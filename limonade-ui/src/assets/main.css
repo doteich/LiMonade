@@ -1,0 +1,23 @@
+/* @import './base.css'; */
+
+#app {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-weight: normal;
+}
+
+body {
+    min-height: 100vh;
+    min-width: 100vw;
+    background: #eff3f8;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+:root {
+    --tile-color-1: #eff3f8;
+    --theme-color-1: hsl(209, 47%, 40%);
+    --theme-color-2: hsl(209, 47%, 20%);
+    --font-color-1: white;
+    --border-color-1: rgb(204, 202, 202);
+}
