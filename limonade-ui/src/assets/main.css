@@ -1,15 +1,14 @@
 /* @import './base.css'; */
 
 #app {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 2rem;
+    margin: 0 0;
+    padding: 1.5rem;
     font-weight: normal;
 }
 
 body {
-    min-height: 100vh;
-    min-width: 100vw;
+    min-height: 98vh;
+    min-width: 98vw;
     background: #eff3f8;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }

@@ -7,18 +7,18 @@ const store = useCounterStore()
 </script>
 
 <template>
-    <div class="counters-bar">
-        <h2>Counters</h2>
+    <section class="counters-bar">
+        <h2>Dynamic Data</h2>
         <single-counter v-for="counter in store.getCounters" :key="counter.name" :name=counter.name
-            :value=counter.value></single-counter>
-    </div>
+            :value=counter.value :unit="counter.unit"></single-counter>
+    </section>
 </template>
 
 <style scoped>
 .counters-bar{
     padding: 1%;
     width: 100%;
-    background: white;
+    background: var(--font-color-1);
     border-radius: 4px;
 }
 </style>

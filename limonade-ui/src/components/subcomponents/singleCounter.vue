@@ -1,16 +1,27 @@
 <script setup>
+import { useCounterStore } from '@/stores/counter'
+
+const store = useCounterStore()
+
+
 defineProps({
     name: String,
-    value: Number
+    value: Number,
+    unit: String,
 })
+
+function fetchCounterData(name) {
+    store.fetchChartData(name)
+}
 
 </script>
 
 <template>
     <div class="counter">
         <h5>{{name }}</h5>
-        <p>{{ value }}</p>
-        <i class="bi bi-bar-chart-line-fill"></i>
+        <p>{{ parseFloat(value.toFixed(3)) }}</p>
+        <p class="unit">{{ unit }}</p>
+        <i class="bi bi-bar-chart-line-fill" @click="fetchCounterData(name)"></i>
 
     </div>
 </template>
@@ -19,7 +30,8 @@ defineProps({
 .counter {
     display: flex;
     flex-direction: row;
-    height: 4vh;
+    height: 4vmin;
+    min-height: 40px;
     margin: 5px;
     border: 1px solid var(--border-color-1);
     border-radius: 1px;
@@ -41,22 +53,31 @@ defineProps({
     font-size: larger;
     align-self: center;
     font-size: 20px;
-    margin: 0;
     color: var(--theme-color-2);
+    width: 50%;
+}
+
+.unit{
+    margin-left: auto;
+    margin-right: 5% ;
+    width: 10% !important;
+    font-size: 15px !important;
 }
 
 .counter i{
     color: var(--theme-color-2);
     cursor: pointer;
     margin-left: auto;
-    margin-right: 10%;
+    margin-right: 1%;
     border: 1px solid var(--border-color-1);
     padding: 4px;
     border-radius: 2px;
+    width: 30px;
+
 }
 
 .counter i:hover{
     background-color: var(--theme-color-2);
-    color: white;
+    color: var(--font-color-1);
 }
 </style>
