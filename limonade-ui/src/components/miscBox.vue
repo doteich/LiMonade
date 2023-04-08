@@ -1,12 +1,34 @@
 <script setup>
 import miscChart from "./subcomponents/miscChart.vue"
+import { reactive } from "vue"
+const state = reactive({
+    activeComp: {
+        chart: false,
+        order: true,
+        calculated: false,
+    }
+})
 
+function setActive(el) {
+    for (let key in state.activeComp) {
+        state.activeComp[key] ? state.activeComp[key] = false : ""
+    }
+
+    state.activeComp[el] = true
+}
 
 </script>
 <template>
     <section class="misc-box">
-        <h2>Misc</h2>
-        <miscChart></miscChart>
+        <nav class="misc-nav">
+            <h2>Misc</h2>
+            <ul>
+                <li @click="setActive('order')" :class="{ 'li-active': state.activeComp.order }">Order Data</li>
+                <li @click="setActive('calculated')" :class="{ 'li-active': state.activeComp.calculated }">Calculated</li>
+                <li @click="setActive('chart')" :class="{ 'li-active': state.activeComp.chart }">Historic Data</li>
+            </ul>
+        </nav>
+        <miscChart v-if="state.activeComp.chart"></miscChart>
     </section>
 </template>
 <style scoped>
@@ -17,5 +39,52 @@ import miscChart from "./subcomponents/miscChart.vue"
     height: 100%;
     background: white !important;
     border-radius: 4px;
+}
+
+h2 {
+    width: 10%;
+    z-index: 1;
+}
+
+.misc-nav {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    box-shadow: 1px 1px 3px 0px var(--theme-color-2);
+    border-radius: 4px;
+    margin: 4px;
+    background: var(--theme-color-2);
+    color: var(--font-color-1);
+}
+
+.misc-nav ul {
+    display: flex;
+    padding: 0;
+    align-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    margin: 0 1px;
+    width: 90%;
+}
+
+.misc-nav ul li {
+    text-decoration: none;
+    list-style: none;
+    margin: 0px 10px;
+    border: 0.5px solid var(--theme-color-1);
+    padding: 2px 20px;
+    text-align: center;
+    border-radius: 2px;
+    width: 10%;
+    min-width: 140px;
+    cursor: pointer;
+    color: var(--font-color-1);
+    box-shadow: 0px 0px 4px 0px var(--theme-color-1);
+
+}
+
+.li-active {
+    background: var(--theme-color-1) !important;
+    transform: scale(1.05);
 }
 </style>

@@ -6,6 +6,8 @@ import { useCounterStore } from '@/stores/counter'
 const store = useCounterStore()
 import countersBar from "../components/countersBar.vue"
 import miscBox from "../components/miscBox.vue"
+import machineBox from "../components/machineBox.vue"
+
 
 onMounted(() => {
     store.startWS()
@@ -16,7 +18,7 @@ onMounted(() => {
 <template>
     <article class="main-view">
         <h1 style="grid-area:alarms">Alarms</h1>
-        <h1 style="grid-area:machine">Machine Model</h1>
+        <machineBox class="machine"></machineBox>
         <miscBox class="misc"></miscBox>
         <countersBar class="counters"></countersBar>
     </article>
@@ -33,11 +35,16 @@ onMounted(() => {
     grid-template-rows: 60% 40%;
     grid-template-columns: 25% 50% 25%;
 }
+
 .main-view>.counters {
     grid-area: counters;
 }
 
 .main-view>.misc {
     grid-area: custom;
+}
+
+.main-view>.machine {
+    grid-area: machine;
 }
 </style>

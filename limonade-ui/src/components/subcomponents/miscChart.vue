@@ -54,9 +54,9 @@ function refreshDate() {
 </script>
 <template>
     <div class="time-picker">
-        <input type="datetime-local" v-model="state.startDate">
-        <input type="datetime-local" v-model="state.endDate">
-
+        <label>Start:</label><input type="datetime-local" v-model="state.startDate">
+        <label>End:</label><input type="datetime-local" v-model="state.endDate">
+        <label>Node:</label>
         <select v-model="state.nodeName">
             <option v-for="counter in store.getCounters" :key="counter.name">{{ counter.name }}</option>
         </select>
@@ -71,12 +71,13 @@ function refreshDate() {
 }
 
 .time-picker {
-    padding: 4px
+    padding: 4px;
+    display: flex;
 }
 
 .time-picker>input {
     margin-left: 4px;
-    margin-right: 4px;
+    margin-right: 10px;
 }
 
 .time-picker>button {
@@ -85,9 +86,18 @@ function refreshDate() {
     border: 1px solid var(--border-color-1);
     border-radius: 2px;
     background: white;
+    margin-left: 1%;
+    width: 40px;
 }
 
-i {
-    font-size: 16px;
+.time-picker>button:hover{
+    background: var(--theme-color-2);
+    color: var(--font-color-1)
 }
+
+
+i {
+    font-size:16px;
+}
+
 </style>

@@ -30,6 +30,7 @@ func main() {
 	mongodb.InitMongoDB()
 
 	router.Get("/generic", controller.GetDataByNodeName)
+	router.Get("/duration", controller.GetDataDuration)
 
 	http.ListenAndServe("127.0.0.1:3000", router)
 
