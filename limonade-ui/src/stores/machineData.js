@@ -29,12 +29,12 @@ export const useMachineDataStore = defineStore("machineData", {
                 data: [
 
                 ],
-                backgroundColor: "yellow"
+                backgroundColor: "rgba(252, 164, 0, 0.8)"
             },
             {
                 label: "Idle",
                 code: 0,
-                data: [{ x: [new Date(2023, 3, 8, 1, 0), new Date(2023, 3, 8, 14, 45)], y: "Status" }],
+                data: [],
                 backgroundColor: "rgba(23, 194, 247, 0.692)"
             },
         ]

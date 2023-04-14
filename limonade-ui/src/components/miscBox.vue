@@ -1,20 +1,11 @@
 <script setup>
 import miscChart from "./subcomponents/miscChart.vue"
-import { reactive } from "vue"
-const state = reactive({
-    activeComp: {
-        chart: false,
-        order: true,
-        calculated: false,
-    }
-})
+import { useMiscStore } from '@/stores/miscStore'
 
-function setActive(el) {
-    for (let key in state.activeComp) {
-        state.activeComp[key] ? state.activeComp[key] = false : ""
-    }
+const store = useMiscStore()
 
-    state.activeComp[el] = true
+const setActive = (name) => {
+    store.setActiveComponent(name)
 }
 
 </script>
@@ -23,12 +14,14 @@ function setActive(el) {
         <nav class="misc-nav">
             <h2>Misc</h2>
             <ul>
-                <li @click="setActive('order')" :class="{ 'li-active': state.activeComp.order }">Order Data</li>
-                <li @click="setActive('calculated')" :class="{ 'li-active': state.activeComp.calculated }">Calculated</li>
-                <li @click="setActive('chart')" :class="{ 'li-active': state.activeComp.chart }">Historic Data</li>
+                <li @click="setActive('order')" :class="{ 'li-active': store.getActiveComponent.order }">Order Data</li>
+                <li @click="setActive('calculated')" :class="{ 'li-active': store.getActiveComponent.calculated }">
+                    Calculated</li>
+                <li @click="setActive('chart')" :class="{ 'li-active': store.getActiveComponent.chart }">Historic Numeric
+                </li>
             </ul>
         </nav>
-        <miscChart v-if="state.activeComp.chart"></miscChart>
+        <miscChart v-if="store.getActiveComponent.chart"></miscChart>
     </section>
 </template>
 <style scoped>
@@ -75,7 +68,7 @@ h2 {
     padding: 2px 20px;
     text-align: center;
     border-radius: 2px;
-    width: 10%;
+    width: 12%;
     min-width: 140px;
     cursor: pointer;
     color: var(--font-color-1);

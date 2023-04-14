@@ -78,9 +78,9 @@ func GetDataDuration(w http.ResponseWriter, r *http.Request) {
 
 func calcDuration(tsData []mongodb.TimeSeriesData) ([]byte, error) {
 	var dur []DurationData
-	len := len(tsData)
+	length := len(tsData)
 
-	for i := 0; i < len-1; i++ {
+	for i := 0; i < length-1; i++ {
 
 		dur = append(dur, DurationData{
 			StartTS:  tsData[i].Timestamp,

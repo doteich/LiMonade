@@ -1,9 +1,9 @@
 <script setup>
 import { onMounted } from "vue"
 
-import { useCounterStore } from '@/stores/counter'
+import { useDynamicDataStore } from '@/stores/dynamicStore'
 
-const store = useCounterStore()
+const store = useDynamicDataStore()
 import countersBar from "../components/countersBar.vue"
 import miscBox from "../components/miscBox.vue"
 import machineBox from "../components/machineBox.vue"
@@ -27,7 +27,7 @@ onMounted(() => {
 <style scoped>
 .main-view {
     display: grid;
-    min-height: 95vh;
+    min-height: 94.5vh;
     min-width: 100%;
     grid-template-areas:
         "alarms machine counters"

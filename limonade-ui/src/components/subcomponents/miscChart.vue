@@ -1,7 +1,7 @@
 <script setup>
 import { reactive } from 'vue'
-import { useCounterStore } from '@/stores/counter'
-const store = useCounterStore()
+import { useDynamicDataStore } from '@/stores/dynamicStore'
+const store = useDynamicDataStore()
 
 const state = reactive({
     startDate: new Date(),
