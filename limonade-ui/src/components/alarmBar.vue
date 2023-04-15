@@ -95,6 +95,9 @@ onMounted(() => {
 
 .alarm-details > div >p{
     margin: 0 0 0 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--theme-color-2)
 }
 
 .alarm-details > div >i{

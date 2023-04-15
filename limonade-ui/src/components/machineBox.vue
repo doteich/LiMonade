@@ -2,7 +2,7 @@
 import { useDynamicDataStore } from '@/stores/dynamicStore'
 import stateChart from "./subcomponents/stateChart.vue"
 import alarmBox from "./subcomponents/alarmBox.vue"
-import stateBox  from "./subcomponents/stateBox.vue"
+import stateBox from "./subcomponents/stateBox.vue"
 import { computed } from "vue"
 
 const dynamicStore = useDynamicDataStore()
@@ -15,7 +15,7 @@ const machineState = computed(() => {
         text: "PROD"
     }
 
-    switch (dynamicStore.getState[0].value ) {
+    switch (dynamicStore.getState[0].value) {
         case 0:
             mappingObj.color = "rgba(23, 194, 247, 0.692)";
             mappingObj.text = "Idle"
@@ -45,8 +45,8 @@ const machineState = computed(() => {
     <section class="machine-box">
         <h2>Status & Availibility </h2>
         <div class="state-box">
-         <stateBox :state="machineState.state" :color="machineState.color" :text="machineState.text"></stateBox>
-         <alarmBox :code="dynamicStore.getAlarm[0].value" text="ALARMTEXT"></alarmBox>
+            <stateBox :state="machineState.state" :color="machineState.color" :text="machineState.text"></stateBox>
+            <alarmBox :code="dynamicStore.getAlarm[0].value" text="ALARMTEXT"></alarmBox>
         </div>
         <stateChart></stateChart>
     </section>
@@ -69,6 +69,17 @@ const machineState = computed(() => {
     height: 10%;
 }
 
+.machine-layout {
+    height: 50%;
+    display: flex;
+    justify-content: center;
+}
+
+.machine-layout > img{
+    height: 100%;
+
+}
+
 .state-box>div {
     width: 50%;
     height: 100%;
@@ -78,8 +89,4 @@ const machineState = computed(() => {
     border-radius: 1px;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
-
-
-
-
 </style>
