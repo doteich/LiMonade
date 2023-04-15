@@ -6,6 +6,7 @@ import (
 	"limonade-backend/logging"
 	"limonade-backend/mongodb"
 	"net/http"
+	"sort"
 	"time"
 )
 
@@ -90,6 +91,10 @@ func calcDuration(tsData []mongodb.TimeSeriesData) ([]byte, error) {
 			NodeName: tsData[i].Meta.NodeName,
 		})
 	}
+
+	sort.Slice(dur, func(i, j int) bool {
+		return dur[i].Duration < dur[j].Duration
+	})
 
 	bytes, err := json.Marshal(dur)
 

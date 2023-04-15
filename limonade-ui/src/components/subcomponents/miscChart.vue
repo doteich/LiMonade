@@ -1,12 +1,16 @@
 <script setup>
-import { reactive } from 'vue'
+import { reactive, computed, onMounted } from 'vue'
+import { useMiscStore } from '@/stores/miscStore'
 import { useDynamicDataStore } from '@/stores/dynamicStore'
-const store = useDynamicDataStore()
+
+const store = useMiscStore()
+const dynamicStore = useDynamicDataStore()
 
 const state = reactive({
-    startDate: new Date(),
-    endDate: new Date(),
+    startDate: "",
+    endDate: "",
     nodeName: "",
+
 })
 
 let config =
@@ -44,25 +48,47 @@ let config =
     }
 }
 
+const chartData = computed(() => {
+    return {
+        labels: store.getChartData.labels,
+        datasets: [{
+            label: store.getChartData.label,
+            data: store.getChartData.data,
+            fill: false,
+            borderColor: "hsl(209, 47%, 20%)",
+            tension: 0.4
+        },]
+    }
+})
+
 function refreshDate() {
     let start = new Date(state.startDate).toISOString()
     let end = new Date(state.endDate).toISOString()
     store.fetchChartData(state.nodeName, start, end)
 }
 
+onMounted(() => {
+    let inputData = store.getChartInputs
+
+    state.startDate = inputData.start.substr(0, 16)
+    state.endDate = inputData.end.substr(0, 16)
+    state.nodeName = inputData.nodeName
+})
+
 
 </script>
 <template>
     <div class="time-picker">
+
         <label>Start:</label><input type="datetime-local" v-model="state.startDate">
         <label>End:</label><input type="datetime-local" v-model="state.endDate">
         <label>Node:</label>
         <select v-model="state.nodeName">
-            <option v-for="counter in store.getCounters" :key="counter.name">{{ counter.name }}</option>
+            <option v-for="counter in dynamicStore.getCounters" :key="counter.name">{{ counter.name }}</option>
         </select>
         <button @click="refreshDate()"><i class="bi bi-arrow-clockwise"></i></button>
     </div>
-    <pv-chart type="line" v-if="store.getChartData.enabled" :data="store.getChartData.data" :options="config"></pv-chart>
+    <pv-chart type="line" :data="chartData" :options="config"></pv-chart>
 </template>
 
 <style scoped>
@@ -90,14 +116,13 @@ function refreshDate() {
     width: 40px;
 }
 
-.time-picker>button:hover{
+.time-picker>button:hover {
     background: var(--theme-color-2);
     color: var(--font-color-1)
 }
 
 
 i {
-    font-size:16px;
+    font-size: 16px;
 }
-
 </style>

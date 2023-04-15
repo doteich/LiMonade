@@ -1,6 +1,8 @@
 <script setup>
 import { useDynamicDataStore } from '@/stores/dynamicStore'
 import {useMiscStore} from '@/stores/miscStore'
+
+
 const store = useDynamicDataStore()
 const miscStore = useMiscStore()
 
@@ -11,8 +13,8 @@ defineProps({
 })
 
 function fetchCounterData(name) {
-    store.fetchChartData(name)
-    miscStore.setActiveComponent("chart")
+    miscStore.fetchChartData(name)
+    //miscStore.setActiveComponent("chart")
     
 }
 

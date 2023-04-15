@@ -7,6 +7,7 @@ const store = useDynamicDataStore()
 import countersBar from "../components/countersBar.vue"
 import miscBox from "../components/miscBox.vue"
 import machineBox from "../components/machineBox.vue"
+import alarmBar from "../components/alarmBar.vue"
 
 
 onMounted(() => {
@@ -17,7 +18,7 @@ onMounted(() => {
 
 <template>
     <article class="main-view">
-        <h1 style="grid-area:alarms">Alarms</h1>
+        <alarmBar class="alarms"></alarmBar>
         <machineBox class="machine"></machineBox>
         <miscBox class="misc"></miscBox>
         <countersBar class="counters"></countersBar>
@@ -46,5 +47,9 @@ onMounted(() => {
 
 .main-view>.machine {
     grid-area: machine;
+}
+
+.main-view > .alarms{
+    grid-area: alarms;
 }
 </style>

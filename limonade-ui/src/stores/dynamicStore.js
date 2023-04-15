@@ -66,20 +66,7 @@ export const useDynamicDataStore = defineStore("dynamicData", {
             }
 
         ],
-        chartData: {
-            enabled: false,
-            data: {
-                labels: [],
-                datasets: [{
-                    label: '',
-                    data: [],
-                    fill: false,
-                    borderColor: "hsl(209, 47%, 20%)",
-                    tension: 0.4
-                }, ]
-            }
 
-        }
 
     }),
     getters: {
@@ -128,39 +115,7 @@ export const useDynamicDataStore = defineStore("dynamicData", {
 
 
         },
-        async fetchChartData(nodeName, start, end) {
-            try {
 
-                if (!start) {
-                    start = new Date()
-                    start.setHours(start.getHours() - 1)
-                    start = start.toISOString()
-                }
-
-                if (!end) {
-                    end = new Date().toISOString()
-                }
-
-
-
-                const params = new URLSearchParams();
-                params.append("nodeName", nodeName)
-                params.append("start", start)
-                params.append("end", end)
-                params.append("chartData", "true")
-
-                let res = await axios.get(`${resturl}/generic`, { params })
-
-
-                this.chartData.data.labels = res.data.labels
-                this.chartData.data.datasets[0].data = res.data.data
-                this.chartData.data.datasets[0].label = nodeName
-                this.chartData.enabled = true
-
-            } catch (err) {
-                console.log(err)
-            }
-        }
     },
 
 

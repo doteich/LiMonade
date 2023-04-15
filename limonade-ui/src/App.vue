@@ -11,7 +11,7 @@
   <footer>
     
     <img src="./assets/limonade.svg"> 
-    <p>LiMoNade</p>
+    <a href="https://github.com/doteich/LiMonade"><p>LiMoNade</p></a>
   </footer>
 </template>
 
@@ -43,7 +43,11 @@ footer > img{
   height: 17px;
 }
 
-footer >p{
+footer > a{
+  text-decoration: none;
+}
+
+footer > a >p{
   margin: 0;
   color:rgb(141, 130, 93);
   border-bottom: 1px solid #ffd4a2
