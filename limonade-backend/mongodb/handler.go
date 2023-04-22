@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"fmt"
 	"limonade-backend/logging"
 	"time"
 
@@ -83,9 +84,23 @@ func (mh *MongoHandler) QueryByNodeName(nodeName string, tsStart time.Time, tsEn
 	return res
 }
 
-// coll := client.Database("machine-data").Collection("lms_packaging")
-// _, err = coll.Find(ctx, bson.D{{"meta.nodeName", "Order"}},
-//   options.Find().SetSort(bson.D{{"ts", -1}}))
-// if err != nil {
-//   log.Fatal(err)
-// }
+func (mh *MongoHandler) FindTopResults(nodeName string) []TimeSeriesData {
+	coll := mh.client.Database(mh.database).Collection("lms_packaging")
+	filter := bson.D{
+		{"meta.nodeName", nodeName},
+	}
+
+	sortParams := bson.D{{"ts", -1}}
+
+	var res []TimeSeriesData
+
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSort(sortParams), options.Find().SetLimit(1))
+
+	if err != nil {
+		logging.LogError(err, "Error getting collection", "QueryByNodeName")
+	}
+
+	cursor.All(ctx, &res)
+	fmt.Println(res)
+	return res
+}
