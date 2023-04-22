@@ -22,8 +22,7 @@ func GetDataDuration(w http.ResponseWriter, r *http.Request) {
 	startString := r.URL.Query().Get("start")
 	endString := r.URL.Query().Get("end")
 	nodeName := r.URL.Query().Get("nodeName")
-	//numberOfResultsString := r.URL.Query().Get("results")
-	//orderBy := r.URL.Query().Get("orderBy")
+	orderBy := r.URL.Query().Get("orderBy")
 
 	tsStart, err0 := time.Parse(time.RFC3339, startString)
 
@@ -57,17 +56,8 @@ func GetDataDuration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// var numberOfResults int
-
-	// if numberOfResultsString == "" {
-	// 	numberOfResults = 9999
-	// } else {
-	// 	numberOfResults, _ = strconv.Atoi(numberOfResultsString)
-
-	// }
-
 	res := mongodb.NewMDBHandler.QueryByNodeName(nodeName, tsStart, tsEnd)
-	bytes, err := calcDuration(res)
+	bytes, err := calcDuration(res, orderBy)
 
 	if err != nil {
 		logging.LogError(err1, "Error marshalling json", "GetDataDuration")
@@ -77,7 +67,7 @@ func GetDataDuration(w http.ResponseWriter, r *http.Request) {
 	w.Write(bytes)
 }
 
-func calcDuration(tsData []mongodb.TimeSeriesData) ([]byte, error) {
+func calcDuration(tsData []mongodb.TimeSeriesData, order string) ([]byte, error) {
 	var dur []DurationData
 	length := len(tsData)
 
@@ -92,9 +82,18 @@ func calcDuration(tsData []mongodb.TimeSeriesData) ([]byte, error) {
 		})
 	}
 
-	sort.Slice(dur, func(i, j int) bool {
-		return dur[i].Duration < dur[j].Duration
-	})
+	switch order {
+	case "desc":
+		sort.Slice(dur, func(i, j int) bool {
+			return dur[i].Duration > dur[j].Duration
+		})
+	case "asc":
+		sort.Slice(dur, func(i, j int) bool {
+			return dur[i].Duration < dur[j].Duration
+		})
+	default:
+
+	}
 
 	bytes, err := json.Marshal(dur)
 

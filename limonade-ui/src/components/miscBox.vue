@@ -1,6 +1,7 @@
 <script setup>
 import miscChart from "./subcomponents/miscChart.vue"
 import { useMiscStore } from '@/stores/miscStore'
+import miscOrderData from "./subcomponents/miscOrderData.vue"
 
 const store = useMiscStore()
 
@@ -21,6 +22,7 @@ const setActive = (name) => {
                 </li>
             </ul>
         </nav>
+        <miscOrderData v-if="store.getActiveComponent.order"></miscOrderData>
         <miscChart v-if="store.getActiveComponent.chart"></miscChart>
     </section>
 </template>

@@ -34,9 +34,9 @@ type MetaData struct {
 
 var NewMDBHandler MongoHandler
 
-func InitMongoDB() {
+func InitMongoDB(password string) {
 
-	connectionURL := "mongodb://appuser:3xtr3m312@192.168.178.107:31511/?directConnection=true"
+	connectionURL := "mongodb://appuser:" + password + "@192.168.178.107:31511/?directConnection=true"
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionURL))
 
@@ -82,3 +82,10 @@ func (mh *MongoHandler) QueryByNodeName(nodeName string, tsStart time.Time, tsEn
 
 	return res
 }
+
+// coll := client.Database("machine-data").Collection("lms_packaging")
+// _, err = coll.Find(ctx, bson.D{{"meta.nodeName", "Order"}},
+//   options.Find().SetSort(bson.D{{"ts", -1}}))
+// if err != nil {
+//   log.Fatal(err)
+// }

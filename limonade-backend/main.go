@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"limonade-backend/controller"
 	"limonade-backend/logging"
 	"limonade-backend/mongodb"
@@ -11,6 +12,10 @@ import (
 )
 
 func main() {
+
+	var pw string
+	flag.StringVar(&pw, "pw", "mongodb-password", "password for mongodb")
+	flag.Parse()
 
 	logging.InitLogger()
 
@@ -27,7 +32,7 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 
-	mongodb.InitMongoDB()
+	mongodb.InitMongoDB(pw)
 
 	router.Get("/generic", controller.GetDataByNodeName)
 	router.Get("/duration", controller.GetDataDuration)

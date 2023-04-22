@@ -28,7 +28,7 @@ onMounted(() => {
 <style scoped>
 .main-view {
     display: grid;
-    min-height: 94.5vh;
+    height: 94.5vh;
     min-width: 100%;
     grid-template-areas:
         "alarms machine counters"

@@ -18,7 +18,7 @@ export const useAlarmStore = defineStore("alarmStore", {
 
                 if (!start) {
                     start = new Date()
-                    start.setHours(start.getHours() - 48)
+                    start.setHours(start.getHours() - 24)
                     start = start.toISOString()
                 }
 
@@ -38,8 +38,9 @@ export const useAlarmStore = defineStore("alarmStore", {
                     return entry.value > 0
                 })
 
-                filteredData = filteredData.slice(-5)
+                filteredData = filteredData.slice(0, 5)
 
+                this.alarms = []
 
                 filteredData.forEach(el => {
                     el.text = "ALARMTEXT_TEST"

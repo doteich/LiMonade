@@ -1,44 +1,43 @@
 <script setup>
 import { onMounted } from "vue"
 import { useAlarmStore } from '@/stores/alarmStore'
+import alarmBoxDetailed from "./subcomponents/alarmBoxDetailed.vue"
+
 
 const alarmStore = useAlarmStore()
 
+function getAlarmsByDate(offset) {
+    let start = new Date()
+    let end = new Date()
+    start.setHours(start.getHours() - offset)
+
+    alarmStore.fetchAlarms("Alarm", start.toISOString(), end.toISOString())
+}
+
+
 onMounted(() => {
-    alarmStore.fetchAlarms("Alarm")
+   
+    getAlarmsByDate(24)
 })
 
 </script>
 
 <template>
-    <section class="machine-box">
+    <section class="alarm-bar">
         <h2>Alarms</h2>
-        <div v-for="alarm in alarmStore.getAlarms" :key="alarm.duration" class="alarm-card">
-            <div class="alarm-icon">
-                <i class="bi bi-exclamation-diamond"></i>
-                <p>{{ alarm.value }}</p>
-            </div>
-            <div class="alarm-details">
-                <div>
-                    <i class="bi bi-clock-history"></i>
-                    <p>{{ alarm.start }} - {{ alarm.end }}</p>
-                </div>
-                <div>
-                    <i class="bi bi-stopwatch"></i>
-                    <p>{{ alarm.duration.toFixed(2) }} min</p>
-                </div>
-                <div>
-                    <i class="bi bi-chat-square-text"></i>
-                    <p>{{alarm.text}}</p>
-                </div>
-            </div>
-
+        <div class="refresh-bar">
+            <p @click="getAlarmsByDate(24)"><i class="bi bi-arrow-clockwise"></i>24h</p>
+            <p @click="getAlarmsByDate(48)"><i class="bi bi-arrow-clockwise"></i>48h</p>
+            <p @click="getAlarmsByDate(168)"><i class="bi bi-arrow-clockwise"></i>7d</p>
         </div>
+        <alarmBoxDetailed v-for="alarm in alarmStore.getAlarms" :key="alarm.duration" :start=alarm.start :end=alarm.end
+            :value=alarm.value :duration=alarm.duration :text="alarm.text"></alarmBoxDetailed>
+
     </section>
 </template>
 
 <style scoped>
-.machine-box {
+.alarm-bar {
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -47,61 +46,28 @@ onMounted(() => {
     margin: 0 0px 0 5px;
 }
 
-.alarm-card {
+.refresh-bar{
     display: flex;
-    flex-direction: row;
-    height: 9vh;
-    min-height:110px;
-    margin: 5px 1px;
+    margin: 0;
+    height: 4%;
+    align-items: center;
+}
+
+.refresh-bar > p{
+    margin: 0 10px;
     border: 1px solid var(--border-color-1);
-    border-radius: 1px;
-    justify-items: center;
-    align-items: center;
-    box-shadow: 1px 1px 4px 0px var(--border-color-1);
+    border-radius: 3px;
+    padding: 4px;
+    width: 60px;
+    cursor: pointer;
 }
 
-.alarm-icon{
-    width: 20%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 2px;
-    color: var(--font-color-1);
-    height: 100%;
-    width: 15%;
-    background: crimson;
+.refresh-bar> p:hover{
+    background: var(--theme-color-2);
+    color: var(--font-color-1) 
 }
 
-.alarm-icon > i{
-    font-size: 30px;
-}
-
-.alarm-details{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 85%;
-    justify-content: center;
-}
-
-.alarm-details > div{
-    display: flex;
-    border: 1px solid var(--border-color-1);
-    margin: 1px;
-    min-height: 30%;
-    align-items: center;
-}
-
-.alarm-details > div >p{
-    margin: 0 0 0 10px;
-    font-size: 14px;
-    font-weight: bold;
-    color: var(--theme-color-2)
-}
-
-.alarm-details > div >i{
-    font-size: 17px;
-    margin: 5px;
+.refresh-bar> p>i{
+    margin-right: 10%;
 }
 </style>
