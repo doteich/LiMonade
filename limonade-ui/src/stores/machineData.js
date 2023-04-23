@@ -64,6 +64,7 @@ export const useMachineDataStore = defineStore("machineData", {
                 params.append("end", end)
 
                 let res = await axios.get(`${resturl}/duration`, { params })
+
                 let stateData
                 let entry
 

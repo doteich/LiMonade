@@ -61,7 +61,6 @@ func GetDataByNodeName(w http.ResponseWriter, r *http.Request) {
 	}
 
 	res := mongodb.NewMDBHandler.QueryByNodeName(nodeName, tsStart, tsEnd)
-	mongodb.NewMDBHandler.FindTopResults("Order")
 
 	var payload []byte
 	var mErr error

@@ -2,7 +2,6 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 
 const websocket = "ws://localhost:8080/"
-const resturl = "http://localhost:3000"
 var socket
 
 export const useDynamicDataStore = defineStore("dynamicData", {

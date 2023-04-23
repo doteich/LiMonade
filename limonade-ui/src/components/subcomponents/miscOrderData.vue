@@ -1,18 +1,27 @@
 <script setup>
+import { onMounted } from "vue"
+import { useMiscStore } from "@/stores/miscStore"
+const miscStore = useMiscStore()
 
-let showTS = true
+function setOrderData() {
+    miscStore.initOrderData()
+}
+
+onMounted(() => {
+    setOrderData()
+})
 
 </script>
 <template>
     <section class="misc-order-data">
-        <div class="order-box">
+        <div class="order-box" v-for="el in miscStore.getOrderData" :key="el.nodeName">
             <div class="order-box-basic">
-                <h5>Current Order</h5>
-                <p>1212312</p>
+                <h5>{{el.displayName}}</h5>
+                <p>{{el.value}}</p>
             </div>
-            <p v-if="showTS" class="order-box-ts">Since: 15.03.2023 - 14:21</p>
+            <p class="order-box-ts">Since: {{el.timestamp}}</p>
         </div>
-      
+
     </section>
 </template>
 <style scoped>

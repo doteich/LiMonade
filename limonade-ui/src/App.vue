@@ -4,6 +4,13 @@
 
 <template>
   <header>
+    <nav>
+      <p>HOME</p>
+      >
+      <p>Line</p>
+      >
+      <p>{{$route.path}}</p>
+    </nav>
   </header>
   <main>
     <router-view></router-view>
@@ -18,6 +25,25 @@
 
 
 <style>
+
+nav{
+  display: flex;
+  align-items: center;
+  margin: 2px;
+}
+
+nav > p{
+  margin: 0;
+  color: var(--theme-color-1);
+  font-weight: bold;
+  width: 100px;
+  border: 1px solid var(--border-color-1);
+  border-radius: 2px;
+  padding: 4px 10px;
+
+  margin: 0 10px;
+}
+
 main {
   height: 95vh;
 }

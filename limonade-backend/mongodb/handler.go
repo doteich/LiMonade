@@ -2,7 +2,6 @@ package mongodb
 
 import (
 	"context"
-	"fmt"
 	"limonade-backend/logging"
 	"time"
 
@@ -99,8 +98,6 @@ func (mh *MongoHandler) FindTopResults(nodeName string) []TimeSeriesData {
 	if err != nil {
 		logging.LogError(err, "Error getting collection", "QueryByNodeName")
 	}
-
 	cursor.All(ctx, &res)
-	fmt.Println(res)
 	return res
 }

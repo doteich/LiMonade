@@ -22,7 +22,39 @@ export const useMiscStore = defineStore("miscData", {
                 data: []
             }
 
-        }
+        },
+        orderData: [{
+                displayName: "Current Order",
+                nodeName: "Order",
+                value: "",
+                timestamp: ""
+            },
+            {
+                displayName: "Material Number",
+                nodeName: "Material",
+                value: "",
+                timestamp: ""
+            },
+            {
+                displayName: "Batch",
+                nodeName: "Batch",
+                value: "",
+                timestamp: ""
+            },
+            {
+                displayName: "SLED",
+                nodeName: "SLED",
+                value: "",
+                timestamp: ""
+            },
+            {
+                displayName: "Recipe",
+                nodeName: "Recipe",
+                value: "",
+                timestamp: ""
+            },
+        ]
+
     }),
     getters: {
         getActiveComponent(state) {
@@ -33,6 +65,9 @@ export const useMiscStore = defineStore("miscData", {
         },
         getChartInputs(state) {
             return state.chartData.input
+        },
+        getOrderData(state) {
+            return state.orderData
         }
     },
     actions: {
@@ -64,7 +99,7 @@ export const useMiscStore = defineStore("miscData", {
                 params.append("end", end)
                 params.append("chartData", "true")
 
-                let res = await axios.get(`${resturl}/generic`, { params })
+                let res = await axios.get(`${resturl}/timeseries`, { params })
 
                 this.chartData.dataset.labels = res.data.labels
                 this.chartData.dataset.data = res.data.data
@@ -76,6 +111,25 @@ export const useMiscStore = defineStore("miscData", {
 
                 this.setActiveComponent("chart")
 
+
+            } catch (err) {
+                console.log(err)
+            }
+        },
+        initOrderData() {
+            for (let obj of this.orderData) {
+                this.fetchNodeData(obj.nodeName)
+            }
+        },
+
+        async fetchNodeData(node) {
+            try {
+                let params = new URLSearchParams()
+                params.append("nodeName", node)
+                let res = await axios.get(`${resturl}/last`, { params })
+                let el = this.orderData.filter((obj) => obj.nodeName == node)
+                el[0].value = res.data[0].Value
+                el[0].timestamp = new Date(res.data[0].ts).toLocaleString()
 
             } catch (err) {
                 console.log(err)

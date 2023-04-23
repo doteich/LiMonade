@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import main from "../views/main.vue"
+import machineView from "../views/machineView.vue"
+import homeView from "../views/homeView.vue"
+import lineView from "../views/lineView.vue"
 
 
 const router = createRouter({
@@ -8,8 +10,24 @@ const router = createRouter({
    {
      path: '/',
      name: 'home',
-    component: main
+    component: homeView
    },
+   {
+    path: '/',
+    name: 'home',
+   component: homeView
+  },
+
+  {
+    path: '/:line',
+    name: 'line',
+   component: lineView
+  },
+  {
+    path: '/:line/:machine',
+    name: 'machineView',
+   component: machineView
+  },
 
  ] 
 })
