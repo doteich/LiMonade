@@ -53,8 +53,36 @@ export const useMiscStore = defineStore("miscData", {
                 value: "",
                 timestamp: ""
             },
-        ]
+            {
+                displayName: "Target Quantity",
+                nodeName: "Target Quantity",
+                value: "",
+                timestamp: ""
+            },
+            {
+                displayName: "Trays",
+                nodeName: "Trays",
+                value: "",
+                timestamp: ""
+            },
+        ],
+        calculatedData: [{
 
+                displayName: "PCs Per Hour",
+                formular: "state.orderData.filter(el => el.nodeName == 'Trays')[0].value/((new Date() - new Date('2023-04-25T17:52:07.484Z'))/3600000)",
+                value: "",
+                unit: "",
+
+            },
+            {
+
+                displayName: "PCs Per Second",
+                formular: "state.orderData.filter(el => el.nodeName == 'Trays')[0].value/((new Date() - new Date('2023-04-25T17:52:07.484Z'))/1000)",
+                value: "",
+                unit: "",
+
+            }
+        ]
     }),
     getters: {
         getActiveComponent(state) {
@@ -68,6 +96,12 @@ export const useMiscStore = defineStore("miscData", {
         },
         getOrderData(state) {
             return state.orderData
+        },
+        getCalculatedData(state) {
+            state.calculatedData.forEach((el) => {
+                el.value = eval(el.formular)
+            })
+            return state.calculatedData
         }
     },
     actions: {

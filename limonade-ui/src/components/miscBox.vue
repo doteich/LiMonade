@@ -2,6 +2,7 @@
 import miscChart from "./subcomponents/miscChart.vue"
 import { useMiscStore } from '@/stores/miscStore'
 import miscOrderData from "./subcomponents/miscOrderData.vue"
+import miscCalculatedData from "./subcomponents/miscCalculatedData.vue"
 
 const store = useMiscStore()
 
@@ -24,6 +25,7 @@ const setActive = (name) => {
         </nav>
         <miscOrderData v-if="store.getActiveComponent.order"></miscOrderData>
         <miscChart v-if="store.getActiveComponent.chart"></miscChart>
+        <miscCalculatedData v-if="store.getActiveComponent.calculated"></miscCalculatedData>
     </section>
 </template>
 <style scoped>
