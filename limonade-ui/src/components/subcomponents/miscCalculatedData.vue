@@ -16,12 +16,14 @@ const miscStore = useMiscStore()
     <section class="misc-order-data">
         <div class="order-box" v-for="el in miscStore.getCalculatedData" :key="el.nodeName">
             <div class="order-box-basic">
-                <h5>{{el.displayName}}</h5>
-                <p>{{el.value}}</p>
+                <h5>{{ el.displayName }}</h5>
+                <div>
+                    <p>{{ el.value }}</p>
+                    <p>{{ el.unit }}</p>
+                </div>
             </div>
-            <p class="order-box-ts">Since: {{el.timestamp}}</p>
-        </div>
 
+        </div>
     </section>
 </template>
 <style scoped>

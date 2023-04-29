@@ -33,6 +33,10 @@ export const useAlarmStore = defineStore("alarmStore", {
                 params.append("orderBy", "desc")
 
                 let res = await axios.get(`${resturl}/duration`, { params })
+                this.alarms = []
+                if (res.data.length < 1) {
+                    return
+                }
 
                 let filteredData = res.data.filter((entry) => {
                     return entry.value > 0
@@ -40,7 +44,7 @@ export const useAlarmStore = defineStore("alarmStore", {
 
                 filteredData = filteredData.slice(0, 5)
 
-                this.alarms = []
+
 
                 filteredData.forEach(el => {
                     el.text = "ALARMTEXT_TEST"

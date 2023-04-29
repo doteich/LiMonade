@@ -19,7 +19,7 @@ onMounted(() => {
                 <h5>{{el.displayName}}</h5>
                 <p>{{el.value}}</p>
             </div>
-            <p class="order-box-ts">Since: {{el.timestamp}}</p>
+            <p  v-if=el.showTS class="order-box-ts">Since: {{el.timestamp.toLocaleString()}}</p>
         </div>
 
     </section>
@@ -37,7 +37,7 @@ p {
 
 .order-box {
     display: flex;
-    min-width: calc(15% - 10px);
+    min-width: calc(15% - 5px);
     flex-direction: column;
     min-height: 20%;
     min-height: 40px;

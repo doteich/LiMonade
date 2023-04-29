@@ -27,62 +27,57 @@ export const useMiscStore = defineStore("miscData", {
                 displayName: "Current Order",
                 nodeName: "Order",
                 value: "",
-                timestamp: ""
+                timestamp: "",
+                showTS: true,
             },
             {
                 displayName: "Material Number",
                 nodeName: "Material",
                 value: "",
-                timestamp: ""
+                timestamp: "",
+                showTS: true,
             },
             {
                 displayName: "Batch",
                 nodeName: "Batch",
                 value: "",
-                timestamp: ""
+                timestamp: "",
+                showTS: false,
             },
             {
                 displayName: "SLED",
                 nodeName: "SLED",
                 value: "",
-                timestamp: ""
+                timestamp: "",
+                showTS: false,
             },
             {
                 displayName: "Recipe",
                 nodeName: "Recipe",
                 value: "",
-                timestamp: ""
+                timestamp: "",
+                showTS: false,
             },
             {
                 displayName: "Target Quantity",
                 nodeName: "Target Quantity",
                 value: "",
-                timestamp: ""
+                timestamp: "",
+                showTS: true,
             },
             {
                 displayName: "Trays",
                 nodeName: "Trays",
                 value: "",
-                timestamp: ""
+                timestamp: "",
+                showTS: false,
             },
         ],
-        calculatedData: [{
-
-                displayName: "PCs Per Hour",
-                formular: "state.orderData.filter(el => el.nodeName == 'Trays')[0].value/((new Date() - new Date('2023-04-25T17:52:07.484Z'))/3600000)",
-                value: "",
-                unit: "",
-
-            },
-            {
-
-                displayName: "PCs Per Second",
-                formular: "state.orderData.filter(el => el.nodeName == 'Trays')[0].value/((new Date() - new Date('2023-04-25T17:52:07.484Z'))/1000)",
-                value: "",
-                unit: "",
-
-            }
-        ]
+        calculatedTemplate: {
+            displayName: "",
+            value: "",
+            unit: "",
+        }
     }),
     getters: {
         getActiveComponent(state) {
@@ -95,13 +90,50 @@ export const useMiscStore = defineStore("miscData", {
             return state.chartData.input
         },
         getOrderData(state) {
+
             return state.orderData
         },
+
+        calcCompletionTime(state) {
+            let date = new Date()
+            date.setHours(date.getHours() + (state.orderData.filter(el => el.nodeName == 'Target Quantity')[0].value / (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000))))
+            return date.toLocaleString()
+        },
+
         getCalculatedData(state) {
-            state.calculatedData.forEach((el) => {
-                el.value = eval(el.formular)
-            })
-            return state.calculatedData
+
+            let calculatedData = [{
+
+                    displayName: "PCs Per Hour",
+                    value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000)).toFixed(0),
+                    unit: "PCs",
+
+                },
+                {
+
+                    displayName: "PCs Per Minute",
+                    value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 60000)).toFixed(0),
+                    unit: "PCs",
+
+                },
+                {
+
+                    displayName: "Estimated Finish in Hours",
+                    value: (state.orderData.filter(el => el.nodeName == 'Target Quantity')[0].value / (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000))).toFixed(2),
+                    unit: "h",
+
+                },
+                {
+
+                    displayName: "Estimated Finish Time",
+                    value: this.calcCompletionTime,
+                    unit: "",
+
+                },
+
+
+            ]
+            return calculatedData
         }
     },
     actions: {
@@ -163,7 +195,7 @@ export const useMiscStore = defineStore("miscData", {
                 let res = await axios.get(`${resturl}/last`, { params })
                 let el = this.orderData.filter((obj) => obj.nodeName == node)
                 el[0].value = res.data[0].Value
-                el[0].timestamp = new Date(res.data[0].ts).toLocaleString()
+                el[0].timestamp = new Date(res.data[0].ts)
 
             } catch (err) {
                 console.log(err)
