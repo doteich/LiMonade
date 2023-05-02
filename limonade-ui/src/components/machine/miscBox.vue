@@ -1,6 +1,6 @@
 <script setup>
 import miscChart from "./subcomponents/miscChart.vue"
-import { useMiscStore } from '@/stores/miscStore'
+import { useMiscStore } from '@/stores/machine/miscStore'
 import miscOrderData from "./subcomponents/miscOrderData.vue"
 import miscCalculatedData from "./subcomponents/miscCalculatedData.vue"
 

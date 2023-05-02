@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from "vue"
-import { useMiscStore } from "@/stores/miscStore"
+import { useMiscStore } from "@/stores/machine/miscStore"
 const miscStore = useMiscStore()
 
 // function setOrderData() {
@@ -14,12 +14,12 @@ const miscStore = useMiscStore()
 </script>
 <template>
     <section class="misc-order-data">
-        <div class="order-box" v-for="el in miscStore.getCalculatedData" :key="el.nodeName">
+        <div class="calc-box" v-for="el in miscStore.getCalculatedData" :key="el.nodeName">
             <div class="order-box-basic">
                 <h5>{{ el.displayName }}</h5>
-                <div>
-                    <p>{{ el.value }}</p>
-                    <p>{{ el.unit }}</p>
+                <div class="values">
+                    <p >{{ el.value }}</p>
+                    <span>{{ el.unit }}</span>
                 </div>
             </div>
 
@@ -37,9 +37,9 @@ p {
     margin: 0;
 }
 
-.order-box {
+.calc-box {
     display: flex;
-    min-width: calc(15% - 10px);
+    min-width: calc(15% - 5px);
     flex-direction: column;
     min-height: 20%;
     min-height: 40px;
@@ -50,7 +50,7 @@ p {
 
 }
 
-.order-box h5 {
+.calc-box h5 {
     margin: 5px 15px;
     word-wrap: break-word;
     font-size: 15px;
@@ -59,27 +59,32 @@ p {
     border-bottom: 1px solid var(--border-color-1);
 }
 
-.order-box-basic {
+.calc-box-basic {
     display: flex;
     flex-direction: column;
     height: 100%;
 }
 
-.order-box-basic>p {
+.values{
+    display: flex;
+}
+
+.values > p {
     font-size: larger;
     font-size: 20px;
     color: var(--theme-color-2);
-    width: 50%;
+    width: 60%;
     padding: 5px;
     margin-left: 10px;
 }
 
-.order-box-ts {
-    margin: 5px 15px;
-    color: var(--theme-color-2);
-    padding: 2px;
-    font-weight: bold;
-    width: 90%;
-    border-top: 1px solid var(--border-color-1);
+.values > span{
+    font-size: larger;
+    font-size: 20px;
+    color: var(--theme-color-1);
+    width: 40%;
+    padding: 5px;
+    margin-left: 10px;
 }
+
 </style>

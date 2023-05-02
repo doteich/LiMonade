@@ -1,7 +1,7 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue'
-import { useMiscStore } from '@/stores/miscStore'
-import { useDynamicDataStore } from '@/stores/dynamicStore'
+import { useMiscStore } from '@/stores/machine/miscStore'
+import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
 
 const store = useMiscStore()
 const dynamicStore = useDynamicDataStore()

@@ -96,7 +96,7 @@ export const useMiscStore = defineStore("miscData", {
 
         calcCompletionTime(state) {
             let date = new Date()
-            date.setHours(date.getHours() + (state.orderData.filter(el => el.nodeName == 'Target Quantity')[0].value / (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000))))
+            date.setMinutes(date.getMinutes() + (state.orderData.filter(el => el.nodeName == 'Target Quantity')[0].value / (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 60000))))
             return date.toLocaleString()
         },
 
@@ -106,14 +106,14 @@ export const useMiscStore = defineStore("miscData", {
 
                     displayName: "PCs Per Hour",
                     value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000)).toFixed(0),
-                    unit: "PCs",
+                    unit: "PCs/h",
 
                 },
                 {
 
                     displayName: "PCs Per Minute",
                     value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 60000)).toFixed(0),
-                    unit: "PCs",
+                    unit: "PCs/min",
 
                 },
                 {

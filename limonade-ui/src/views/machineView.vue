@@ -1,13 +1,13 @@
 <script setup>
 import { onMounted } from "vue"
 
-import { useDynamicDataStore } from '@/stores/dynamicStore'
+import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
 
 const store = useDynamicDataStore()
-import countersBar from "../components/countersBar.vue"
-import miscBox from "../components/miscBox.vue"
-import machineBox from "../components/machineBox.vue"
-import alarmBar from "../components/alarmBar.vue"
+import countersBar from "../components/machine/countersBar.vue"
+import miscBox from "../components/machine/miscBox.vue"
+import machineBox from "../components/machine/machineBox.vue"
+import alarmBar from "../components/machine/alarmBar.vue"
 
 
 onMounted(() => {

@@ -8,9 +8,21 @@ const route = computed(() => {
 
   let arr = router.currentRoute.value.fullPath.split("/")
   arr.shift()
+  arr[0] == "" ? arr.shift() : ""
   return arr
 
 })
+
+function changeRoute(index, name) {
+  switch (index) {
+    case 0:
+      router.push("/" + name)
+      break;
+    case -1:
+      router.push("/")
+      break;
+  }
+}
 
 </script>
 
@@ -18,10 +30,10 @@ const route = computed(() => {
 <template>
   <header>
     <nav>
-      <p><i class="bi bi-house"></i></p>
-      <div  v-if="route.length > 1" v-for="el in route" :key="el.index">
+      <p @click="changeRoute(-1, 'home')"><i class="bi bi-house"></i></p>
+      <div v-if="route.length > 0" v-for="(el, index) in route" :key="index" >
         <i class="bi bi-arrow-right"></i>
-        <p>{{ el.toUpperCase() }}</p>
+        <p :class="index == (route.length - 1) ? 'active-route' : ''" @click="changeRoute(index, el)">{{ el.toUpperCase() }}</p>
       </div>
     </nav>
   </header>
@@ -55,11 +67,17 @@ nav p {
   padding: 4px 10px;
   border-radius: 20px;
   margin: 0 10px;
+  cursor: pointer;
 }
 
-nav > div{
+nav>div {
   display: flex;
   align-items: center;
+}
+
+.active-route {
+  background: var(--theme-color-2);
+  color: white;
 }
 
 main {

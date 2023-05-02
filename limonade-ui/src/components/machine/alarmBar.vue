@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from "vue"
-import { useAlarmStore } from '@/stores/alarmStore'
+import { useAlarmStore } from '@/stores/machine/alarmStore'
 import alarmBoxDetailed from "./subcomponents/alarmBoxDetailed.vue"
 
 

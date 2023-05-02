@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from "vue"
-import { useMachineDataStore } from '@/stores/machineData'
+import { useMachineDataStore } from '@/stores/machine/machineData'
 
 const machineStore = useMachineDataStore()
 
@@ -80,4 +80,3 @@ onMounted(() => {
         <pv-chart type="bar" :data="data" :options="config"></pv-chart>
     </section>
 </template>
-<style scoped></style>

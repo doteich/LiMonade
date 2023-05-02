@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted } from "vue"
-import { useMiscStore } from "@/stores/miscStore"
+import { useMiscStore } from "@/stores/machine/miscStore"
 const miscStore = useMiscStore()
 
 function setOrderData() {

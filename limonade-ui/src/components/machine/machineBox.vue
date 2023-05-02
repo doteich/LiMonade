@@ -1,5 +1,5 @@
 <script setup>
-import { useDynamicDataStore } from '@/stores/dynamicStore'
+import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
 import stateChart from "./subcomponents/stateChart.vue"
 import alarmBox from "./subcomponents/alarmBox.vue"
 import stateBox from "./subcomponents/stateBox.vue"
