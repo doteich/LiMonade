@@ -1,8 +1,12 @@
 <script setup>
+import { onMounted } from "vue"
 import Timeline from 'primevue/timeline';
 import { useLineDataStore } from "@/stores/line/lineData"
 const store = useLineDataStore()
 
+onMounted(()=>{
+    store.startSockets()
+})
 
 </script>
 
