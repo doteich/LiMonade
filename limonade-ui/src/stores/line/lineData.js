@@ -94,6 +94,16 @@ export const useLineDataStore = defineStore("lineData", {
                 }
             }
             return machines
+        },
+        getMachineAreas(state) {
+            let arr = []
+            for (let group of state.lineDefinition) {
+                arr.push(group.machines.length)
+            }
+            let sum = arr.reduce((a, c) => a + c, 0)
+            let ratArr = []
+            arr.forEach(num => ratArr.push(num / sum))
+            return ratArr
         }
     },
     actions: {
