@@ -5,7 +5,7 @@ const sockets = []
 export const useLineDataStore = defineStore("lineData", {
     state: () => ({
         lineDefinition: [{
-                name: "group1",
+                name: "Packaging",
                 socket: "ws://localhost:8080/ws",
                 machines: [{
                         name: "Machine 1",
@@ -54,7 +54,7 @@ export const useLineDataStore = defineStore("lineData", {
                 ]
             },
             {
-                name: "group2",
+                name: "Palettizing",
                 socket: "ws://localhost:8081/ws",
                 machines: [{
                     name: "Machine 1",
@@ -78,7 +78,7 @@ export const useLineDataStore = defineStore("lineData", {
                         value: 0
                     }
                 ]
-            }
+            },
 
 
         ]
@@ -100,9 +100,16 @@ export const useLineDataStore = defineStore("lineData", {
             for (let group of state.lineDefinition) {
                 arr.push(group.machines.length)
             }
-            let sum = arr.reduce((a, c) => a + c, 0)
+            let sum = arr.reduce((accum, curVal) => accum + curVal, 0)
             let ratArr = []
-            arr.forEach(num => ratArr.push(num / sum))
+            arr.forEach((num, index) => {
+
+                ratArr.push({
+                    name: state.lineDefinition[index].name,
+                    ratio: num / sum
+                })
+
+            })
             return ratArr
         }
     },

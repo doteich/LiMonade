@@ -1,8 +1,17 @@
 <script setup>
 import { onMounted } from "vue"
+import { useRouter } from 'vue-router'
 import Timeline from 'primevue/timeline';
 import { useLineDataStore } from "@/stores/line/lineData"
+
 const store = useLineDataStore()
+const router = useRouter();
+
+function switchRoute(name) {
+    router.push(router.currentRoute.value.fullPath + "/" +name)
+    
+}
+
 </script>
 
 <template>
@@ -11,7 +20,7 @@ const store = useLineDataStore()
         <div class="timeline-container">
             <Timeline :value="store.getMachines" layout="horizontal">
                 <template #marker="slotProps">
-                    <div class="machine-container">
+                    <div class="machine-container" @click="switchRoute(slotProps.item.name)">
                         <p class="machine-state"><span class="status-num">{{ slotProps.item.state }}</span><span
                                 class="status-string">Productive</span></p>
                         <img src="../../assets/packing-machine-svgrepo-com.svg">
@@ -55,6 +64,7 @@ const store = useLineDataStore()
 }
 
 .machine-container {
+    cursor: pointer;
     min-width: 16vmin;
     border-radius: 2px;
     padding: 0;
