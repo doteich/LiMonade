@@ -17,6 +17,7 @@ type ChartData struct {
 
 func GetDataByNodeName(w http.ResponseWriter, r *http.Request) {
 
+	collection := r.URL.Query().Get("collection")
 	startString := r.URL.Query().Get("start")
 	endString := r.URL.Query().Get("end")
 	nodeName := r.URL.Query().Get("nodeName")
@@ -30,6 +31,12 @@ func GetDataByNodeName(w http.ResponseWriter, r *http.Request) {
 
 	tsStart, err0 := time.Parse(time.RFC3339, startString)
 
+	if collection == "" {
+		logging.LogError(errors.New("missing collection param in query"), "Missing Param Collection", "GetDataDuration")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Parameter Collection not provided"))
+		return
+	}
 	if err0 != nil {
 		logging.LogError(err0, "Error parsing start timestamp", "GetDataByNodeName")
 		w.WriteHeader(http.StatusBadRequest)
@@ -60,7 +67,7 @@ func GetDataByNodeName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := mongodb.NewMDBHandler.QueryByNodeName(nodeName, tsStart, tsEnd)
+	res := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, tsStart, tsEnd)
 
 	var payload []byte
 	var mErr error

@@ -58,8 +58,8 @@ func InitMongoDB(password string) {
 
 }
 
-func (mh *MongoHandler) QueryByNodeName(nodeName string, tsStart time.Time, tsEnd time.Time) []TimeSeriesData {
-	coll := mh.client.Database(mh.database).Collection("lms_packaging")
+func (mh *MongoHandler) QueryByNodeName(collection string, nodeName string, tsStart time.Time, tsEnd time.Time) []TimeSeriesData {
+	coll := mh.client.Database(mh.database).Collection(collection)
 	filter := bson.D{
 		{"meta.nodeName", nodeName},
 		{"ts",
@@ -83,8 +83,8 @@ func (mh *MongoHandler) QueryByNodeName(nodeName string, tsStart time.Time, tsEn
 	return res
 }
 
-func (mh *MongoHandler) FindTopResults(nodeName string) []TimeSeriesData {
-	coll := mh.client.Database(mh.database).Collection("lms_packaging")
+func (mh *MongoHandler) FindTopResults(collection string, nodeName string) []TimeSeriesData {
+	coll := mh.client.Database(mh.database).Collection(collection)
 	filter := bson.D{
 		{"meta.nodeName", nodeName},
 	}

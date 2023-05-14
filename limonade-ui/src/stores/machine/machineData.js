@@ -1,7 +1,11 @@
 import { defineStore } from 'pinia'
+import { useGlobalVars } from "./globalVars"
+
 import axios from "axios"
 
-const resturl = "http://localhost:3000"
+//const resturl = "http://localhost:3000"
+
+
 
 export const useMachineDataStore = defineStore("machineData", {
     state: () => ({
@@ -46,6 +50,8 @@ export const useMachineDataStore = defineStore("machineData", {
         async fetchMachineData(nodeName, start, end) {
             try {
 
+                const globalVarStore = useGlobalVars()
+
                 if (!start) {
                     start = new Date()
                     start.setHours(start.getHours() - 24)
@@ -59,20 +65,25 @@ export const useMachineDataStore = defineStore("machineData", {
 
 
                 const params = new URLSearchParams();
+                params.append("collection", globalVarStore.getGlobalVars.mongodbCollection)
                 params.append("nodeName", nodeName)
                 params.append("start", start)
                 params.append("end", end)
 
-                let res = await axios.get(`${resturl}/duration`, { params })
+                let res = await axios.get(`${globalVarStore.getGlobalVars.restURL}/duration`, { params })
 
                 let stateData
                 let entry
 
-                res.data.forEach((el) => {
-                    stateData = this.datasets.filter(entry => entry.code == el.value)
-                    entry = { x: [new Date(el.start), new Date(el.end)], y: "Status" }
-                    stateData[0].data.push(entry)
-                })
+
+                if (res.data) {
+                    res.data.forEach((el) => {
+                        stateData = this.datasets.filter(entry => entry.code == el.value)
+                        entry = { x: [new Date(el.start), new Date(el.end)], y: "Status" }
+                        stateData[0].data.push(entry)
+                    })
+                }
+
 
             } catch (err) {
                 console.log(err)

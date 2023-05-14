@@ -19,10 +19,19 @@ type DurationData struct {
 }
 
 func GetDataDuration(w http.ResponseWriter, r *http.Request) {
+
+	collection := r.URL.Query().Get("collection")
 	startString := r.URL.Query().Get("start")
 	endString := r.URL.Query().Get("end")
 	nodeName := r.URL.Query().Get("nodeName")
 	orderBy := r.URL.Query().Get("orderBy")
+
+	if collection == "" {
+		logging.LogError(errors.New("missing collection param in query"), "Missing Param Collection", "GetDataDuration")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Parameter Collection not provided"))
+		return
+	}
 
 	tsStart, err0 := time.Parse(time.RFC3339, startString)
 
@@ -56,7 +65,7 @@ func GetDataDuration(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := mongodb.NewMDBHandler.QueryByNodeName(nodeName, tsStart, tsEnd)
+	res := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, tsStart, tsEnd)
 	bytes, err := calcDuration(res, orderBy)
 
 	if err != nil {

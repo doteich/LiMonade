@@ -19,6 +19,9 @@ onMounted(() => {
             <div class="data-container" v-for="group in store.getMachineAreas" :key="group.ratio"
                 :style="{ width: group.ratio * 100 + '%' }">
                 <h2>Dynamic - {{ group.name }}</h2>
+                <div v-for="tag in store.getDynamicData(group.name)" :key="tag.name">
+                    <p>{{ tag }}</p>
+                </div>
             </div>
         </section>
 
@@ -69,7 +72,4 @@ onMounted(() => {
     align-content: center;
     justify-content: center;
 }
-
-
-
 </style>

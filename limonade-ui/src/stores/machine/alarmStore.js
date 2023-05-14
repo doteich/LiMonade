@@ -1,7 +1,10 @@
 import { defineStore } from 'pinia'
+import { useGlobalVars } from "./globalVars"
 import axios from "axios"
 
-const resturl = "http://localhost:3000"
+//const resturl = "http://localhost:3000"
+
+
 
 export const useAlarmStore = defineStore("alarmStore", {
     state: () => ({
@@ -16,6 +19,9 @@ export const useAlarmStore = defineStore("alarmStore", {
         async fetchAlarms(nodeName, start, end) {
             try {
 
+                const globalVarStore = useGlobalVars()
+
+
                 if (!start) {
                     start = new Date()
                     start.setHours(start.getHours() - 24)
@@ -27,12 +33,13 @@ export const useAlarmStore = defineStore("alarmStore", {
                 }
 
                 const params = new URLSearchParams();
+                params.append("collection", globalVarStore.getGlobalVars.mongodbCollection)
                 params.append("nodeName", nodeName)
                 params.append("start", start)
                 params.append("end", end)
                 params.append("orderBy", "desc")
 
-                let res = await axios.get(`${resturl}/duration`, { params })
+                let res = await axios.get(`${globalVarStore.getGlobalVars.restURL}/duration`, { params })
                 this.alarms = []
                 if (res.data.length < 1) {
                     return

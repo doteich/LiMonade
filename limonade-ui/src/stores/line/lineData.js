@@ -111,15 +111,24 @@ export const useLineDataStore = defineStore("lineData", {
 
             })
             return ratArr
+        },
+        getDynamicData(state) {
+            return (group) => state.lineDefinition.find((g) => group === g.name).dynamicData
         }
+
     },
     actions: {
         startSockets() {
-            let socket
+
             this.lineDefinition.forEach((group, idx) => {
+                let socket
                 socket = new WebSocket(group.socket)
                 socket.addEventListener('open', () => {
-                    console.log("Websocket opened for group: " + group.name)
+                    console.log("Socket opened for machine group: " + idx)
+                    let payload = {
+                        "operation": "bulk_read"
+                    }
+                    socket.send(JSON.stringify(payload))
 
                 })
                 socket.addEventListener("message", (event) => {

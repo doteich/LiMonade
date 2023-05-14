@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
-import axios from "axios"
+import { useGlobalVars } from "./globalVars"
 
-const websocket = "ws://localhost:8080/"
 var socket
 
 export const useDynamicDataStore = defineStore("dynamicData", {
@@ -86,7 +85,11 @@ export const useDynamicDataStore = defineStore("dynamicData", {
     },
     actions: {
         startWS() {
-            socket = new WebSocket(`${websocket}ws`)
+
+            const globalVarStore = useGlobalVars()
+
+
+            socket = new WebSocket(`${globalVarStore.getGlobalVars.websocket}ws`)
 
             socket.addEventListener('open', () => {
                 let payload = JSON.stringify({
@@ -112,6 +115,9 @@ export const useDynamicDataStore = defineStore("dynamicData", {
 
             })
 
+            socket.addEventListener("error", (event) => {
+                console.log(event)
+            })
 
         },
 

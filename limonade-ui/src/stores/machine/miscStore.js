@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
+import { useGlobalVars } from "./globalVars"
+
 import axios from "axios"
 
-const resturl = "http://localhost:3000"
+//const resturl = "http://localhost:3000"
 
 export const useMiscStore = defineStore("miscData", {
     state: () => ({
@@ -147,6 +149,8 @@ export const useMiscStore = defineStore("miscData", {
         async fetchChartData(nodeName, start, end) {
             try {
 
+                const globalVarStore = useGlobalVars()
+
                 if (!start) {
                     start = new Date()
                     start.setHours(start.getHours() - 1)
@@ -160,12 +164,13 @@ export const useMiscStore = defineStore("miscData", {
 
 
                 const params = new URLSearchParams();
+                params.append("collection", globalVarStore.getGlobalVars.mongodbCollection)
                 params.append("nodeName", nodeName)
                 params.append("start", start)
                 params.append("end", end)
                 params.append("chartData", "true")
 
-                let res = await axios.get(`${resturl}/timeseries`, { params })
+                let res = await axios.get(`${globalVarStore.getGlobalVars.restURL}/timeseries`, { params })
 
                 this.chartData.dataset.labels = res.data.labels
                 this.chartData.dataset.data = res.data.data
@@ -190,9 +195,12 @@ export const useMiscStore = defineStore("miscData", {
 
         async fetchNodeData(node) {
             try {
+                const globalVarStore = useGlobalVars()
+
                 let params = new URLSearchParams()
+                params.append("collection", globalVarStore.getGlobalVars.mongodbCollection)
                 params.append("nodeName", node)
-                let res = await axios.get(`${resturl}/last`, { params })
+                let res = await axios.get(`${globalVarStore.getGlobalVars.restURL}/last`, { params })
                 let el = this.orderData.filter((obj) => obj.nodeName == node)
                 el[0].value = res.data[0].Value
                 el[0].timestamp = new Date(res.data[0].ts)
