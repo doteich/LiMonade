@@ -45,6 +45,16 @@ export const useMachineDataStore = defineStore("machineData", {
     }),
     getters: {
         getDatasets: (state) => state.datasets,
+        getProductiveTime(state) {
+            let curDate = new Date()
+            let passedTime = curDate.getHours() * 24 + curDate.getMinutes()
+            let prodTime = ((state.datasets.filter(obj => obj.label == "Prod")[0].data.map(el => el.duration)).reduce((acc, cur) => acc + cur, 0)) / 60
+            return {
+                passedTime,
+                prodTime
+            }
+
+        }
     },
     actions: {
         async fetchMachineData(nodeName, start, end) {
@@ -79,7 +89,7 @@ export const useMachineDataStore = defineStore("machineData", {
                 if (res.data) {
                     res.data.forEach((el) => {
                         stateData = this.datasets.filter(entry => entry.code == el.value)
-                        entry = { x: [new Date(el.start), new Date(el.end)], y: "Status" }
+                        entry = { x: [new Date(el.start), new Date(el.end)], y: "Status", duration: el.duration }
                         stateData[0].data.push(entry)
                     })
                 }

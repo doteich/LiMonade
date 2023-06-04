@@ -3,6 +3,8 @@ import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
 import stateChart from "./subcomponents/stateChart.vue"
 import alarmBox from "./subcomponents/alarmBox.vue"
 import stateBox from "./subcomponents/stateBox.vue"
+import productivityCockpitChart from "../machine/subcomponents/productivityCockpitChart.vue"
+
 import { computed } from "vue"
 
 const dynamicStore = useDynamicDataStore()
@@ -49,6 +51,7 @@ const machineState = computed(() => {
             <alarmBox :code="dynamicStore.getAlarm[0].value" text="ALARMTEXT"></alarmBox>
         </div>
         <stateChart></stateChart>
+        <productivityCockpitChart></productivityCockpitChart>
     </section>
 </template>
 <style scoped>
