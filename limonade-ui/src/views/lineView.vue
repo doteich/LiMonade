@@ -1,75 +1,68 @@
 <script setup>
 import { onMounted } from "vue"
-import Timeline from 'primevue/timeline';
 import { useLineDataStore } from "@/stores/line/lineData"
 import lineVisu from "../components/line/visu.vue"
+import progressBox from "../components/line/progressBox.vue"
+import staticData from "../components/line/staticData.vue"
+
+import dynamicData from "../components/line/dynamicData.vue"
 
 const store = useLineDataStore()
 
 onMounted(() => {
     store.startSockets()
+    store.fetchStaticData()
 })
 
 </script>
 
 <template >
     <div class="line-view">
-        <lineVisu class=".line-visu"></lineVisu>
-        <section class="line-dynamic">
-            <div class="data-container" v-for="group in store.getMachineAreas" :key="group.ratio"
-                :style="{ width: group.ratio * 100 + '%' }">
-                <h2>Dynamic - {{ group.name }}</h2>
-                <div v-for="tag in store.getDynamicData(group.name)" :key="tag.name">
-                    <p>{{ tag }}</p>
-                </div>
-            </div>
-        </section>
+        <lineVisu class="line-visu"></lineVisu>
+        <progressBox class="line-section test3"></progressBox>
 
-        <section class="line-static">
-            <div class="data-container" v-for="group in store.getMachineAreas" :key="group"
-                :style="{ width: group.ratio * 100 + '%' }">
-                <h2>Static - {{ group.name }}</h2>
-            </div>
-        </section>
+        <dynamicData class="line-section test2"></dynamicData>
+        <staticData class="line-section test"></staticData>
 
     </div>
 </template>
 
-<style scoped>
+<style>
 .line-view {
     display: grid;
     height: 94.5vh;
     min-width: 100%;
     grid-template-areas:
         "line"
+        "progress"
         "dynamic"
         "static";
-    grid-template-rows: 40% 30% 30%;
+    grid-template-rows: 38% 17% 20% 25%;
 }
 
 
-.line-view>.line-visu {
+.line-visu {
     grid-area: line;
 }
 
-.line-view>.line-dynamic {
-    grid-area: dynamic;
-    display: flex;
-    align-content: center;
-    justify-content: center;
-}
-
-.data-container {
-    margin: 5px 0 0 5px;
-    background: var(--font-color-1);
-    border-radius: 3px;
-    height: 100%
-}
-
-.line-view>.line-static {
+.test{
     grid-area: static;
-    display: flex;
-    align-content: center;
-    justify-content: center;
 }
+.test2{
+    grid-area: dynamic
+}
+.test3{
+    grid-area: progress
+}
+
+.line-section {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    align-items: flex-start;
+    border-radius: 3px;
+    margin: 0 0 0 5px ; 
+}
+
+
 </style>

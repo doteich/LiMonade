@@ -52,7 +52,7 @@ function switchRoute(name) {
 }
 
 .timeline-container {
-    padding: 20px;
+    padding: 0px 10px;
 }
 
 .p-timeline-event-connector {
@@ -60,7 +60,8 @@ function switchRoute(name) {
 }
 
 .p-timeline-event-opposite {
-    flex: 0 !important
+    flex: 0 !important;
+    padding: 10px !important;
 }
 
 .machine-container {

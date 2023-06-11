@@ -51,7 +51,9 @@ const machineState = computed(() => {
             <alarmBox :code="dynamicStore.getAlarm[0].value" text="ALARMTEXT"></alarmBox>
         </div>
         <stateChart></stateChart>
-        <productivityCockpitChart></productivityCockpitChart>
+        <div class="indicators">
+            <productivityCockpitChart></productivityCockpitChart>
+        </div>
     </section>
 </template>
 <style scoped>
@@ -78,7 +80,7 @@ const machineState = computed(() => {
     justify-content: center;
 }
 
-.machine-layout > img{
+.machine-layout>img {
     height: 100%;
 
 }
@@ -92,4 +94,9 @@ const machineState = computed(() => {
     border-radius: 1px;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
+
+.indicators{
+    padding: 1%;
+}
+
 </style>

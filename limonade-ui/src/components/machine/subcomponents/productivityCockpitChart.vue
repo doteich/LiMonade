@@ -18,36 +18,52 @@ let chartData = computed(() => {
 
 
 const config = {
-    rotation: -105,
-    circumference: 210,
-    cutout: "90%"
+    rotation: -90,
+    circumference: 180,
+    cutout: "80%",
+    maintainAspectRatio: false,
 }
 
 </script>
 
 <template>
-    <div class="cockpit-chart">
-        <pv-chart type="doughnut" :data="chartData" :options="config"></pv-chart>
-        <h4>Productiv Time</h4>
-    </div>
+    <div class="productivity-indicator">
+        <h4>Productive Time</h4>
+        
+            
+            <pv-chart type="doughnut" :data="chartData" :options="config"></pv-chart>
+            <p>{{ (store.getProductiveTime.prodTime / (store.getProductiveTime.passedTime - store.getProductiveTime.prodTime)).toFixed(2) *100}} %</p>
+    
+    </div> 
 </template>
 
 <style scoped>
-.cockpit-chart {
+.productivity-indicator {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    margin: 5%;
-    height: 100%;
     align-items: center;
-    align-content: center;
+    width: 40%;
+    margin: 1%;
+    height: 15vh;
     justify-content: center;
     border: 1px solid var(--border-color-1);
     border-radius: 1px;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
 
-.cockpit-chart h4 {
-    color: var(--theme-color-2)
+.productivity-indicator h4 {
+    color: var(--theme-color-2);
+    width: 90%;
+    border-bottom: 1px solid var(--border-color-1);
+    padding: 1px;
+    margin: 10px;
+}
+
+.productivity-indicator >div {
+    height: 8vh;
+}
+
+p {
+   font-weight: bold;
 }
 </style>
