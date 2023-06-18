@@ -10,6 +10,7 @@ import dynamicData from "../components/line/dynamicData.vue"
 const store = useLineDataStore()
 
 onMounted(() => {
+    store.fetchConfig()
     store.startSockets()
     store.fetchStaticData()
 })
@@ -37,7 +38,7 @@ onMounted(() => {
         "progress"
         "dynamic"
         "static";
-    grid-template-rows: 38% 17% 20% 25%;
+    grid-template-rows: 36.5% 19% 19% 25%;
 }
 
 

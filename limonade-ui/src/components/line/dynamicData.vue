@@ -22,7 +22,7 @@ const store = useLineDataStore()
     align-content: center;
     justify-content: flex-start;
     flex-direction: column;
-    margin: 0px 5px 10px 0;
+    margin: 10px 5px 10px 0;
     height: 100%;
     background: var(--font-color-1);
 }
