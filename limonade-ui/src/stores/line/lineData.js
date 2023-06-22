@@ -305,11 +305,11 @@ export const useLineDataStore = defineStore("lineData", {
     },
     actions: {
 
-        async fetchConfig(){
+        async fetchConfig(lineName){
             try{
                 let params = new URLSearchParams()
                 params.append("configType", "line")
-                params.append("name", "line1")
+                params.append("name", lineName)
                 let res = await axios.get(`${this.restURL}/config`,{params})
                 this.lineDefinition = res.data
                 this.startSockets()

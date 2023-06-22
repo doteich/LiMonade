@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted } from "vue"
+import { useRoute } from 'vue-router';
 import { useLineDataStore } from "@/stores/line/lineData"
 import lineVisu from "../components/line/visu.vue"
 import progressBox from "../components/line/progressBox.vue"
@@ -10,9 +11,10 @@ import dynamicData from "../components/line/dynamicData.vue"
 const store = useLineDataStore()
 
 onMounted(() => {
-    store.fetchConfig()
-    store.startSockets()
-    store.fetchStaticData()
+    let route = useRoute().fullPath.replace("/","")
+    store.fetchConfig(route)
+    // store.startSockets()
+    // store.fetchStaticData()
 })
 
 </script>

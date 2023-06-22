@@ -7,7 +7,7 @@
         "machines": [
             {
                 "name": "Machine 1",
-                "img":"http://127.0.0.1:3000/etc/machine.svg",
+                "img":"http://127.0.0.1:3000/etc/congrats.jpg",
                 "stateNode": "State",
                 "state": 0,
                 "alarmNode": "Alarm",
@@ -15,7 +15,7 @@
             },
             {
                 "name": "Machine 2",
-                "img":"http://127.0.0.1:3000/etc/machine.svg",
+                "img":"http://127.0.0.1:3000/etc/64.jpg",
                 "stateNode": "State_Machine2",
                 "state": 0,
                 "alarmNode": "Alarm_Machine2",
@@ -144,7 +144,7 @@
         "machines": [
             {
                 "name": "Machine 1",
-                "img":"http://127.0.0.1:3000/etc/machine.svg",
+                "img":"http://127.0.0.1:3000/etc/49.jpg",
                 "stateNode": "State",
                 "state": 0,
                 "alarmNode": "Alarm",

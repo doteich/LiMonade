@@ -38,6 +38,8 @@ func main() {
 	router.Get("/duration", controller.GetDataDuration)
 	router.Get("/last", controller.GetLastEntry)
 	router.Get("/config", controller.FetchConfig)
+	fs := http.FileServer(http.Dir("/etc/"))
+	router.Handle("/etc/*", http.StripPrefix("/etc/", fs))
 
 	http.ListenAndServe("127.0.0.1:3000", router)
 

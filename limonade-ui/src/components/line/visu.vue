@@ -8,8 +8,8 @@ const store = useLineDataStore()
 const router = useRouter();
 
 function switchRoute(name) {
-    router.push(router.currentRoute.value.fullPath + "/" +name)
-    
+    router.push(router.currentRoute.value.fullPath + "/" + name)
+
 }
 
 </script>
@@ -23,7 +23,10 @@ function switchRoute(name) {
                     <div class="machine-container" @click="switchRoute(slotProps.item.name)">
                         <p class="machine-state"><span class="status-num">{{ slotProps.item.state }}</span><span
                                 class="status-string">Productive</span></p>
-                        <img src="../../assets/packing-machine-svgrepo-com.svg">
+                        <!-- <img src="../../assets/packing-machine-svgrepo-com.svg"> -->
+                        <div class="image-container">
+                            <img :src="slotProps.item.img">
+                        </div>
                         <p class="machine-name">{{ slotProps.item.name }}</p>
                     </div>
                 </template>
@@ -64,10 +67,23 @@ function switchRoute(name) {
     padding: 10px !important;
 }
 
+.image-container {
+    height: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container img{
+    width: 95%;
+    height: 95%;
+}
+
 .machine-container {
     cursor: pointer;
-    min-width: 16vmin;
+    min-width: 13vw;
     border-radius: 2px;
+    height: 22vh;
     padding: 0;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
@@ -75,8 +91,8 @@ function switchRoute(name) {
 .machine-name {
     padding: 5px;
     border-top: 1px solid var(--border-color-1);
-    border-bottom: 1px solid var(--border-color-1);
-    margin: 0;
+    margin-top: auto;
+    height: 15%;
     color: var(--theme-color-2);
     font-weight: bolder;
     text-align: center;
@@ -88,6 +104,7 @@ function switchRoute(name) {
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
     margin: 0;
     display: flex;
+    height: 15%;
 
 }
 
@@ -108,13 +125,13 @@ function switchRoute(name) {
     width: 16vmin;
 }
 
-.alarm >p{
+.alarm>p {
     padding: 2px
 }
 
-.alarm-num{
+.alarm-num {
     background: crimson;
-    color:white;
+    color: white;
     padding: 5px 10px;
     display: flex;
     flex-direction: column;
@@ -122,11 +139,11 @@ function switchRoute(name) {
     font-weight: bold;
 }
 
-.alarm-num >p{
+.alarm-num>p {
     margin: 0;
 }
-.alarm-num >i {
+
+.alarm-num>i {
     font-size: 20px;
 }
-
 </style>
