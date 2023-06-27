@@ -38,6 +38,7 @@ func main() {
 	router.Get("/duration", controller.GetDataDuration)
 	router.Get("/last", controller.GetLastEntry)
 	router.Get("/config", controller.FetchConfig)
+	router.Get("/config/alarm", controller.FetchAlarm)
 	fs := http.FileServer(http.Dir("/etc/"))
 	router.Handle("/etc/*", http.StripPrefix("/etc/", fs))
 

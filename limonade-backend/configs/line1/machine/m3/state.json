@@ -1,0 +1,22 @@
+[
+    {
+        "id": 0,
+        "name": "Offline",
+        "scheme": "neutral"
+    },
+    {
+        "id": 1,
+        "name": "Productive",
+        "scheme": "good"
+    },
+    {
+        "id": 2,
+        "name": "Alarm",
+        "scheme": "bad"
+    },
+    {
+        "id": 3,
+        "name": "Error",
+        "scheme": "critical"
+    }
+]

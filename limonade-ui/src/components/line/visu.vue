@@ -1,5 +1,7 @@
 <script setup>
-import { onMounted } from "vue"
+import { ref, watch, onMounted, reactive } from "vue"
+import { storeToRefs } from 'pinia'
+
 import { useRouter } from 'vue-router'
 import Timeline from 'primevue/timeline';
 import { useLineDataStore } from "@/stores/line/lineData"
@@ -7,10 +9,16 @@ import { useLineDataStore } from "@/stores/line/lineData"
 const store = useLineDataStore()
 const router = useRouter();
 
+const { getMachines } = storeToRefs(store)
+
 function switchRoute(name) {
     router.push(router.currentRoute.value.fullPath + "/" + name)
 
 }
+
+
+
+
 
 </script>
 
@@ -36,7 +44,7 @@ function switchRoute(name) {
                             <i class="bi bi-exclamation-diamond"></i>
                             <p>{{ slotProps.item.alarm }}</p>
                         </div>
-                        <p>NO ALARM</p>
+                        <p>TES</p>
                     </div>
                 </template>
             </Timeline>
@@ -74,7 +82,7 @@ function switchRoute(name) {
     justify-content: center;
 }
 
-.image-container img{
+.image-container img {
     width: 95%;
     height: 95%;
 }

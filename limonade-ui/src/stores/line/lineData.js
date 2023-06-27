@@ -234,6 +234,7 @@ export const useLineDataStore = defineStore("lineData", {
             let machines = []
             for (let group of state.lineDefinition) {
                 for (let machine of group.machines) {
+                 
                     machine.state = group.dynamicData.filter(el => el.name == machine.stateNode)[0].value
                     machine.alarm = group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value
                     machines.push(machine)
@@ -305,6 +306,8 @@ export const useLineDataStore = defineStore("lineData", {
     },
     actions: {
 
+
+
         async fetchConfig(lineName){
             try{
                 let params = new URLSearchParams()
@@ -342,7 +345,14 @@ export const useLineDataStore = defineStore("lineData", {
                         el.nodeId == json.nodeid
                     )
                     if (tag) {
+                    
                         tag.value = json.value
+
+                        if (tag.type == "alarm" && json.value > 0){
+                            this.setAlarmFromWS(idx,tag.name)
+                        }
+
+
                     }
 
 
@@ -350,12 +360,18 @@ export const useLineDataStore = defineStore("lineData", {
                 sockets.push(socket)
             })
         },
+
+        async setAlarmFromWS(idx, name){
+            let aDesc = await this.fetchAlarmDescription("line1", "m1", 1000)
+            let tag = this.lineDefinition[idx]
+            console.log(tag)
+        },
+
         fetchStaticData() {
 
             this.lineDefinition.forEach((line) => {
                 line.staticData.forEach(async (node, index, source) => {
 
-                    console.log(index + " " + source.length)
                     if (index === source.length - 1) {
                         let finish = await this.fetchNodeData(line.name, line.database, node.nodeName, true)
                         line.isLoaded = finish
@@ -368,7 +384,6 @@ export const useLineDataStore = defineStore("lineData", {
 
 
         },
-
 
         async fetchNodeData(group, db, node, isLast) {
             try {
@@ -385,6 +400,26 @@ export const useLineDataStore = defineStore("lineData", {
                     return false
                 }
             } catch (err) {
+                console.log(err)
+            }
+        },
+        async fetchAlarmDescription(line, mId, aId){
+            try{
+
+            
+            let params = new URLSearchParams()
+            params.append("line", line)
+            params.append("machineId", mId)
+            params.append("alarmId", aId)
+
+            let res = await axios.get(`${this.restURL}/config/alarm`, { params })
+            
+            console.log(res.data)
+            return res.data
+
+            
+            }
+            catch(err){
                 console.log(err)
             }
         }
