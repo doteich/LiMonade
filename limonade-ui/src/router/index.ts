@@ -5,31 +5,34 @@ import lineView from "../views/lineView.vue"
 
 
 const router = createRouter({
- history: createWebHistory(import.meta.env.BASE_URL),
- routes: [
-   {
-     path: '/',
-     name: 'home',
-    component: homeView
-   },
-   {
-    path: '/',
-    name: 'home',
-   component: homeView
-  },
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: homeView
+    },
+    {
+      path: '/',
+      name: 'home',
+      component: homeView,
+      meta: { type: "home" }
+    },
 
-  {
-    path: '/:line',
-    name: 'line',
-   component: lineView
-  },
-  {
-    path: '/:line/:machine',
-    name: 'machineView',
-   component: machineView
-  },
+    {
+      path: '/:line',
+      name: 'line',
+      component: lineView,
+      meta: { type: "line" }
+    },
+    {
+      path: '/:line/:machine',
+      name: 'machineView',
+      component: machineView,
+      meta: { type: "machine" }
+    },
 
- ] 
+  ]
 })
 
 export default router

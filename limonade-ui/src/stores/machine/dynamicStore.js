@@ -85,12 +85,8 @@ export const useDynamicDataStore = defineStore("dynamicData", {
     },
     actions: {
         startWS() {
-
             const globalVarStore = useGlobalVars()
-
-
             socket = new WebSocket(`${globalVarStore.getGlobalVars.websocket}ws`)
-
             socket.addEventListener('open', () => {
                 let payload = JSON.stringify({
                     "operation": "bulk_read"

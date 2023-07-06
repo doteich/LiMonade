@@ -15,38 +15,64 @@ type Alarm struct {
 	Name string `json:"name"`
 }
 
+type State struct {
+	Id     int    `json:"id"`
+	Name   string `json:"name"`
+	Schema string `json:"schema"`
+}
+
 func FetchConfig(w http.ResponseWriter, r *http.Request) {
 
 	configType := r.URL.Query().Get("configType")
-	name := r.URL.Query().Get("name")
+	lineId := r.URL.Query().Get("lineId")
+	machineId := r.URL.Query().Get("machineId")
 
-	if configType == "" {
-		logging.LogError(errors.New("parameter config type not provided"), "aborting http request", "fetchConfig")
-		w.Write([]byte("Parameter configType not provided"))
+	if configType == "" || (configType != "machine" && configType != "line") {
+		logging.LogError(errors.New("parameter config type not provided or is not equal line or machine"), "aborting http request", "fetchConfig")
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Parameter configType not provided or is not equal to line or machine"))
 		return
 	}
 
-	if name == "" {
-		logging.LogError(errors.New("parameter name not provided"), "aborting http request", "fetchConfig")
-		w.Write([]byte("Parameter name not provided"))
+	if lineId == "" {
+		logging.LogError(errors.New("parameter lineId not provided"), "aborting http request", "fetchConfig")
 		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Parameter lineId not provided"))
 		return
 	}
 
 	var data []byte
 
 	if configType == "line" {
-		fileStr := "./configs/" + name + "/definition.json"
+		fileStr := fmt.Sprintf("./configs/%s/definition.json", lineId)
 
 		lineData, err := os.ReadFile(fileStr)
 
 		if err != nil {
 			logging.LogError(err, "error while reading line definition "+fileStr, "fetchConfig")
+			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
 		data = lineData
+	} else if configType == "machine" {
+		if machineId == "" {
+			logging.LogError(errors.New("parameter machineId not provided"), "aborting http request", "fetchConfig")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Parameter machineId is necessary for config type 'machine'"))
+			return
+		}
+		fileStr := fmt.Sprintf("./configs/%s/machine/%s/definition.json", lineId, machineId)
+		machineData, err := os.ReadFile(fileStr)
+
+		if err != nil {
+			logging.LogError(err, "error while reading machine definition "+fileStr, "fetchConfig")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		data = machineData
+
 	}
 
 	w.Write(data)
@@ -84,7 +110,7 @@ func FetchAlarm(w http.ResponseWriter, r *http.Request) {
 	byteArr, err := os.ReadFile(fileStr)
 
 	if err != nil {
-		logging.LogError(err, "error while reading alarm definition "+fileStr, "fetchAlarm")
+		logging.LogError(err, "failed to read contents from file "+fileStr, "fetchAlarm")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -101,7 +127,9 @@ func FetchAlarm(w http.ResponseWriter, r *http.Request) {
 	var response Alarm
 
 	if err := json.Unmarshal(byteArr, &alarmList); err != nil {
-		fmt.Println(err)
+		logging.LogError(err, "error unmarshalling json", "fetchAlarm")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	for _, el := range alarmList {
@@ -120,6 +148,80 @@ func FetchAlarm(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		logging.LogError(err, "error while marshalling response", "fetchAlarm")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(rArr)
+
+}
+
+func FetchState(w http.ResponseWriter, r *http.Request) {
+	line := r.URL.Query().Get("line")
+	machineId := r.URL.Query().Get("machineId")
+	stateId := r.URL.Query().Get("stateId")
+
+	if line == "" {
+		logging.LogError(errors.New("parameter line not provided"), "aborting http request", "fetchState")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Parameter line not provided"))
+		return
+	}
+
+	if machineId == "" {
+		logging.LogError(errors.New("parameter machineid not provided"), "aborting http request", "fetchState")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Parameter machineId not provided"))
+		return
+	}
+
+	if stateId == "" {
+		logging.LogError(errors.New("parameter stateid not provided"), "aborting http request", "fetchState")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Parameter stateId not provided"))
+		return
+	}
+
+	stateInt, err := strconv.ParseInt(stateId, 10, 0)
+
+	if err != nil {
+		logging.LogError(err, "failed to parse stateid to int", "fetchState")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	fileStr := fmt.Sprintf("./configs/%s/machine/%s/state.json", line, machineId)
+
+	byteArr, err := os.ReadFile(fileStr)
+
+	if err != nil {
+		logging.LogError(err, "failed to read contents from file "+fileStr, "fetchState")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var machineStates []State
+
+	if err := json.Unmarshal(byteArr, &machineStates); err != nil {
+		logging.LogError(err, "error unmarshalling json", "fetchAlarm")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var response State
+
+	for _, state := range machineStates {
+		if state.Id == int(stateInt) {
+			response = State{Id: state.Id, Name: state.Name, Schema: state.Schema}
+			break
+		}
+	}
+
+	rArr, err := json.Marshal(&response)
+
+	if err != nil {
+		logging.LogError(err, "failed to marshall response", "fetchState")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

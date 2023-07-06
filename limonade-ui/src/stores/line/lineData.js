@@ -3,238 +3,23 @@ import axios from "axios"
 
 
 const sockets = []
+const intervals = []
 
 export const useLineDataStore = defineStore("lineData", {
     state: () => (
         {
-        restURL: "http://localhost:3000",
-        lineDefinition:[],
-        backup: [{
-            name: "Packaging",
-            socket: "ws://localhost:8080/ws",
-            database: "lms_packaging",
-            isLoaded: false,
-            machines: [{
-                name: "Machine 1",
-                stateNode: "State",
-                state: 0,
-                alarmNode: "Alarm",
-                alarm: 0,
-            },
-            {
-                name: "Machine 2",
-                stateNode: "State_Machine2",
-                state: 0,
-                alarmNode: "Alarm_Machine2",
-                alarm: 0,
-            },
-            ],
-            dynamicData: [{
-                nodeId: "ns=2;s=Machines.Packaging.State.Alarm",
-                name: "Alarm",
-                unit: "",
-                type: "alarm",
-                value: 0,
-                show: false
-            },
-            {
-                nodeId: "ns=2;s=Machines.Packaging.State.Alarm_Machine2",
-                name: "Alarm_Machine2",
-                unit: "",
-                type: "alarm",
-                value: 0,
-                show: false,
-            },
-            {
-                nodeId: "ns=2;s=Machines.Packaging.State.State_Machine2",
-                name: "State_Machine2",
-                unit: "",
-                type: "state",
-                value: 0,
-                show: false,
-            }, {
-                nodeId: "ns=2;s=Machines.Packaging.State.State",
-                name: "State",
-                unit: "",
-                type: "state",
-                value: 0,
-                show: false
-            },
-            {
-                nodeId: "ns=2;s=Machines.Packaging.Counters.Bags",
-                name: "Bags",
-                unit: "",
-                type: "counter",
-                value: 0,
-                show: true
-            },
-            {
-                nodeId: "ns=2;s=Machines.Packaging.Counters.Trays",
-                name: "Trays",
-                unit: "",
-                type: "counter",
-                value: 0,
-                show: true
-            },
-            {
-                nodeId: "ns=2;s=Machines.Packaging.Counters.Labels",
-                name: "Labels",
-                unit: "",
-                type: "counter",
-                value: 0,
-                show: true
-            },
-            {
-                nodeId: "ns=2;s=Machines.Packaging.MachineData.MotorAmps",
-                name: "Motor Amps",
-                unit: "A",
-                type: "counter",
-                value: 0,
-                show: true
-            },
-            {
-                nodeId: "ns=2;s=Machines.Packaging.MachineData.MotorVoltage",
-                name: "Motor Voltage",
-                unit: "V",
-                type: "counter",
-                value: 0,
-                show: true
-            },
-            {
-                nodeId: "ns=2;s=Machines.Packaging.MachineData.MotorTemperature",
-                name: "Motor Temperature",
-                unit: "°C",
-                type: "counter",
-                value: 0,
-                show: true
-            },
+            restURL: "http://localhost:3000",
+            refreshInterval: 60,
+            name: "", 
+            lineDefinition: [],
 
-
-            ],
-            staticData: [{
-
-                displayName: "Current Order",
-                nodeName: "Order",
-                value: "",
-                timestamp: "",
-                showTS: true,
-
-            },
-            {
-
-                displayName: "Target Quantity",
-                nodeName: "Target Quantity",
-                value: "",
-                timestamp: "",
-                showTS: true,
-
-            },
-            {
-
-                displayName: "Bags",
-                nodeName: "Bags",
-                value: "",
-                timestamp: "",
-                showTS: true,
-
-            },
-            ],
-            progressConfig: {
-                tsIdKey: "Order",
-                counterIdKey: "Bags",
-                targetIdKey: "Target Quantity"
-            }
-        },
-        {
-            name: "Palettizing",
-            socket: "ws://localhost:8081/ws",
-            database: "lms_palettierung",
-            isLoaded: false,
-            machines: [{
-                name: "Machine 1",
-                stateNode: "State",
-                state: 0,
-                alarmNode: "Alarm",
-                alarm: 0,
-            },],
-            dynamicData: [{
-                nodeId: "ns=2;s=Machines.Palettierung.State.Alarm",
-                name: "Alarm",
-                unit: "",
-                type: "alarm",
-                value: 0,
-                show: false,
-            },
-            {
-                nodeId: "ns=2;s=Machines.Palettierung.State.State",
-                name: "State",
-                unit: "pcs",
-                type: "state",
-                value: 0,
-                show: false
-            },
-            {
-                nodeId: "ns=2;s=Machines.Palettierung.Counters.HU",
-                name: "HUs",
-                unit: "pcs",
-                type: "counter",
-                value: 0,
-                show: true
-            },
-            {
-                nodeId: "ns=2;s=Machines.Palettierung.Counters.Packages",
-                name: "Packages",
-                unit: "pcs",
-                type: "counter",
-                value: 0,
-                show: true
-            },
-            ],
-            staticData: [{
-
-                displayName: "Current Order",
-                nodeName: "Order",
-                value: "",
-                timestamp: "",
-                showTS: true,
-
-            },
-            {
-
-                displayName: "Packages",
-                nodeName: "Packages",
-                value: "",
-                timestamp: "",
-                showTS: true,
-
-            },
-            {
-
-                displayName: "Target Quantity",
-                nodeName: "Target Quantity",
-                value: "",
-                timestamp: "",
-                showTS: true,
-
-            },
-            ],
-            progressConfig: {
-                tsIdKey: "Order",
-                counterIdKey: "Packages",
-                targetIdKey: "Target Quantity"
-            }
-
-        },
-
-
-        ]
-    }),
+        }),
     getters: {
         getMachines(state) {
             let machines = []
             for (let group of state.lineDefinition) {
                 for (let machine of group.machines) {
-                 
+
                     machine.state = group.dynamicData.filter(el => el.name == machine.stateNode)[0].value
                     machine.alarm = group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value
                     machines.push(machine)
@@ -242,6 +27,33 @@ export const useLineDataStore = defineStore("lineData", {
             }
             return machines
         },
+        getAlarms(state) {
+            let alarms = []
+            for (let group of state.lineDefinition) {
+                for (let machine of group.machines) {
+                    let alarm = {
+                        mid: machine.id,
+                        aid: group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value,
+                    }
+                    alarms.push(alarm)
+                }
+            }
+            return alarms
+        },
+        getStates(state) {
+            let states = []
+            for (let group of state.lineDefinition) {
+                for (let machine of group.machines) {
+                    let state = {
+                        sid: group.dynamicData.filter(el => el.name == machine.stateNode)[0].value,
+                        mid: machine.id,
+                    }
+                    states.push(state)
+                }
+            }
+            return states
+        },
+
         getMachineAreas(state) {
             let arr = []
             for (let group of state.lineDefinition) {
@@ -266,7 +78,7 @@ export const useLineDataStore = defineStore("lineData", {
             return (group) => {
                 return state.lineDefinition.find(g => group == g.name).staticData.filter(obj => obj.show)
 
-                }
+            }
         },
         getProgressData(state) {
             return (group) => {
@@ -284,15 +96,15 @@ export const useLineDataStore = defineStore("lineData", {
                 let finishTS = new Date()
                 finishTS.setMinutes(finishTS.getMinutes() + finish)
 
- 
+
 
                 let obj = {
                     pace: pace.toFixed(2),
                     finish: finish.toFixed(2),
                     finishTS: finishTS.toLocaleString(),
-                    target, 
+                    target,
                     count: count.value,
-                    progress: ((Number(count.value)/Number(target))*100).toFixed(1)
+                    progress: ((Number(count.value) / Number(target)) * 100).toFixed(1)
                 }
 
                 return obj
@@ -300,30 +112,30 @@ export const useLineDataStore = defineStore("lineData", {
         },
         getLoadingState(state) {
             return (group) => state.lineDefinition.find(g => group == g.name).isLoaded
+        },
+        getLineName(state){
+            return state.name
         }
 
 
     },
     actions: {
-
-
-
-        async fetchConfig(lineName){
-            try{
+        async fetchConfig(lineName) {
+            try {
                 let params = new URLSearchParams()
                 params.append("configType", "line")
-                params.append("name", lineName)
-                let res = await axios.get(`${this.restURL}/config`,{params})
-                this.lineDefinition = res.data
+                params.append("lineId", lineName)
+                let res = await axios.get(`${this.restURL}/config`, { params })
+                this.lineDefinition = res.data.data
+                this.name = res.data.displayName
                 this.startSockets()
                 this.fetchStaticData()
+                this.intervalHandler()
 
-            }catch(err){
+            } catch (err) {
                 console.log(err)
             }
-        }, 
-        
-
+        },
         startSockets() {
 
             this.lineDefinition.forEach((group, idx) => {
@@ -345,26 +157,23 @@ export const useLineDataStore = defineStore("lineData", {
                         el.nodeId == json.nodeid
                     )
                     if (tag) {
-                    
                         tag.value = json.value
 
-                        if (tag.type == "alarm" && json.value > 0){
-                            this.setAlarmFromWS(idx,tag.name)
-                        }
-
-
                     }
-
-
                 })
                 sockets.push(socket)
             })
         },
 
-        async setAlarmFromWS(idx, name){
-            let aDesc = await this.fetchAlarmDescription("line1", "m1", 1000)
-            let tag = this.lineDefinition[idx]
-            console.log(tag)
+        intervalHandler() {
+            for (let int of intervals){
+                clearInterval(int)
+            }
+
+            let i = setInterval(() => {
+                this.fetchStaticData()
+            }, this.refreshInterval*1000)
+            intervals.push(i)
         },
 
         fetchStaticData() {
@@ -403,25 +212,50 @@ export const useLineDataStore = defineStore("lineData", {
                 console.log(err)
             }
         },
-        async fetchAlarmDescription(line, mId, aId){
-            try{
+        async fetchAlarmDescription(line, mId, aId) {
+            try {
 
-            
-            let params = new URLSearchParams()
-            params.append("line", line)
-            params.append("machineId", mId)
-            params.append("alarmId", aId)
+                let params = new URLSearchParams()
+                params.append("line", line)
+                params.append("machineId", mId)
+                params.append("alarmId", aId)
 
-            let res = await axios.get(`${this.restURL}/config/alarm`, { params })
-            
-            console.log(res.data)
-            return res.data
+                let res = await axios.get(`${this.restURL}/config/alarm`, { params })
 
-            
+                //console.log(res.data)
+                return res.data
+
+
             }
-            catch(err){
+            catch (err) {
+
+                console.log(err)
+
+            }
+        },
+        async fetchStateDescription(line, mId, sId) {
+            try {
+
+                let params = new URLSearchParams()
+                params.append("line", line)
+                params.append("machineId", mId)
+                params.append("stateId", sId)
+
+                let res = await axios.get(`${this.restURL}/config/state`, { params })
+
+                return res.data
+
+            }
+            catch (err) {
                 console.log(err)
             }
+        },
+        setRefreshInterval(value){
+            this.refreshInterval = value 
+            this.intervalHandler()
         }
+
+
+
     }
 })

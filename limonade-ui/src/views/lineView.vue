@@ -22,10 +22,10 @@ onMounted(() => {
 <template >
     <div class="line-view">
         <lineVisu class="line-visu"></lineVisu>
-        <progressBox class="line-section test3"></progressBox>
+        <progressBox class="line-section progress-sec"></progressBox>
 
-        <dynamicData class="line-section test2"></dynamicData>
-        <staticData class="line-section test"></staticData>
+        <dynamicData class="line-section dynamic-sec"></dynamicData>
+        <staticData class="line-section static-sec"></staticData>
 
     </div>
 </template>
@@ -48,13 +48,13 @@ onMounted(() => {
     grid-area: line;
 }
 
-.test{
+.static-sec{
     grid-area: static;
 }
-.test2{
+.dynamic-sec{
     grid-area: dynamic
 }
-.test3{
+.progress-sec{
     grid-area: progress
 }
 

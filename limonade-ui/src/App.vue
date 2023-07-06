@@ -1,41 +1,12 @@
 <script setup>
-import { useRouter } from 'vue-router'
-const router = useRouter();
-
-import { computed } from "vue"
-
-const route = computed(() => {
-
-  let arr = router.currentRoute.value.fullPath.split("/")
-  arr.shift()
-  arr[0] == "" ? arr.shift() : ""
-  return arr
-
-})
-
-function changeRoute(index, name) {
-  switch (index) {
-    case 0:
-      router.push("/" + name)
-      break;
-    case -1:
-      router.push("/")
-      break;
-  }
-}
+import navBar  from "./components/navBar.vue"
 
 </script>
 
 
 <template>
   <header>
-    <nav>
-      <p @click="changeRoute(-1, 'home')"><i class="bi bi-house"></i></p>
-      <div v-if="route.length > 0" v-for="(el, index) in route" :key="index" >
-        <i class="bi bi-arrow-right"></i>
-        <p :class="index == (route.length - 1) ? 'active-route' : ''" @click="changeRoute(index, el)">{{ el.toUpperCase() }}</p>
-      </div>
-    </nav>
+    <navBar></navBar>
   </header>
   <main>
     <router-view></router-view>
@@ -52,33 +23,6 @@ function changeRoute(index, name) {
 
 
 <style>
-nav {
-  display: flex;
-  align-items: center;
-  margin: 2px;
-}
-
-nav p {
-  margin: 0;
-  color: var(--theme-color-2);
-  font-weight: bold;
-  border: 1px solid var(--border-color-1);
-  border-radius: 2px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  margin: 0 10px;
-  cursor: pointer;
-}
-
-nav>div {
-  display: flex;
-  align-items: center;
-}
-
-.active-route {
-  background: var(--theme-color-2);
-  color: white;
-}
 
 main {
   height: 95vh;

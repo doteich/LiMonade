@@ -1,7 +1,7 @@
 <script setup>
-import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
+import { useCentralDataStore } from '@/stores/machine/centralDataStore'
 import singleCounter from "./subcomponents/singleCounter.vue"
-const store = useDynamicDataStore()
+const store = useCentralDataStore()
 
 
 </script>

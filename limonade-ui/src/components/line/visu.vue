@@ -1,21 +1,101 @@
 <script setup>
 import { ref, watch, onMounted, reactive } from "vue"
 import { storeToRefs } from 'pinia'
-
 import { useRouter } from 'vue-router'
-import Timeline from 'primevue/timeline';
+
 import { useLineDataStore } from "@/stores/line/lineData"
+
+
+import Timeline from 'primevue/timeline';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const store = useLineDataStore()
 const router = useRouter();
 
-const { getMachines } = storeToRefs(store)
+const { getAlarms, getStates } = storeToRefs(store)
+const line = router.currentRoute.value.fullPath.replace("/", "")
+
+let state = reactive({
+    alarms: [],
+    states: []
+})
+
 
 function switchRoute(name) {
     router.push(router.currentRoute.value.fullPath + "/" + name)
+}
+
+function getAlarmName(id, mid) {
+    if (state.alarms.length > 0) {
+        return state.alarms.filter(a => a.id == id && a.mid == mid).length > 0 ? state.alarms.filter(a => a.id == id && a.mid == mid)[0].name : ""
+
+    } else {
+        return "🔜"
+    }
+}
+
+function getStateName(id, mid) {
+    if (state.states.length > 0) {
+        return state.states.filter(a => a.id == id && a.mid == mid).length > 0 ? state.states.filter(a => a.id == id && a.mid == mid)[0].name : ""
+
+    } else {
+        return "🔜"
+    }
+}
+
+function getStateColor(id, mid) {
+
+    let s = state.states.filter(a => a.id === id && a.mid === mid)
+
+    if (s.length < 1) {
+        return 'var(--schema-neutral)'
+    }
+
+    switch (s[0].schema) {
+        case 'critical':
+            return 'var(--schema-critical)'
+        case 'bad':
+            return 'var(--schema-bad)'
+        case 'good':
+            return 'var(--schema-good)'
+        default:
+            return 'var(--schema-neutral)'
+    }
 
 }
 
+
+watch(getAlarms, (nState) => {
+    nState.forEach(async (el, idx) => {
+        if (el.aid > 0) {
+            let aRes = await store.fetchAlarmDescription(line, el.mid, el.aid)
+            if (!aRes) {
+
+                let unknown = { id: el.aid, name: "Unknown", mid: el.mid }
+                state.alarms[idx] = unknown
+            } else {
+                aRes.mid = el.mid
+                state.alarms[idx] = aRes
+            }
+        }
+    })
+})
+
+watch(getStates, (nState) => {
+    nState.forEach(async (el, idx) => {
+
+        let sRes = await store.fetchStateDescription(line, el.mid, el.sid)
+        if (!sRes) {
+
+            let unknown = { id: el.aid, name: "Unknown", mid: el.mid }
+            state.states[idx] = unknown
+        } else {
+            sRes.mid = el.mid
+            state.states[idx] = sRes
+        }
+
+    })
+})
 
 
 
@@ -28,9 +108,11 @@ function switchRoute(name) {
         <div class="timeline-container">
             <Timeline :value="store.getMachines" layout="horizontal">
                 <template #marker="slotProps">
-                    <div class="machine-container" @click="switchRoute(slotProps.item.name)">
-                        <p class="machine-state"><span class="status-num">{{ slotProps.item.state }}</span><span
-                                class="status-string">Productive</span></p>
+                    <div class="machine-container" @click="switchRoute(slotProps.item.id)">
+                        <p class="machine-state"><span class="status-num"
+                                :style="{ 'backgroundColor': getStateColor(slotProps.item.state, slotProps.item.id) }">{{
+                                    slotProps.item.state }}</span><span class="status-string">{{
+        getStateName(slotProps.item.state, slotProps.item.id) }}</span></p>
                         <!-- <img src="../../assets/packing-machine-svgrepo-com.svg"> -->
                         <div class="image-container">
                             <img :src="slotProps.item.img">
@@ -44,7 +126,7 @@ function switchRoute(name) {
                             <i class="bi bi-exclamation-diamond"></i>
                             <p>{{ slotProps.item.alarm }}</p>
                         </div>
-                        <p>TES</p>
+                        <p>{{ getAlarmName(slotProps.item.alarm, slotProps.item.id) }}</p>
                     </div>
                 </template>
             </Timeline>
@@ -122,7 +204,6 @@ function switchRoute(name) {
 
 .status-num {
     font-weight: bold;
-    background: limegreen;
     text-align: center;
     color: var(--font-color-1);
 }
@@ -130,7 +211,20 @@ function switchRoute(name) {
 .alarm {
     display: flex;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
-    width: 16vmin;
+    width: 13vw;
+    animation-name: example;
+    animation-duration: 2s;
+
+}
+
+@keyframes example {
+    from {
+        box-shadow: 1px 1px 5px 3px crimson;
+    }
+
+    to {
+        box-shadow: 1px 1px 3px 1px rgb(255, 179, 211);
+    }
 }
 
 .alarm>p {

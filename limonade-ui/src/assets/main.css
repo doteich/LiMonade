@@ -10,6 +10,7 @@
 body {
     min-height: 98vh;
     min-width: 98vw;
+    margin-top: 0;
     background: #eff3f8;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
@@ -20,4 +21,10 @@ body {
     --theme-color-2: hsl(209, 47%, 20%);
     --font-color-1: white;
     --border-color-1: rgb(204, 202, 202);
+
+    --schema-critical: crimson;
+    --schema-bad: rgb(255, 51, 0); 
+    --schema-neutral: grey; 
+    --schema-good: rgb(21, 231, 14); 
+
 }

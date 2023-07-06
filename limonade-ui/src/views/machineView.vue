@@ -1,9 +1,14 @@
 <script setup>
 import { onMounted } from "vue"
+import { useRoute } from 'vue-router';
 
 import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
+import {useCentralDataStore} from '@/stores/machine/centralDataStore'
 
-const store = useDynamicDataStore()
+
+const store = useCentralDataStore()
+
+
 import countersBar from "../components/machine/countersBar.vue"
 import miscBox from "../components/machine/miscBox.vue"
 import machineBox from "../components/machine/machineBox.vue"
@@ -11,7 +16,8 @@ import alarmBar from "../components/machine/alarmBar.vue"
 
 
 onMounted(() => {
-    store.startWS()
+    let route = useRoute().fullPath.split("/")
+    store.fetchMachineConfig(route[1], route[2])
 })
 
 </script>

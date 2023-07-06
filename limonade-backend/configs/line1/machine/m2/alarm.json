@@ -1,10 +1,10 @@
 [
     {
-        "id":"1000",
-        "name":"Belt Error"
+        "id": 1000,
+        "name": "Belt Error"
     },
     {
-        "id":"1001",
-        "name":"Belt Break"
+        "id": 1001,
+        "name": "Belt Break"
     }
 ]
