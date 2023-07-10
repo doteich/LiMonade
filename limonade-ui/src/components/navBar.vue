@@ -2,10 +2,12 @@
 import { computed } from "vue"
 import {useRouter, useRoute} from 'vue-router';
 import { useLineDataStore } from "@/stores/line/lineData"
+import { useCentralDataStore } from "@/stores/machine/centralDataStore"
 
 const route = useRoute()
 const router = useRouter()
 const lineStore = useLineDataStore()
+const machineStore = useCentralDataStore()
 
 let rRate = 60
 
@@ -17,7 +19,7 @@ const getRoute = computed(() => {
     }
 
     if (type == "machine") {
-        return "Machine 1"
+        return machineStore.getMachineName
     }
 
     if (type == "home") {

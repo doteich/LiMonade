@@ -22,7 +22,7 @@ defineProps({
     </div>
     <div class="p-bar">
       <h4>Auftragsfortschritt</h4>
-      <ProgressBar style="height:1.5vh" :value="pObject.progress">{{pObject.count}}/{{pObject.target }}</ProgressBar>
+      <ProgressBar style="height:1.4vh" :value="pObject.progress">{{pObject.count}}/{{pObject.target }}</ProgressBar>
     </div>
   </div>
 </template>
@@ -38,25 +38,24 @@ defineProps({
 
 .p-infos{
   display: flex;
-  width: 100%;
-  justify-content: center;
-  margin: 5px 0 1vh 0;
+  width: 99%;
+  justify-content: space-between;
+  margin: 0px 0;
 }
 
 
 .p-bar {
-  width: 94%;
+  width: 98.6%;
   box-shadow: 1px 1px 4px 0px var(--border-color-1);
   margin-bottom: 5px;
-  padding: 10px;
+  padding: 7px;
   border: 1px solid var(--border-color-1)
 }
 
 .p-bar h4{
   border-bottom: 1px solid var(--border-color-1);
   width: 30%;
-
-  margin: 5px 0;
+  margin: 0.5vh 0;
 }
 
 span{

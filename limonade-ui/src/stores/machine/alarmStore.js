@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia'
-import { useGlobalVars } from "./globalVars"
 import axios from "axios"
 
 //const resturl = "http://localhost:3000"
@@ -8,6 +7,7 @@ import axios from "axios"
 
 export const useAlarmStore = defineStore("alarmStore", {
     state: () => ({
+        offset: 24,
         alarms: [],
     }),
     getters: {
@@ -16,30 +16,23 @@ export const useAlarmStore = defineStore("alarmStore", {
         }
     },
     actions: {
-        async fetchAlarms(nodeName, start, end) {
+        setOffset(offset) {
+            this.offset = offset
+        },
+        async fetchAlarms(obj) {
             try {
-
-                const globalVarStore = useGlobalVars()
-
-
-                if (!start) {
-                    start = new Date()
-                    start.setHours(start.getHours() - 24)
-                    start = start.toISOString()
-                }
-
-                if (!end) {
-                    end = new Date().toISOString()
-                }
+                let start = new Date()
+                let end = new Date()
+                start.setHours(start.getHours() - this.offset)
 
                 const params = new URLSearchParams();
-                params.append("collection", globalVarStore.getGlobalVars.mongodbCollection)
-                params.append("nodeName", nodeName)
-                params.append("start", start)
-                params.append("end", end)
+                params.append("collection", obj.database)
+                params.append("nodeName", obj.alarmTag)
+                params.append("start", start.toISOString())
+                params.append("end", end.toISOString())
                 params.append("orderBy", "desc")
 
-                let res = await axios.get(`${globalVarStore.getGlobalVars.restURL}/duration`, { params })
+                let res = await axios.get(`${obj.url}/duration`, { params })
                 this.alarms = []
                 if (res.data.length < 1) {
                     return
@@ -51,21 +44,40 @@ export const useAlarmStore = defineStore("alarmStore", {
 
                 filteredData = filteredData.slice(0, 5)
 
-
-
-                filteredData.forEach(el => {
-                    el.text = "ALARMTEXT_TEST"
+                for (let el of filteredData) {
+                    let aDesc = await this.fetchAlarmDescription(obj.url, obj.line, obj.machine, el.value)
+                    if (aDesc){
+                        el.text = aDesc.name
+                    }else{
+                        el.text ="Unbekannt"
+                    }
+                   
                     el.duration = el.duration / 60
                     el.start = new Date(el.start).toLocaleString()
                     el.end = new Date(el.end).toLocaleString()
                     this.alarms.push(el)
-                });
-
-
-
+                }
 
             } catch (err) {
                 console.log(err)
+            }
+        },
+        async fetchAlarmDescription(url, line, mId, aId) {
+            try {
+
+                let params = new URLSearchParams()
+                params.append("line", line)
+                params.append("machineId", mId)
+                params.append("alarmId", aId)
+
+                let res = await axios.get(`${url}/config/alarm`, { params })
+
+                return res.data
+            }
+            catch (err) {
+
+                console.log(err)
+
             }
         },
     }

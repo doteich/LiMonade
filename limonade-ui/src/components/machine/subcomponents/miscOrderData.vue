@@ -1,20 +1,12 @@
 <script setup>
 import { onMounted } from "vue"
-import { useMiscStore } from "@/stores/machine/miscStore"
-const miscStore = useMiscStore()
-
-function setOrderData() {
-    miscStore.initOrderData()
-}
-
-onMounted(() => {
-    setOrderData()
-})
+import { useCentralDataStore } from "@/stores/machine/centralDataStore"
+const store = useCentralDataStore()
 
 </script>
 <template>
     <section class="misc-order-data">
-        <div class="order-box" v-for="el in miscStore.getOrderData" :key="el.nodeName">
+        <div class="order-box" v-for="el in store.getStaticData" :key="el.nodeName">
             <div class="order-box-basic">
                 <h5>{{el.displayName}}</h5>
                 <p>{{el.value}}</p>

@@ -1,21 +1,13 @@
 {
     "database": "lms_packaging",
     "socket": "ws://localhost:8080/ws",
-    "name":"Verpackung",
-    "alarmNode":"Alarm",
-    "stateNode":"State",
+    "name": "Tray Packer",
+    "alarmNode": "Alarm_Machine2",
+    "stateNode": "State_Machine2",
     "dynamicData": [
         {
             "nodeId": "ns=2;s=Machines.Packaging.Counters.Bags",
             "name": "Bags",
-            "unit": "pcs",
-            "type": "counter",
-            "value": 0,
-            "show": true
-        },
-        {
-            "nodeId": "ns=2;s=Machines.Packaging.Counters.Labels",
-            "name": "Labels",
             "unit": "pcs",
             "type": "counter",
             "value": 0,
@@ -30,52 +22,20 @@
             "show": true
         },
         {
-            "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorAmps",
-            "name": "Motor Amps",
-            "unit": "A",
-            "type": "counter",
-            "value": 0,
-            "show": true
-        },
-        {
-            "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorVoltage",
-            "name": "Motor Voltage",
-            "unit": "V",
-            "type": "counter",
-            "value": 0,
-            "show": true
-        },
-        {
-            "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorTemperature",
-            "name": "Motor Temperature",
-            "unit": "°C",
-            "type": "counter",
-            "value": 0,
-            "show": true
-        },
-        {
-            "nodeId": "ns=2;s=Machines.Packaging.State.State",
-            "name": "State",
+            "nodeId": "ns=2;s=Machines.Packaging.State.State_Machine2",
+            "name": "State_Machine2",
             "unit": "",
             "type": "state",
             "value": 0,
-            "show": true
+            "show": false
         },
         {
-            "nodeId": "ns=2;s=Machines.Packaging.State.Alarm",
-            "name": "Alarm",
+            "nodeId": "ns=2;s=Machines.Packaging.State.Alarm_Machine2",
+            "name": "Alarm_Machine2",
             "unit": "",
             "type": "alarm",
             "value": 0,
-            "show": true
-        },
-        {
-            "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorTemperature",
-            "name": "Motor Temperature",
-            "unit": "°C",
-            "type": "counter",
-            "value": 0,
-            "show": true
+            "show": false
         }
     ],
     "staticData": [
@@ -85,7 +45,7 @@
             "value": "",
             "timestamp": "",
             "showTS": true,
-            "show": false
+            "show": true
         },
         {
             "displayName": "Material Number",

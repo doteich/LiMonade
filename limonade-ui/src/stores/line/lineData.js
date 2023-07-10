@@ -243,7 +243,7 @@ export const useLineDataStore = defineStore("lineData", {
 
                 let res = await axios.get(`${this.restURL}/config/state`, { params })
 
-                return res.data
+                return res.data[0]
 
             }
             catch (err) {

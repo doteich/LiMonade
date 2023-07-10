@@ -8,7 +8,7 @@
             "isLoaded": false,
             "machines": [
                 {
-                    "name": "Machine 1",
+                    "name": "Verpackung",
                     "id": "m1",
                     "img": "http://127.0.0.1:3000/etc/machine.svg",
                     "stateNode": "State",
@@ -17,7 +17,7 @@
                     "alarm": 0
                 },
                 {
-                    "name": "Machine 2",
+                    "name": "Tray Packer",
                     "id": "m2",
                     "img": "http://127.0.0.1:3000/etc/machine.svg",
                     "stateNode": "State_Machine2",
@@ -147,7 +147,7 @@
             "isLoaded": false,
             "machines": [
                 {
-                    "name": "Machine 1",
+                    "name": "Palettierung",
                     "id": "m3",
                     "img": "http://127.0.0.1:3000/etc/machine.svg",
                     "stateNode": "State",

@@ -1,5 +1,6 @@
 <script setup>
-import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
+import { useCentralDataStore } from '@/stores/machine/centralDataStore'
+import ProgressSpinner from 'primevue/progressspinner';
 import stateChart from "./subcomponents/stateChart.vue"
 import alarmBox from "./subcomponents/alarmBox.vue"
 import stateBox from "./subcomponents/stateBox.vue"
@@ -7,37 +8,16 @@ import productivityCockpitChart from "../machine/subcomponents/productivityCockp
 
 import { computed } from "vue"
 
-const dynamicStore = useDynamicDataStore()
+const store = useCentralDataStore()
 
 const machineState = computed(() => {
 
     let mappingObj = {
-        state: dynamicStore.getState[0].value,
+        state: store.getState[0].value,
         color: "green",
         text: "PROD"
-    }
 
-    switch (dynamicStore.getState[0].value) {
-        case 0:
-            mappingObj.color = "rgba(23, 194, 247, 0.692)";
-            mappingObj.text = "Idle"
-            break;
-        case 1:
-            mappingObj.color = "rgba(238, 31, 83, 0.7)";
-            mappingObj.text = "Error"
-            break;
-        case 2:
-            mappingObj.color = "rgba(252, 164, 0, 0.8)";
-            mappingObj.text = "Alarm"
-            break;
-        case 3:
-            mappingObj.color = "rgba(22,150, 103, 0.7)";
-            mappingObj.text = "Productive"
-            break;
-        default:
-            break;
     }
-
     return mappingObj
 })
 
@@ -46,13 +26,18 @@ const machineState = computed(() => {
 <template>
     <section class="machine-box">
         <h2>Status & Availibility </h2>
-        <div class="state-box">
-            <stateBox :state="machineState.state" :color="machineState.color" :text="machineState.text"></stateBox>
-            <alarmBox :code="dynamicStore.getAlarm[0].value" text="ALARMTEXT"></alarmBox>
+        <div v-if="!store.getLoadingState" class="spinner-machine">
+            <ProgressSpinner></ProgressSpinner>
         </div>
-        <stateChart></stateChart>
-        <div class="indicators">
-            <productivityCockpitChart></productivityCockpitChart>
+        <div v-else>
+            <div class="state-box">
+                <stateBox :state="machineState.state" :color="machineState.color" :text="machineState.text"></stateBox>
+                <alarmBox :code="store.getAlarm[0].value" text="ALARMTEXT"></alarmBox>
+            </div>
+            <stateChart></stateChart>
+            <div class="indicators">
+                <productivityCockpitChart></productivityCockpitChart>
+            </div>
         </div>
     </section>
 </template>
@@ -71,7 +56,8 @@ const machineState = computed(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 10%;
+    height: 5vh;
+    margin-bottom: 1vh;
 }
 
 .machine-layout {
@@ -95,8 +81,7 @@ const machineState = computed(() => {
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
 
-.indicators{
+.indicators {
     padding: 1%;
 }
-
 </style>

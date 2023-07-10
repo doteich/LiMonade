@@ -35,13 +35,7 @@ const store = useLineDataStore()
     
 }
 
-.spinner{
-    
-    margin-top: auto;
-    margin-bottom: 6vh
-    
-    
-}
+
 
 .static-data{
     display: flex;

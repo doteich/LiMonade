@@ -70,7 +70,7 @@ onMounted(() => {
     let end = new Date();
     end.setUTCHours(23, 59, 59, 999);
 
-    machineStore.fetchMachineData("State", start.toISOString(), end.toISOString())
+    //machineStore.fetchMachineData("State", start.toISOString(), end.toISOString())
 })
 
 

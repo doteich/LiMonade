@@ -1,10 +1,10 @@
 <script setup>
 import { reactive, computed, onMounted } from 'vue'
 import { useMiscStore } from '@/stores/machine/miscStore'
-import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
+import { useCentralDataStore } from '@/stores/machine/centralDataStore'
 
-const store = useMiscStore()
-const dynamicStore = useDynamicDataStore()
+const miscStore = useMiscStore()
+const store = useCentralDataStore()
 
 const state = reactive({
     startDate: "",
@@ -50,10 +50,10 @@ let config =
 
 const chartData = computed(() => {
     return {
-        labels: store.getChartData.labels,
+        labels: miscStore.getChartData.labels,
         datasets: [{
-            label: store.getChartData.label,
-            data: store.getChartData.data,
+            label: miscStore.getChartData.label,
+            data: miscStore.getChartData.data,
             fill: false,
             borderColor: "hsl(209, 47%, 20%)",
             tension: 0.4
@@ -64,11 +64,11 @@ const chartData = computed(() => {
 function refreshDate() {
     let start = new Date(state.startDate).toISOString()
     let end = new Date(state.endDate).toISOString()
-    store.fetchChartData(state.nodeName, start, end)
+    miscStore.fetchChartData(state.nodeName, start, end)
 }
 
 onMounted(() => {
-    let inputData = store.getChartInputs
+    let inputData = miscStore.getChartInputs
 
     state.startDate = inputData.start.substr(0, 16)
     state.endDate = inputData.end.substr(0, 16)
@@ -84,7 +84,7 @@ onMounted(() => {
         <label>End:</label><input type="datetime-local" v-model="state.endDate">
         <label>Node:</label>
         <select v-model="state.nodeName">
-            <option v-for="counter in dynamicStore.getCounters" :key="counter.name">{{ counter.name }}</option>
+            <option v-for="counter in store.getCounters" :key="counter.name">{{ counter.name }}</option>
         </select>
         <button @click="refreshDate()"><i class="bi bi-arrow-clockwise"></i></button>
     </div>

@@ -13,16 +13,14 @@ const setActive = (name) => {
 </script>
 <template>
     <section class="misc-box">
-        <nav class="misc-nav">
+        <div class="misc-nav">
             <h2>Misc</h2>
             <ul>
                 <li @click="setActive('order')" :class="{ 'li-active': store.getActiveComponent.order }">Order Data</li>
-                <li @click="setActive('calculated')" :class="{ 'li-active': store.getActiveComponent.calculated }">
-                    Calculated</li>
                 <li @click="setActive('chart')" :class="{ 'li-active': store.getActiveComponent.chart }">Historic Numeric
                 </li>
             </ul>
-        </nav>
+        </div>
         <miscOrderData v-if="store.getActiveComponent.order"></miscOrderData>
         <miscChart v-if="store.getActiveComponent.chart"></miscChart>
         <miscCalculatedData v-if="store.getActiveComponent.calculated"></miscCalculatedData>

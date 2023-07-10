@@ -154,7 +154,11 @@ watch(getStates, (nState) => {
 
 .p-timeline-event-opposite {
     flex: 0 !important;
-    padding: 10px !important;
+    padding: 2px !important;
+}
+
+.p-timeline-event-content{
+    padding-top: 10px !important;
 }
 
 .image-container {
@@ -214,6 +218,7 @@ watch(getStates, (nState) => {
     width: 13vw;
     animation-name: example;
     animation-duration: 2s;
+    max-height: 6vh;
 
 }
 
@@ -228,7 +233,8 @@ watch(getStates, (nState) => {
 }
 
 .alarm>p {
-    padding: 2px
+    padding: 2px;
+    margin:0
 }
 
 .alarm-num {
@@ -248,4 +254,7 @@ watch(getStates, (nState) => {
 .alarm-num>i {
     font-size: 20px;
 }
+
+
+
 </style>

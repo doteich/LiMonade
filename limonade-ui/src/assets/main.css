@@ -23,6 +23,7 @@ body {
     --border-color-1: rgb(204, 202, 202);
 
     --schema-critical: crimson;
+    --test: rgba(220, 20, 60, 0.692);
     --schema-bad: rgb(255, 51, 0); 
     --schema-neutral: grey; 
     --schema-good: rgb(21, 231, 14); 

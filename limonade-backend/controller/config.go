@@ -177,9 +177,19 @@ func FetchState(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if stateId == "" {
-		logging.LogError(errors.New("parameter stateid not provided"), "aborting http request", "fetchState")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Parameter stateId not provided"))
+		fileStr := fmt.Sprintf("./configs/%s/machine/%s/state.json", line, machineId)
+
+		byteArr, err := os.ReadFile(fileStr)
+
+		if err != nil {
+			logging.LogError(err, "failed to read contents from file "+fileStr, "fetchState")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusAccepted)
+		w.Write(byteArr)
+
 		return
 	}
 
@@ -209,11 +219,11 @@ func FetchState(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var response State
+	var response []State
 
 	for _, state := range machineStates {
 		if state.Id == int(stateInt) {
-			response = State{Id: state.Id, Name: state.Name, Schema: state.Schema}
+			response = append(response, State{Id: state.Id, Name: state.Name, Schema: state.Schema})
 			break
 		}
 	}

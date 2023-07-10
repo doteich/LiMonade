@@ -32,7 +32,7 @@ const config = {
         
             
             <pv-chart type="doughnut" :data="chartData" :options="config"></pv-chart>
-            <p>{{ (store.getProductiveTime.prodTime / (store.getProductiveTime.passedTime - store.getProductiveTime.prodTime)).toFixed(2) *100}} %</p>
+            <p>{{ ((store.getProductiveTime.prodTime / (store.getProductiveTime.passedTime - store.getProductiveTime.prodTime))*100).toFixed(2)}} %</p>
     
     </div> 
 </template>

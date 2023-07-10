@@ -91,11 +91,6 @@ export const useMiscStore = defineStore("miscData", {
         getChartInputs(state) {
             return state.chartData.input
         },
-        getOrderData(state) {
-
-            return state.orderData
-        },
-
         calcCompletionTime(state) {
             let date = new Date()
             date.setMinutes(date.getMinutes() + (state.orderData.filter(el => el.nodeName == 'Target Quantity')[0].value / (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 60000))))
@@ -187,27 +182,6 @@ export const useMiscStore = defineStore("miscData", {
                 console.log(err)
             }
         },
-        initOrderData() {
-            for (let obj of this.orderData) {
-                this.fetchNodeData(obj.nodeName)
-            }
-        },
 
-        async fetchNodeData(node) {
-            try {
-                const globalVarStore = useGlobalVars()
-
-                let params = new URLSearchParams()
-                params.append("collection", globalVarStore.getGlobalVars.mongodbCollection)
-                params.append("nodeName", node)
-                let res = await axios.get(`${globalVarStore.getGlobalVars.restURL}/last`, { params })
-                let el = this.orderData.filter((obj) => obj.nodeName == node)
-                el[0].value = res.data[0].Value
-                el[0].timestamp = new Date(res.data[0].ts)
-
-            } catch (err) {
-                console.log(err)
-            }
-        }
     }
 })

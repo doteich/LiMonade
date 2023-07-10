@@ -59,4 +59,17 @@ footer>a>p {
   color: rgb(141, 130, 93);
   border-bottom: 1px solid #ffd4a2
 }
+
+.spinner{
+    margin-top: auto;
+    margin-bottom: 6vh
+}
+
+.spinner-machine{
+  display: flex;
+  height: 100%;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+}
 </style>

@@ -1,9 +1,7 @@
 <script setup>
-import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
 import {useMiscStore} from '@/stores/machine/miscStore'
 
 
-const store = useDynamicDataStore()
 const miscStore = useMiscStore()
 
 defineProps({
