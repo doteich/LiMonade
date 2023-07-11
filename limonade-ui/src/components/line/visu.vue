@@ -68,6 +68,7 @@ function getStateColor(id, mid) {
 watch(getAlarms, (nState) => {
     nState.forEach(async (el, idx) => {
         if (el.aid > 0) {
+         
             let aRes = await store.fetchAlarmDescription(line, el.mid, el.aid)
             if (!aRes) {
 
@@ -81,9 +82,11 @@ watch(getAlarms, (nState) => {
     })
 })
 
-watch(getStates, (nState) => {
+watch(getStates, (nState, oState) => {
     nState.forEach(async (el, idx) => {
-
+        if (oState.some(e => e.sid == el.sid && e.mid == el.mid)) {
+                return
+            }
         let sRes = await store.fetchStateDescription(line, el.mid, el.sid)
         if (!sRes) {
 
@@ -113,9 +116,10 @@ watch(getStates, (nState) => {
                                 :style="{ 'backgroundColor': getStateColor(slotProps.item.state, slotProps.item.id) }">{{
                                     slotProps.item.state }}</span><span class="status-string">{{
         getStateName(slotProps.item.state, slotProps.item.id) }}</span></p>
-                        <!-- <img src="../../assets/packing-machine-svgrepo-com.svg"> -->
+
                         <div class="image-container">
-                            <img :src="slotProps.item.img">
+                            <img src="../../assets/packing-machine-svgrepo-com.svg">
+                            <!-- <img :src="slotProps.item.img"> -->
                         </div>
                         <p class="machine-name">{{ slotProps.item.name }}</p>
                     </div>
@@ -157,7 +161,7 @@ watch(getStates, (nState) => {
     padding: 2px !important;
 }
 
-.p-timeline-event-content{
+.p-timeline-event-content {
     padding-top: 10px !important;
 }
 
@@ -234,7 +238,7 @@ watch(getStates, (nState) => {
 
 .alarm>p {
     padding: 2px;
-    margin:0
+    margin: 0
 }
 
 .alarm-num {
@@ -254,7 +258,4 @@ watch(getStates, (nState) => {
 .alarm-num>i {
     font-size: 20px;
 }
-
-
-
 </style>

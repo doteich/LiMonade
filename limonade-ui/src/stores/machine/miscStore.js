@@ -159,7 +159,7 @@ export const useMiscStore = defineStore("miscData", {
 
 
                 const params = new URLSearchParams();
-                params.append("collection", globalVarStore.getGlobalVars.mongodbCollection)
+                params.append("collection", "goglio_line3_general")
                 params.append("nodeName", nodeName)
                 params.append("start", start)
                 params.append("end", end)

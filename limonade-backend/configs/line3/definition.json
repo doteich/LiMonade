@@ -1,0 +1,252 @@
+{
+    "displayName": "Ganze Bohne L3",
+    "data": [
+        {
+            "name": "Verpackung",
+            "socket": "ws://localhost:8080/ws",
+            "database": "goglio_line3_general",
+            "isLoaded": false,
+            "machines": [
+                {
+                    "name": "Verpackung",
+                    "id": "goglio",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State Goglio",
+                    "state": 0,
+                    "alarmNode": "Alarm_Goglio",
+                    "alarm": 0
+                },
+                {
+                    "name": "Waage",
+                    "id": "cw",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State CW",
+                    "state": 0,
+                    "alarmNode": "Alarm_CW",
+                    "alarm": 0
+                },
+                {
+                    "name": "Xray",
+                    "id": "xray",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State Xray",
+                    "state": 0,
+                    "alarmNode": "Alarm_Xray",
+                    "alarm": 0
+                },
+                {
+                    "name": "IMA",
+                    "id": "ima",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State IMA",
+                    "state": 0,
+                    "alarmNode": "Alarm_IMA",
+                    "alarm": 0
+                }
+            ],
+            "dynamicData": [
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Alarm\".\"WS_Alarm_MMP400\"",
+                    "name": "Alarm_IMA",
+                    "unit": "",
+                    "type": "alarm",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Alarm\".\"WS_Alarm_Goglio\"",
+                    "name": "Alarm_Goglio",
+                    "unit": "",
+                    "type": "alarm",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Alarm\".\"WS_Alarm_CW\"",
+                    "name": "Alarm_CW",
+                    "unit": "",
+                    "type": "alarm",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Alarm\".\"WS_Alarm_Xray\"",
+                    "name": "Alarm_Xray",
+                    "unit": "",
+                    "type": "alarm",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Machine State\".\"IMA 3\"",
+                    "name": "State IMA",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Machine State\".\"Wipotec - XRay\"",
+                    "name": "State Xray",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Machine State\".\"Wipotec - Checkweigher\"",
+                    "name": "State CW",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Machine State\".\"Goglio\"",
+                    "name": "State Goglio",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Filled_Bags\"",
+                    "name": "Päckchen",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Valves_Applied\"",
+                    "name": "Ventile",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Carton_Consumption\"",
+                    "name": "Trays",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                }
+            ],
+            "staticData": [
+                {
+                    "displayName": "Aktueller Auftrag",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true
+                },
+                {
+                    "displayName": "Target Quantity",
+                    "nodeName": "CT_CurrentOrder_Order_Quantity",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": false
+                },
+                {
+                    "displayName": "Filled Bags",
+                    "nodeName": "CT_Counter_Filled_Bags",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": false
+                }
+            ],
+            "progressConfig": {
+                "tsIdKey": "WS_Cur_Order_ID",
+                "counterIdKey": "CT_Counter_Filled_Bags",
+                "targetIdKey": "CT_CurrentOrder_Order_Quantity"
+            }
+        },
+        {
+            "name": "Palettierung",
+            "socket": "ws://localhost:8081/ws",
+            "database": "lp_line3_general",
+            "isLoaded": false,
+            "machines": [
+                {
+                    "name": "Lorenz Pan",
+                    "id": "lp",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State",
+                    "state": 0,
+                    "alarmNode": "Alarm",
+                    "alarm": 0
+                }
+            ],
+            "dynamicData": [
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.Alarm",
+                    "name": "Alarm",
+                    "unit": "",
+                    "type": "alarm",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"OPC_UA SAP DMC\".\"WS_Cur_State\"",
+                    "name": "State",
+                    "unit": "pcs",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=3;s=\"OPC_UA SAP DMC\".\"WS_Tot_Packages\"",
+                    "name": "Trays",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=3;s=\"OPC_UA SAP DMC\".\"WS_Tot_Pallets\"",
+                    "name": "Paletten",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                }
+            ],
+            "staticData": [
+                {
+                    "displayName": "Auftrag",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true
+                },
+                {
+                    "displayName": "Paletten",
+                    "nodeName": "WS_Tot_Pallets",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true
+                },
+                {
+                    "displayName": "Zielmenge",
+                    "nodeName": "CT_CurrentOrder_Order_Quantity",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true
+                }
+            ],
+            "progressConfig": {
+                "tsIdKey": "WS_Cur_Order_ID",
+                "counterIdKey": "WS_Tot_Pallets",
+                "targetIdKey": "CT_CurrentOrder_Order_Quantity"
+            }
+        }
+    ]
+}

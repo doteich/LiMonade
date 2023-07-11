@@ -1,0 +1,27 @@
+[
+    {
+        "id": 0,
+        "name": "Ausgeschaltet",
+        "schema": "neutral"
+    },
+    {
+        "id": 2,
+        "name": "Untätig",
+        "schema": "bad"
+    },
+    {
+        "id": 3,
+        "name": "Produktiv",
+        "schema": "good"
+    },
+    {
+        "id": 6,
+        "name": "In Störung",
+        "schema": "critical"
+    },
+    {
+        "id": 7,
+        "name": "Fehler",
+        "schema": "critical"
+    }
+]
