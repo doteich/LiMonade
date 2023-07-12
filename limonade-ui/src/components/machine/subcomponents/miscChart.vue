@@ -64,7 +64,7 @@ const chartData = computed(() => {
 function refreshDate() {
     let start = new Date(state.startDate).toISOString()
     let end = new Date(state.endDate).toISOString()
-    miscStore.fetchChartData(state.nodeName, start, end)
+    store.fetchChartData(state.nodeName, start, end)
 }
 
 onMounted(() => {

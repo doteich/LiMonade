@@ -8,6 +8,7 @@ import axios from "axios"
 
 export const useMachineDataStore = defineStore("machineData", {
     state: () => ({
+
         datasets: [],
         backup: [{
             label: "Error",
@@ -44,7 +45,11 @@ export const useMachineDataStore = defineStore("machineData", {
         ]
     }),
     getters: {
-        getDatasets: (state) => state.datasets,
+        getDatasets: (state) => {
+          
+           return state.datasets
+
+        },
         getProductiveTime(state) {
             let curDate = new Date()
             let passedTime = curDate.getHours() * 24 + curDate.getMinutes()
@@ -122,21 +127,24 @@ export const useMachineDataStore = defineStore("machineData", {
 
                 let res = await axios.get(`${url}/duration`, { params })
 
-                let stateData
+           
+                let filteredData
                 let entry
-
+              
 
                 if (res.data) {
                     res.data.forEach((el) => {
-                        stateData = this.datasets.filter(entry => entry.id == el.value)
+                       
+                        filteredData = this.datasets.filter(entry => entry.id == el.value)
                         entry = { x: [new Date(el.start), new Date(el.end)], y: "Status", duration: el.duration }
-                        stateData[0].data.push(entry)
+                        filteredData[0].data.push(entry)
+                        
                     })
                 }
 
-
             } catch (err) {
-                console.log(err)
+
+                console.error(err)
             }
         },
     }

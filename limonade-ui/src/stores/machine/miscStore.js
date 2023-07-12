@@ -141,11 +141,8 @@ export const useMiscStore = defineStore("miscData", {
 
             this.activeComp[name] = true
         },
-        async fetchChartData(nodeName, start, end) {
+        async fetchChartData(url, database, nodeName, start, end) {
             try {
-
-                const globalVarStore = useGlobalVars()
-
                 if (!start) {
                     start = new Date()
                     start.setHours(start.getHours() - 1)
@@ -159,13 +156,13 @@ export const useMiscStore = defineStore("miscData", {
 
 
                 const params = new URLSearchParams();
-                params.append("collection", "goglio_line3_general")
+                params.append("collection", database)
                 params.append("nodeName", nodeName)
                 params.append("start", start)
                 params.append("end", end)
                 params.append("chartData", "true")
 
-                let res = await axios.get(`${globalVarStore.getGlobalVars.restURL}/timeseries`, { params })
+                let res = await axios.get(`${url}/timeseries`, { params })
 
                 this.chartData.dataset.labels = res.data.labels
                 this.chartData.dataset.data = res.data.data

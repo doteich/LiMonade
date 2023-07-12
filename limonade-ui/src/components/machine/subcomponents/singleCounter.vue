@@ -1,8 +1,8 @@
 <script setup>
-import {useMiscStore} from '@/stores/machine/miscStore'
+import {useCentralDataStore} from '@/stores/machine/centralDataStore'
 
 
-const miscStore = useMiscStore()
+const store = useCentralDataStore()
 
 defineProps({
     name: String,
@@ -11,7 +11,7 @@ defineProps({
 })
 
 function fetchCounterData(name) {
-    miscStore.fetchChartData(name)
+    store.fetchChartData(name)
     //miscStore.setActiveComponent("chart")
     
 }

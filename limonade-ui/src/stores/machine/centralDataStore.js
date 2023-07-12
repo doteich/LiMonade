@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import axios from "axios"
 import { useAlarmStore } from './alarmStore'
 import { useMachineDataStore } from "./machineData"
+import { useMiscStore } from "./miscStore"
 
 export const useCentralDataStore = defineStore("centralDataStore", {
     state: () => ({
@@ -143,7 +144,16 @@ export const useCentralDataStore = defineStore("centralDataStore", {
         updateStates() {
             const machineStore = useMachineDataStore()
             machineStore.initDataSet(this.restURL, this.line, this.machine)
-            machineStore.fetchMachineData(this.restURL, this.machineDefinition.database, this.machineDefinition.stateNode)
+            setTimeout(()=>{
+                machineStore.fetchMachineData(this.restURL, this.machineDefinition.database, this.machineDefinition.stateNode)
+            }, 1000)
+            
+        },
+        fetchChartData(node, start, end){
+            const miscStore = useMiscStore()
+            miscStore.fetchChartData(this.restURL, this.machineDefinition.database, node, start, end)
+
+
         }
 
     }

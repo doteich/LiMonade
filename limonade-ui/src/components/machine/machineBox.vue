@@ -1,12 +1,15 @@
 <script setup>
 import { useCentralDataStore } from '@/stores/machine/centralDataStore'
+import { computed } from "vue"
+import { storeToRefs } from 'pinia'
 import ProgressSpinner from 'primevue/progressspinner';
 import stateChart from "./subcomponents/stateChart.vue"
 import alarmBox from "./subcomponents/alarmBox.vue"
 import stateBox from "./subcomponents/stateBox.vue"
 import productivityCockpitChart from "../machine/subcomponents/productivityCockpitChart.vue"
 
-import { computed } from "vue"
+
+
 
 const store = useCentralDataStore()
 
@@ -20,6 +23,8 @@ const machineState = computed(() => {
     }
     return mappingObj
 })
+
+const { getAlarm, getState } = storeToRefs(store)
 
 
 </script>

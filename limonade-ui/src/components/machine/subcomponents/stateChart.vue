@@ -1,17 +1,24 @@
 <script setup>
-import { onMounted } from "vue"
+import { onMounted, shallowRef } from "vue"
+import { storeToRefs } from 'pinia'
 import { useMachineDataStore } from '@/stores/machine/machineData'
 
 const machineStore = useMachineDataStore()
 
-let machineData = machineStore.getDatasets
+let machineData = [...machineStore.getDatasets]
+
+const { getDatasets } = storeToRefs(machineStore)
+const state = shallowRef({
 
 
+})
 
 let data = {
     labels: ['Status'],
     datasets: machineData
 }
+
+
 
 let config =
 {
