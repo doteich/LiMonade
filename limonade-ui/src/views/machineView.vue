@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from "vue"
+import { onMounted, onUnmounted } from "vue"
 import { useRoute } from 'vue-router';
 
 import { useDynamicDataStore } from '@/stores/machine/dynamicStore'
@@ -16,9 +16,18 @@ import alarmBar from "../components/machine/alarmBar.vue"
 
 
 onMounted(() => {
+    store.resetAttachedStores()
+    store.$reset()
     let route = useRoute().fullPath.split("/")
     store.fetchMachineConfig(route[1], route[2])
 })
+
+
+onUnmounted(()=>{
+    store.resetAttachedStores()
+    store.$reset()
+})
+
 
 </script>
 

@@ -144,15 +144,20 @@ export const useCentralDataStore = defineStore("centralDataStore", {
         updateStates() {
             const machineStore = useMachineDataStore()
             machineStore.initDataSet(this.restURL, this.line, this.machine)
-            setTimeout(()=>{
-                machineStore.fetchMachineData(this.restURL, this.machineDefinition.database, this.machineDefinition.stateNode)
-            }, 1000)
-            
+            machineStore.fetchMachineData(this.restURL, this.machineDefinition.database, this.machineDefinition.stateNode)
+
+
         },
-        fetchChartData(node, start, end){
+        fetchChartData(node, start, end) {
             const miscStore = useMiscStore()
             miscStore.fetchChartData(this.restURL, this.machineDefinition.database, node, start, end)
 
+        },
+        resetAttachedStores() {
+
+            useAlarmStore().$reset()
+            useMachineDataStore().$reset()
+            useMiscStore().$reset()
 
         }
 

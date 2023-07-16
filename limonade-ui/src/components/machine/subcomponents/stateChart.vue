@@ -4,24 +4,9 @@ import { storeToRefs } from 'pinia'
 import { useMachineDataStore } from '@/stores/machine/machineData'
 
 const machineStore = useMachineDataStore()
-
-let machineData = [...machineStore.getDatasets]
-
 const { getDatasets } = storeToRefs(machineStore)
-const state = shallowRef({
 
-
-})
-
-let data = {
-    labels: ['Status'],
-    datasets: machineData
-}
-
-
-
-let config =
-{
+let config = {
     barPercentage: 1,
     categoryPercentage: 1,
     maintainAspectRatio: false,
@@ -69,6 +54,13 @@ let config =
     }
 }
 
+const data = {
+    labels: ['Status'],
+    datasets: getDatasets.value
+}
+
+
+
 onMounted(() => {
     let start = new Date();
     start.setUTCHours(0, 0, 0, 0);
@@ -77,7 +69,8 @@ onMounted(() => {
     let end = new Date();
     end.setUTCHours(23, 59, 59, 999);
 
-    //machineStore.fetchMachineData("State", start.toISOString(), end.toISOString())
+  
+
 })
 
 

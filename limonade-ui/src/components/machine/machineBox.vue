@@ -1,17 +1,21 @@
 <script setup>
 import { useCentralDataStore } from '@/stores/machine/centralDataStore'
+import { useMachineDataStore } from '@/stores/machine/machineData'
 import { computed } from "vue"
 import { storeToRefs } from 'pinia'
 import ProgressSpinner from 'primevue/progressspinner';
 import stateChart from "./subcomponents/stateChart.vue"
 import alarmBox from "./subcomponents/alarmBox.vue"
 import stateBox from "./subcomponents/stateBox.vue"
-import productivityCockpitChart from "../machine/subcomponents/productivityCockpitChart.vue"
+//import productivityCockpitChart from "../machine/subcomponents/productivityCockpitChart.vue"
+import shiftChart from "../machine/subcomponents/shiftChart.vue"
 
 
 
 
 const store = useCentralDataStore()
+const machineStore = useMachineDataStore()
+
 
 const machineState = computed(() => {
 
@@ -23,6 +27,7 @@ const machineState = computed(() => {
     }
     return mappingObj
 })
+
 
 const { getAlarm, getState } = storeToRefs(store)
 
@@ -39,10 +44,12 @@ const { getAlarm, getState } = storeToRefs(store)
                 <stateBox :state="machineState.state" :color="machineState.color" :text="machineState.text"></stateBox>
                 <alarmBox :code="store.getAlarm[0].value" text="ALARMTEXT"></alarmBox>
             </div>
-            <stateChart></stateChart>
+            <stateChart v-if="machineStore.getFetchState"></stateChart>
             <div class="indicators">
-                <productivityCockpitChart></productivityCockpitChart>
+                <shiftChart></shiftChart>
+                <!-- <productivityCockpitChart></productivityCockpitChart> --> 
             </div>
+
         </div>
     </section>
 </template>

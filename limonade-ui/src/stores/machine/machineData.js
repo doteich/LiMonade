@@ -8,52 +8,21 @@ import axios from "axios"
 
 export const useMachineDataStore = defineStore("machineData", {
     state: () => ({
-
+        fetched: false,
         datasets: [],
-        backup: [{
-            label: "Error",
-            id: 1,
-            data: [
-
-            ],
-            backgroundColor: "rgba(238, 31, 83, 0.7)"
-        },
-
-        {
-            label: "Prod",
-            id: 3,
-            data: [
-
-            ],
-            backgroundColor: "rgba(22,150, 103, 0.7)"
-        },
-
-        {
-            label: "Alarm",
-            id: 2,
-            data: [
-
-            ],
-            backgroundColor: "rgba(252, 164, 0, 0.8)"
-        },
-        {
-            label: "Idle",
-            id: 0,
-            data: [],
-            backgroundColor: "rgba(23, 194, 247, 0.692)"
-        },
-        ]
     }),
     getters: {
+        getFetchState: (state) => {
+            return state.fetched
+        },
+
         getDatasets: (state) => {
-          
            return state.datasets
 
         },
         getProductiveTime(state) {
             let curDate = new Date()
             let passedTime = curDate.getHours() * 24 + curDate.getMinutes()
-            //let test = ((state.datasets.filter(obj => obj.schema == "good")[0].data.map(el => el.duration)).reduce((acc, cur) => acc + cur, 0)) / 60
             let fData = state.datasets.filter(obj => obj.schema == "good")
 
             if (fData.length > 0) {
@@ -108,7 +77,8 @@ export const useMachineDataStore = defineStore("machineData", {
         },
         async fetchMachineData(url, database, nodeName, start, end) {
             try {
-
+                this.fetched = false
+                
                 if (!start) {
                     start = new Date()
                     start.setHours(start.getHours() - 24)
@@ -140,7 +110,11 @@ export const useMachineDataStore = defineStore("machineData", {
                         filteredData[0].data.push(entry)
                         
                     })
+
+                    this.fetched = true
                 }
+
+              
 
             } catch (err) {
 
