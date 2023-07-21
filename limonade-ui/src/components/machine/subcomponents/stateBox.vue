@@ -4,9 +4,8 @@ defineProps({
     state: Number,
     color: String,
     text: String,
-}
+})
 
-)
 
 
 </script>

@@ -43,7 +43,10 @@ export const useCentralDataStore = defineStore("centralDataStore", {
         },
         getState: (state) => {
             let status = state.machineDefinition.dynamicData.filter((el) => el.name == state.machineDefinition.stateNode)
-            return status
+            if (status.length > 0){
+                return status[0].value
+            }
+            return []
         },
         getAlarm: (state) => {
             let alarm = state.machineDefinition.dynamicData.filter((el) => el.name == state.machineDefinition.alarmNode)
@@ -159,6 +162,23 @@ export const useCentralDataStore = defineStore("centralDataStore", {
             useMachineDataStore().$reset()
             useMiscStore().$reset()
 
+        },
+        async fetchStateDescription(state){
+            try {
+
+                let params = new URLSearchParams()
+                params.append("line", this.line)
+                params.append("machineId", this.machine)
+                params.append("stateId", state)
+
+                let res = await axios.get(`${this.restURL}/config/state`, { params })
+
+                return res.data[0]
+
+            }
+            catch (err) {
+                console.log(err)
+            }
         }
 
     }

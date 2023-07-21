@@ -1,7 +1,7 @@
 <script setup>
 import { useCentralDataStore } from '@/stores/machine/centralDataStore'
 import { useMachineDataStore } from '@/stores/machine/machineData'
-import { computed } from "vue"
+import { computed, ref, watch } from "vue"
 import { storeToRefs } from 'pinia'
 import ProgressSpinner from 'primevue/progressspinner';
 import stateChart from "./subcomponents/stateChart.vue"
@@ -16,20 +16,53 @@ import shiftChart from "../machine/subcomponents/shiftChart.vue"
 const store = useCentralDataStore()
 const machineStore = useMachineDataStore()
 
-
-const machineState = computed(() => {
-
-    let mappingObj = {
-        state: store.getState[0].value,
-        color: "green",
-        text: "PROD"
-
-    }
-    return mappingObj
+const machineState = ref({
+    state: 0,
+    color: "",
+    text: ""
 })
 
 
 const { getAlarm, getState } = storeToRefs(store)
+
+watch(getState, async (newVal) => {
+
+    try {
+        console.log(newVal)
+
+        let res = await store.fetchStateDescription(newVal)
+
+        let color = ""
+
+        switch (res.schema) {
+            case "good":
+                color = "var(--schema-good)"
+                break;
+            case "bad":
+                color = "var(--schema-bad)"
+                break;
+            case "critical":
+                color = "var(--schema-critical)"
+                break;
+            default:
+                color = "var(--schema-neutral)"
+                break;
+        }
+
+        machineState.value = {
+            state: res.id,
+            color,
+            text: res.name
+        }
+
+    }
+    catch (err) {
+        console.error(err);
+    }
+
+
+})
+
 
 
 </script>
@@ -37,6 +70,7 @@ const { getAlarm, getState } = storeToRefs(store)
     <section class="machine-box">
         <h2>Status & Availibility </h2>
         <div v-if="!store.getLoadingState" class="spinner-machine">
+
             <ProgressSpinner></ProgressSpinner>
         </div>
         <div v-else>
@@ -47,7 +81,7 @@ const { getAlarm, getState } = storeToRefs(store)
             <stateChart v-if="machineStore.getFetchState"></stateChart>
             <div class="indicators">
                 <shiftChart></shiftChart>
-                <!-- <productivityCockpitChart></productivityCockpitChart> --> 
+                <!-- <productivityCockpitChart></productivityCockpitChart> -->
             </div>
 
         </div>
