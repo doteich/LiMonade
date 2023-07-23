@@ -18,7 +18,12 @@ const machineStore = useMachineDataStore()
 
 const machineState = ref({
     state: 0,
-    color: "",
+    color: "var(--schema-neutral)",
+    text: ""
+})
+
+const alarm = ref({
+    id: 0,
     text: ""
 })
 
@@ -26,9 +31,8 @@ const machineState = ref({
 const { getAlarm, getState } = storeToRefs(store)
 
 watch(getState, async (newVal) => {
-
     try {
-        console.log(newVal)
+       console.log(newVal)
 
         let res = await store.fetchStateDescription(newVal)
 
@@ -48,18 +52,34 @@ watch(getState, async (newVal) => {
                 color = "var(--schema-neutral)"
                 break;
         }
-
         machineState.value = {
             state: res.id,
             color,
             text: res.name
         }
-
     }
     catch (err) {
         console.error(err);
     }
+})
 
+
+watch(getAlarm, async (newVal) => {
+    if (newVal > 0) {
+        try{
+            let res = await store.fetchAlarmDescription(newVal)
+            if (res){
+                alarm.value = {
+                    id: res.id,
+                    text: res.name
+                }
+            }
+        }catch(err){
+            console.error(err)
+        }
+        
+        
+    }
 
 })
 
@@ -76,12 +96,12 @@ watch(getState, async (newVal) => {
         <div v-else>
             <div class="state-box">
                 <stateBox :state="machineState.state" :color="machineState.color" :text="machineState.text"></stateBox>
-                <alarmBox :code="store.getAlarm[0].value" text="ALARMTEXT"></alarmBox>
+                <alarmBox :code="alarm.id" :text="alarm.text"></alarmBox>
             </div>
             <stateChart v-if="machineStore.getFetchState"></stateChart>
             <div class="indicators">
                 <shiftChart></shiftChart>
-                <!-- <productivityCockpitChart></productivityCockpitChart> -->
+                
             </div>
 
         </div>

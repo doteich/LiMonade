@@ -46,11 +46,14 @@ export const useCentralDataStore = defineStore("centralDataStore", {
             if (status.length > 0){
                 return status[0].value
             }
-            return []
+            return 0
         },
         getAlarm: (state) => {
             let alarm = state.machineDefinition.dynamicData.filter((el) => el.name == state.machineDefinition.alarmNode)
-            return alarm
+            if (alarm.length > 0){
+                return alarm[0].value
+            }
+            return 0
         },
         getStaticData(state) {
             let staticData = state.machineDefinition.staticData.filter(el => el.show)
@@ -178,6 +181,27 @@ export const useCentralDataStore = defineStore("centralDataStore", {
             }
             catch (err) {
                 console.log(err)
+            }
+        },
+        async fetchAlarmDescription(alarm){
+            try {
+
+                let params = new URLSearchParams()
+                params.append("line", this.line)
+                params.append("machineId", this.machine)
+                params.append("alarmId", alarm)
+
+                let res = await axios.get(`${this.restURL}/config/alarm`, { params })
+
+                //console.log(res.data)
+                return res.data
+
+
+            }
+            catch (err) {
+
+                console.log(err)
+
             }
         }
 

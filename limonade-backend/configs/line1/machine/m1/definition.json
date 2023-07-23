@@ -58,7 +58,7 @@
             "name": "State",
             "unit": "",
             "type": "state",
-            "value": 0,
+            "value": -1,
             "show": true
         },
         {
