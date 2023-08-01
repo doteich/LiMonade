@@ -1,4 +1,4 @@
-package controller
+package main
 
 import (
 	"fmt"
@@ -74,7 +74,19 @@ func main() {
 
 	}
 
-	ww.getCurrentShift(weekDay, now)
+	isProd, cShift, dev := ww.getCurrentShift(weekDay, now)
+
+	if isProd {
+		cShiftStart := time.Date(now.Year(), now.Month(), now.Day(), cShift.start, 0, 0, 0, now.Location())
+		fmt.Println(now.Sub(cShiftStart).Hours() + float64(dev))
+
+		results = append(results, result{Duration: now.Sub(cShiftStart).Hours() + float64(dev), EndTS: now})
+
+	}
+
+	for i, res := range results {
+		results[i].Target = int(res.Duration) * pace
+	}
 
 	fmt.Println(results)
 }
@@ -97,18 +109,18 @@ func (ww *workweek) getShift(wd string, t time.Time) (bool, result) {
 	return false, result{}
 }
 
-func (ww *workweek) getCurrentShift(wd string, t time.Time) {
+func (ww *workweek) getCurrentShift(wd string, t time.Time) (bool, shift, int) {
 	d := ww.days[wd]
 
 	for _, s := range d.shifts {
 		if s.dayOverlap {
 			if t.Hour() >= s.start || t.Hour() < s.end {
 				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.name, d.name)
-				return
+				return true, s, 24
 			}
 		} else if t.Hour() < s.end && t.Hour() >= s.start {
 			fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.name, d.name)
-			return
+			return true, s, 0
 		}
 	}
 	next := t.Add(24 * time.Hour).Weekday().String()
@@ -118,17 +130,13 @@ func (ww *workweek) getCurrentShift(wd string, t time.Time) {
 		if s.dayOverlap {
 			if t.Hour() >= s.start || t.Hour() < s.end {
 				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.name, d.name)
-				return
+				return true, s, 0
 			}
 		}
 	}
 
 	fmt.Printf("No current shift found \n")
 
-	// for _, s := range d.shifts {
-	// 	if t.Hour() < s.end && t.Hour() > s.start {
-	// 		fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.name, d.name)
+	return false, shift{}, 0
 
-	// 	}
-	// }
 }
