@@ -35,6 +35,7 @@ func main() {
 	mongodb.InitMongoDB(pw)
 
 	router.Get("/timeseries", controller.GetDataByNodeName)
+	router.Get("/timeseries/shifts", controller.GetShiftTargets)
 	router.Get("/duration", controller.GetDataDuration)
 	router.Get("/last", controller.GetLastEntry)
 	router.Get("/config", controller.FetchConfig)

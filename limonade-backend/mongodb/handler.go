@@ -101,3 +101,28 @@ func (mh *MongoHandler) FindTopResults(collection string, nodeName string) []Tim
 	cursor.All(ctx, &res)
 	return res
 }
+
+func (mh *MongoHandler) FindTopResultsByTS(collection string, nodeName string, tsStart time.Time, tsEnd time.Time) []TimeSeriesData {
+	coll := mh.client.Database(mh.database).Collection(collection)
+	filter := bson.D{
+		{"meta.nodeName", nodeName},
+		{"ts",
+			bson.D{
+				{"$gte", tsStart},
+				{"$lt", tsEnd},
+			},
+		},
+	}
+
+	sortParams := bson.D{{"ts", -1}}
+
+	var res []TimeSeriesData
+
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSort(sortParams), options.Find().SetLimit(1))
+
+	if err != nil {
+		logging.LogError(err, "Error getting collection", "QueryByNodeName")
+	}
+	cursor.All(ctx, &res)
+	return res
+}
