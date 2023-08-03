@@ -5,10 +5,10 @@ import { Chart } from 'chart.js';
 import axios from "axios"
 import annotationPlugin from 'chartjs-plugin-annotation';
 
-const ist = ref(80)
-const soll = ref(100)
-const count = ref(1)
-const shift = ref("")
+// const ist = ref(80)
+// const soll = ref(100)
+// const count = ref(1)
+// const shift = ref("")
 
 const show = ref(true)
 
@@ -35,6 +35,13 @@ const data = {
         { x: [0, 0], y: "Qty" },
       ],
       backgroundColor: "crimson",
+    },
+    {
+      label: 'Über',
+      data: [
+        { x: [0, 100], y: "Qty" },
+      ],
+      backgroundColor: "limes",
     }
   ]
 }
@@ -53,17 +60,6 @@ const config = {
   plugins: {
     annotation: {
       annotations: {
-        line1: {
-          type: 'line',
-          label: {
-            content: "FS",
-            display: true
-          },
-          xMin: 0,
-          xMax: 0,
-          borderColor: 'grey',
-          borderWidth: 2,
-        },
 
       }
     }
@@ -93,7 +89,7 @@ async function addData() {
   let chartdata = data
 
   let params = new URLSearchParams()
-  params.append("collection", "goglio_line3_general")
+  params.append("collection", "goglio_line4_general")
   params.append("tsIdentifier", "WS_Cur_Order_ID")
   params.append("nodeName", "CT_Counter_Filled_Bags")
   let res = await axios.get(`http://localhost:3000/timeseries/shifts`, { params })
@@ -120,8 +116,8 @@ async function addData() {
         content: el.name,
         display: true
       },
-      xMin: s,
-      xMax: s,
+      xMin: last,
+      xMax: last,
       borderColor: 'grey',
       borderWidth: 2,
     }
@@ -134,34 +130,6 @@ async function addData() {
     
   })
 
-  // let last = data.datasets[1].data[data.datasets[1].data.length - 1].x[1]
-  // let n = last + ist.value
-  // let s = last + soll.value
-
-
-  // let iEntry = { x: [last, n], y: "Qty" }
-  // let sEntry = { x: [n, s], y: "Qty" }
-  // data.datasets[0].data.push(iEntry)
-  // data.datasets[1].data.push(sEntry)
-
-  // let lObj = {
-  //   type: 'line',
-  //   label: {
-  //     content: shift.value,
-  //     display: true
-  //   },
-  //   xMin: s,
-  //   xMax: s,
-  //   borderColor: 'grey',
-  //   borderWidth: 2,
-  // }
-  // count.value++
-  // let oName = "line" + count.value.toString()
-
-
-  // config.plugins.annotation.annotations[oName] = lObj
-
-  // config.data = data
   config.data = data
   setTimeout(() => {
     show.value = true

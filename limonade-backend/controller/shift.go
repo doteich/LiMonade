@@ -75,6 +75,10 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 	startFixed := start.Round(time.Hour)
 
+	if start.Sub(startFixed) >= 0 {
+		startFixed = startFixed.Add(time.Hour)
+	}
+
 	var weekDay string
 	var results []result
 
@@ -97,13 +101,13 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 	if isProd {
 		cShiftStart := time.Date(now.Year(), now.Month(), now.Day(), cShift.start, 0, 0, 0, now.Location())
-		fmt.Println(now.Sub(cShiftStart).Hours() + float64(dev))
-
 		results = append(results, result{Duration: now.Sub(cShiftStart).Hours() + float64(dev), EndTS: now, Name: cShift.name, StartTS: cShiftStart})
-
 	}
 
 	results[0].Duration = results[0].EndTS.Sub(start).Hours()
+
+	fmt.Println(start)
+	fmt.Println(results)
 
 	for i, res := range results {
 		entry := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, res.StartTS, res.EndTS)
