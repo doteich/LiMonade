@@ -41,7 +41,7 @@ const data = {
       data: [
         { x: [0, 100], y: "Qty" },
       ],
-      backgroundColor: "limes",
+      backgroundColor: "lime",
     }
   ]
 }

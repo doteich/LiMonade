@@ -5,8 +5,13 @@ import (
 	"fmt"
 	"limonade-backend/mongodb"
 	"net/http"
+	"os"
 	"time"
 )
+
+type definition struct {
+	Days map[string][]shift `json:"shifts"`
+}
 
 type day struct {
 	name   string
@@ -14,10 +19,10 @@ type day struct {
 }
 
 type shift struct {
-	dayOverlap bool
-	name       string
-	start      int
-	end        int
+	DayOverlap bool   `json:"dayOverlap"`
+	Name       string `json:"name"`
+	Start      int    `json:"start"`
+	End        int    `json:"end"`
 }
 
 type result struct {
@@ -45,15 +50,29 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 	tsEntry := mongodb.NewMDBHandler.FindTopResults(collection, tsIdentifier)
 
-	ww := workweek{make(map[string]day)}
+	bArr, err := os.ReadFile("./configs/definition.json")
 
-	ww.days["Monday"] = day{name: "Montag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	ww.days["Tuesday"] = day{name: "Dienstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	ww.days["Wednesday"] = day{name: "Mittwoch", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	ww.days["Thursday"] = day{name: "Donnerstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	ww.days["Friday"] = day{name: "Freitag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	ww.days["Saturday"] = day{name: "Samstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}}}
-	ww.days["Sunday"] = day{name: "Sonntag", shifts: []shift{}}
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	var def definition
+
+	if err := json.Unmarshal(bArr, &def); err != nil {
+		fmt.Println(err)
+	}
+
+	ww := def.Days
+
+	//ww := workweek{make(map[string]day)}
+
+	// ww.days["Monday"] = day{name: "Montag", shifts: []shift{{name: "NS", start: 20, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
+	// ww.days["Tuesday"] = day{name: "Dienstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
+	// ww.days["Wednesday"] = day{name: "Mittwoch", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
+	// ww.days["Thursday"] = day{name: "Donnerstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
+	// ww.days["Friday"] = day{name: "Freitag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
+	// ww.days["Saturday"] = day{name: "Samstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}}}
+	// ww.days["Sunday"] = day{name: "Sonntag", shifts: []shift{}}
 
 	loc, err := time.LoadLocation("Europe/Berlin")
 
@@ -100,14 +119,13 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 	isProd, cShift, dev := ww.getCurrentShift(weekDay, now)
 
 	if isProd {
-		cShiftStart := time.Date(now.Year(), now.Month(), now.Day(), cShift.start, 0, 0, 0, now.Location())
-		results = append(results, result{Duration: now.Sub(cShiftStart).Hours() + float64(dev), EndTS: now, Name: cShift.name, StartTS: cShiftStart})
+		cShiftStart := time.Date(now.Year(), now.Month(), now.Day(), cShift.Start, 0, 0, 0, now.Location())
+		results = append(results, result{Duration: now.Sub(cShiftStart).Hours() + float64(dev), EndTS: now, Name: cShift.Name, StartTS: cShiftStart})
 	}
 
-	results[0].Duration = results[0].EndTS.Sub(start).Hours()
-
-	fmt.Println(start)
-	fmt.Println(results)
+	if len(results) > 1 {
+		results[0].Duration = results[0].EndTS.Sub(start).Hours()
+	}
 
 	for i, res := range results {
 		entry := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, res.StartTS, res.EndTS)
@@ -137,12 +155,12 @@ func (ww *workweek) getShift(wd string, t time.Time) (bool, result) {
 	d := ww.days[wd]
 
 	for _, s := range d.shifts {
-		if s.end == t.Hour() && s.dayOverlap {
+		if s.End == t.Hour() && s.DayOverlap {
 
-			return true, result{Duration: float64((s.end + 24) - s.start), EndTS: t, Name: s.name, StartTS: t.Add(-time.Hour * time.Duration(s.end+24-s.start))}
+			return true, result{Duration: float64((s.End + 24) - s.Start), EndTS: t, Name: s.Name, StartTS: t.Add(-time.Hour * time.Duration(s.End+24-s.Start))}
 
-		} else if s.end == t.Hour() {
-			return true, result{Duration: float64(s.end - s.start), EndTS: t, Name: s.name, StartTS: t.Add(-time.Hour * time.Duration(s.end-s.start))}
+		} else if s.End == t.Hour() {
+			return true, result{Duration: float64(s.End - s.Start), EndTS: t, Name: s.Name, StartTS: t.Add(-time.Hour * time.Duration(s.End-s.Start))}
 		}
 
 	}
@@ -153,13 +171,13 @@ func (ww *workweek) getCurrentShift(wd string, t time.Time) (bool, shift, int) {
 	d := ww.days[wd]
 
 	for _, s := range d.shifts {
-		if s.dayOverlap {
-			if t.Hour() >= s.start || t.Hour() < s.end {
-				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.name, d.name)
+		if s.DayOverlap {
+			if t.Hour() >= s.Start || t.Hour() < s.End {
+				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, d.name)
 				return true, s, 24
 			}
-		} else if t.Hour() < s.end && t.Hour() >= s.start {
-			fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.name, d.name)
+		} else if t.Hour() < s.End && t.Hour() >= s.Start {
+			fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, d.name)
 			return true, s, 0
 		}
 	}
@@ -167,9 +185,9 @@ func (ww *workweek) getCurrentShift(wd string, t time.Time) (bool, shift, int) {
 	d = ww.days[next]
 
 	for _, s := range d.shifts {
-		if s.dayOverlap {
-			if t.Hour() >= s.start || t.Hour() < s.end {
-				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.name, d.name)
+		if s.DayOverlap {
+			if t.Hour() >= s.Start || t.Hour() < s.End {
+				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, d.name)
 				return true, s, 0
 			}
 		}
