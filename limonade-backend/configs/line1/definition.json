@@ -137,7 +137,8 @@
             "progressConfig": {
                 "tsIdKey": "Order",
                 "counterIdKey": "Bags",
-                "targetIdKey": "Target Quantity"
+                "targetIdKey": "Target Quantity",
+                "chartType": "shift"
             }
         },
         {
@@ -223,7 +224,8 @@
             "progressConfig": {
                 "tsIdKey": "Order",
                 "counterIdKey": "Packages",
-                "targetIdKey": "Target Quantity"
+                "targetIdKey": "Target Quantity",
+                "chartType": "default"
             }
         }
     ]

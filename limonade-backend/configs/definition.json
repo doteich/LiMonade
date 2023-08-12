@@ -1,0 +1,120 @@
+{
+    "shifts": {
+        "Monday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Tuesday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Wednesday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Thursday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Friday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Saturday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            }
+        ],
+        "Sunday": []
+    },
+    "lines": []
+}

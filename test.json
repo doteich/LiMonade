@@ -1,0 +1,34 @@
+[
+    {
+       $match: {
+         "meta.nodeName": "Order"
+       }
+     },
+     {
+       $sort: {
+         ts: -1
+       }
+     },
+     {
+       $limit: 5
+     },
+     {
+       $group: {
+         _id: { name: "$meta.nodeName", value: "$value" },
+         ts: { $last: "$ts" }
+       }
+     },
+     {
+       $project: {
+         _id: 0,
+         name: "$_id.name",
+         value: "$_id.value",
+         ts: 1
+       }
+     },
+     {
+       $sort: {
+         ts: -1
+       }
+     },
+   ]
