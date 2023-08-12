@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-type definition struct {
+type workweek struct {
 	Days map[string][]shift `json:"shifts"`
 }
 
@@ -34,9 +34,9 @@ type result struct {
 	StartTS  time.Time `json:"startTs"`
 }
 
-type workweek struct {
-	days map[string]day
-}
+// type workweek struct {
+// 	days map[string]day
+// }
 
 //var workweek map[string]day
 
@@ -56,13 +56,13 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	var def definition
+	var ww workweek
 
-	if err := json.Unmarshal(bArr, &def); err != nil {
+	if err := json.Unmarshal(bArr, &ww); err != nil {
 		fmt.Println(err)
 	}
 
-	ww := def.Days
+	// ww := def.Days
 
 	//ww := workweek{make(map[string]day)}
 
@@ -82,6 +82,8 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 	start := tsEntry[0].Timestamp.In(loc)
 
+	fmt.Println(start)
+
 	now := time.Now()
 
 	//start, err := time.Parse(time.RFC3339, startString)
@@ -98,7 +100,7 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 		startFixed = startFixed.Add(time.Hour)
 	}
 
-	var weekDay string
+	weekDay := startFixed.Weekday().String()
 	var results []result
 
 	for startFixed.Before(now) {
@@ -123,11 +125,10 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 		results = append(results, result{Duration: now.Sub(cShiftStart).Hours() + float64(dev), EndTS: now, Name: cShift.Name, StartTS: cShiftStart})
 	}
 
-	if len(results) > 1 {
-		results[0].Duration = results[0].EndTS.Sub(start).Hours()
-	}
+	results[0].Duration = results[0].EndTS.Sub(start).Hours()
 
 	for i, res := range results {
+
 		entry := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, res.StartTS, res.EndTS)
 
 		startEntry, ok := entry[0].Value.(int64)
@@ -152,9 +153,9 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 func (ww *workweek) getShift(wd string, t time.Time) (bool, result) {
 
-	d := ww.days[wd]
+	d := ww.Days[wd]
 
-	for _, s := range d.shifts {
+	for _, s := range d {
 		if s.End == t.Hour() && s.DayOverlap {
 
 			return true, result{Duration: float64((s.End + 24) - s.Start), EndTS: t, Name: s.Name, StartTS: t.Add(-time.Hour * time.Duration(s.End+24-s.Start))}
@@ -168,26 +169,26 @@ func (ww *workweek) getShift(wd string, t time.Time) (bool, result) {
 }
 
 func (ww *workweek) getCurrentShift(wd string, t time.Time) (bool, shift, int) {
-	d := ww.days[wd]
+	d := ww.Days[wd]
 
-	for _, s := range d.shifts {
+	for _, s := range d {
 		if s.DayOverlap {
 			if t.Hour() >= s.Start || t.Hour() < s.End {
-				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, d.name)
+				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, wd)
 				return true, s, 24
 			}
 		} else if t.Hour() < s.End && t.Hour() >= s.Start {
-			fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, d.name)
+			fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, wd)
 			return true, s, 0
 		}
 	}
 	next := t.Add(24 * time.Hour).Weekday().String()
-	d = ww.days[next]
+	d = ww.Days[next]
 
-	for _, s := range d.shifts {
+	for _, s := range d {
 		if s.DayOverlap {
 			if t.Hour() >= s.Start || t.Hour() < s.End {
-				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, d.name)
+				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, next)
 				return true, s, 0
 			}
 		}
