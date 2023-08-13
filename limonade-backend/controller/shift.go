@@ -13,11 +13,6 @@ type workweek struct {
 	Days map[string][]shift `json:"shifts"`
 }
 
-type day struct {
-	name   string
-	shifts []shift
-}
-
 type shift struct {
 	DayOverlap bool   `json:"dayOverlap"`
 	Name       string `json:"name"`
@@ -33,12 +28,6 @@ type result struct {
 	EndTS    time.Time `json:"endTs"`
 	StartTS  time.Time `json:"startTs"`
 }
-
-// type workweek struct {
-// 	days map[string]day
-// }
-
-//var workweek map[string]day
 
 const pace float64 = 3870
 
@@ -62,18 +51,6 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	// ww := def.Days
-
-	//ww := workweek{make(map[string]day)}
-
-	// ww.days["Monday"] = day{name: "Montag", shifts: []shift{{name: "NS", start: 20, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	// ww.days["Tuesday"] = day{name: "Dienstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	// ww.days["Wednesday"] = day{name: "Mittwoch", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	// ww.days["Thursday"] = day{name: "Donnerstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	// ww.days["Friday"] = day{name: "Freitag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}, {name: "SS", start: 14, end: 22, dayOverlap: false}}}
-	// ww.days["Saturday"] = day{name: "Samstag", shifts: []shift{{name: "NS", start: 22, end: 6, dayOverlap: true}, {name: "FS", start: 6, end: 14, dayOverlap: false}}}
-	// ww.days["Sunday"] = day{name: "Sonntag", shifts: []shift{}}
-
 	loc, err := time.LoadLocation("Europe/Berlin")
 
 	if err != nil {
@@ -85,14 +62,6 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(start)
 
 	now := time.Now()
-
-	//start, err := time.Parse(time.RFC3339, startString)
-
-	// if err != nil {
-	// 	fmt.Println(err)
-	// 	panic(err)
-
-	// }
 
 	startFixed := start.Round(time.Hour)
 

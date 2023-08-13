@@ -27,14 +27,14 @@ func FetchConfig(w http.ResponseWriter, r *http.Request) {
 	lineId := r.URL.Query().Get("lineId")
 	machineId := r.URL.Query().Get("machineId")
 
-	if configType == "" || (configType != "machine" && configType != "line") {
+	if configType == "" || (configType != "machine" && configType != "line" && configType != "main") {
 		logging.LogError(errors.New("parameter config type not provided or is not equal line or machine"), "aborting http request", "fetchConfig")
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Parameter configType not provided or is not equal to line or machine"))
 		return
 	}
 
-	if lineId == "" {
+	if lineId == "" && configType != "main" {
 		logging.LogError(errors.New("parameter lineId not provided"), "aborting http request", "fetchConfig")
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("Parameter lineId not provided"))
@@ -72,6 +72,18 @@ func FetchConfig(w http.ResponseWriter, r *http.Request) {
 		}
 
 		data = machineData
+
+	} else if configType == "main" {
+
+		mainData, err := os.ReadFile("./configs/definition.json")
+
+		if err != nil {
+			logging.LogError(err, "error while reading main definition", "fetchConfig")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		data = mainData
 
 	}
 

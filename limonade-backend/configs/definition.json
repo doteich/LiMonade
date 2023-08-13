@@ -116,5 +116,26 @@
         ],
         "Sunday": []
     },
-    "lines": []
+    "lines": [
+        {
+            "id": "line1",
+            "name": "Linie 1",
+            "subtitle": "Packaging of Something",
+            "numberOfMachines": 5,
+            "data": [
+                {
+                    "database": "lms_packaging",
+                    "nodeName": "Order",
+                    "displayName": "Auftrag",
+                    "value":""
+                },
+                {
+                    "database": "lms_packaging",
+                    "nodeName": "Order",
+                    "displayName": "Auftrag",
+                    "value":""
+                }
+            ]
+        }
+    ]
 }
