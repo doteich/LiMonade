@@ -78,7 +78,6 @@ export const useMachineDataStore = defineStore("machineData", {
         async fetchMachineData(url, database, nodeName, start, end) {
             try {
                 this.fetched = false
-                
                 if (!start) {
                     start = new Date()
                     start.setHours(start.getHours() - 24)
