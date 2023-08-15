@@ -34,7 +34,7 @@ export const useAlarmStore = defineStore("alarmStore", {
 
                 let res = await axios.get(`${obj.url}/duration`, { params })
                 this.alarms = []
-                if (res.data.length < 1) {
+                if (!res.data) {
                     return
                 }
 

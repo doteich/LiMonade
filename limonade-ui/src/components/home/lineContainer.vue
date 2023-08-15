@@ -16,11 +16,12 @@ const props = defineProps({
         <h2> {{ line.name }}</h2>
         <div class="line-container-infos">
             <h3>{{ line.subtitle }}</h3>
-            <p v-for="el in line.data" :key="el.name">
-                <i></i>
-                <span>{{ el.value}}</span>
-
-            </p>
+            <div class="line-data">
+                <p v-for="el in line.data" :key="el.name">
+                    <i class="bi bi-clipboard-check"></i>
+                    <span>{{ el.value }}</span>
+                </p>
+            </div>
             <Timeline :value="line.numberOfMachines" layout="horizontal" class="test">
                 <template #marker>
                     <span class="timeline-bubble">I</span>
@@ -73,6 +74,17 @@ const props = defineProps({
     font-size: 17px;
     color: var(--theme-color-2);
 
+}
+
+
+.line-data{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.line-data > p{
+    width: 45%;
 }
 
 .p-timeline-event-content {

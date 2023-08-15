@@ -32,10 +32,8 @@ const { getAlarm, getState } = storeToRefs(store)
 
 watch(getState, async (newVal) => {
     try {
-       console.log(newVal)
 
         let res = await store.fetchStateDescription(newVal)
-
         let color = ""
 
         switch (res.schema) {
@@ -77,8 +75,6 @@ watch(getAlarm, async (newVal) => {
         }catch(err){
             console.error(err)
         }
-        
-        
     }
 
 })
