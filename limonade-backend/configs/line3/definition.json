@@ -222,7 +222,7 @@
                     "nodeName": "WS_Cur_Order_ID",
                     "value": "",
                     "timestamp": "",
-                    "showTS": true,
+                    "showTS": false,
                     "show": true
                 },
                 {
@@ -230,7 +230,7 @@
                     "nodeName": "WS_Tot_Pallets",
                     "value": "",
                     "timestamp": "",
-                    "showTS": true,
+                    "showTS": false,
                     "show": true
                 },
                 {
@@ -239,7 +239,7 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": true
+                    "show": false
                 }
             ],
             "progressConfig": {

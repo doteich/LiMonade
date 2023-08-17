@@ -36,7 +36,7 @@ defineProps({
 .order-box h5 {
     margin: 5px 15px;
     word-wrap: break-word;
-    font-size: 15px;
+    font-size: 1em;
     padding: 1px;
     width: 90%;
     border-bottom: 1px solid var(--border-color-1);
@@ -50,7 +50,7 @@ defineProps({
 
 .order-box-basic>p {
     font-size: larger;
-    font-size: 20px;
+    font-size: 1.3em;
     color: var(--theme-color-2);
     width: 100%;
     padding: 0px 5px;

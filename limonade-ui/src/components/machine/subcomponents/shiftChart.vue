@@ -36,13 +36,7 @@ const data = {
       ],
       backgroundColor: "crimson",
     },
-    {
-      label: 'Über',
-      data: [
-        { x: [0, 100], y: "Qty" },
-      ],
-      backgroundColor: "lime",
-    }
+   
   ]
 }
 
