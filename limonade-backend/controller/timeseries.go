@@ -67,7 +67,13 @@ func GetDataByNodeName(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, tsStart, tsEnd)
+	res, err := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, tsStart, tsEnd)
+
+	if err != nil {
+		logging.LogError(err, "error executing mongodb query", "GetDataByNodeName")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	var payload []byte
 	var mErr error

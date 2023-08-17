@@ -26,7 +26,13 @@ func GetLastEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	res := mongodb.NewMDBHandler.FindTopResults(collection, nodeName)
+	res, err := mongodb.NewMDBHandler.FindTopResults(collection, nodeName)
+
+	if err != nil {
+		logging.LogError(err, "error executing mongodb query", "GetLastEntry")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	payload, err := json.Marshal(res)
 

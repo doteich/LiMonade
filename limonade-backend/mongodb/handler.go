@@ -2,6 +2,7 @@ package mongodb
 
 import (
 	"context"
+	"errors"
 	"limonade-backend/logging"
 	"time"
 
@@ -42,6 +43,7 @@ func InitMongoDB(password string) {
 
 	if err != nil {
 		logging.LogError(err, "Failed to connect to MongoDB", "mongodb")
+		panic(err)
 	}
 
 	err = client.Ping(ctx, readpref.Primary())
@@ -58,14 +60,14 @@ func InitMongoDB(password string) {
 
 }
 
-func (mh *MongoHandler) QueryByNodeName(collection string, nodeName string, tsStart time.Time, tsEnd time.Time) []TimeSeriesData {
+func (mh *MongoHandler) QueryByNodeName(collection string, nodeName string, tsStart time.Time, tsEnd time.Time) ([]TimeSeriesData, error) {
 	coll := mh.client.Database(mh.database).Collection(collection)
 	filter := bson.D{
-		{"meta.nodeName", nodeName},
-		{"ts",
-			bson.D{
-				{"$gte", tsStart},
-				{"$lt", tsEnd},
+		{Key: "meta.nodeName", Value: nodeName},
+		{Key: "ts",
+			Value: bson.D{
+				{Key: "$gte", Value: tsStart},
+				{Key: "$lt", Value: tsEnd},
 			},
 		},
 	}
@@ -75,15 +77,15 @@ func (mh *MongoHandler) QueryByNodeName(collection string, nodeName string, tsSt
 	cursor, err := coll.Find(ctx, filter)
 
 	if err != nil {
-		logging.LogError(err, "Error getting collection", "QueryByNodeName")
+		return nil, err
 	}
 
 	cursor.All(ctx, &res)
 
-	return res
+	return res, nil
 }
 
-func (mh *MongoHandler) FindTopResults(collection string, nodeName string) []TimeSeriesData {
+func (mh *MongoHandler) FindTopResults(collection string, nodeName string) ([]TimeSeriesData, error) {
 	coll := mh.client.Database(mh.database).Collection(collection)
 
 	pipeline := bson.A{
@@ -123,33 +125,38 @@ func (mh *MongoHandler) FindTopResults(collection string, nodeName string) []Tim
 	cursor, err := coll.Aggregate(ctx, pipeline)
 
 	if err != nil {
-		logging.LogError(err, "Error getting collection", "QueryByNodeName")
+		return nil, err
 	}
 	cursor.All(ctx, &res)
-	return res[:1]
+
+	if len(res) < 1 {
+		return nil, errors.New("query did not return any results")
+	}
+
+	return res[:1], nil
 }
 
-func (mh *MongoHandler) FindTopResultsByTS(collection string, nodeName string, tsStart time.Time, tsEnd time.Time) []TimeSeriesData {
+func (mh *MongoHandler) FindLast(collection string, nodeName string, tsStart time.Time, tsEnd time.Time) ([]TimeSeriesData, error) {
 	coll := mh.client.Database(mh.database).Collection(collection)
 	filter := bson.D{
-		{"meta.nodeName", nodeName},
-		{"ts",
-			bson.D{
-				{"$gte", tsStart},
-				{"$lt", tsEnd},
+		{Key: "meta.nodeName", Value: nodeName},
+		{Key: "ts",
+			Value: bson.D{
+				{Key: "$gte", Value: tsStart},
+				{Key: "$lt", Value: tsEnd},
 			},
 		},
 	}
 
-	sortParams := bson.D{{"ts", -1}}
+	sortParams := bson.D{{Key: "ts", Value: -1}}
 
 	var res []TimeSeriesData
 
 	cursor, err := coll.Find(ctx, filter, options.Find().SetSort(sortParams), options.Find().SetLimit(1))
 
 	if err != nil {
-		logging.LogError(err, "Error getting collection", "QueryByNodeName")
+		return nil, err
 	}
 	cursor.All(ctx, &res)
-	return res
+	return res, nil
 }

@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"limonade-backend/logging"
 	"limonade-backend/mongodb"
 	"net/http"
 	"os"
@@ -37,7 +38,13 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 	tsIdentifier := r.URL.Query().Get("tsIdentifier")
 	collection := r.URL.Query().Get("collection")
 
-	tsEntry := mongodb.NewMDBHandler.FindTopResults(collection, tsIdentifier)
+	tsEntry, err := mongodb.NewMDBHandler.FindTopResults(collection, tsIdentifier)
+
+	if err != nil {
+		logging.LogError(err, "error executing mongodb query", "GetShiftTargets")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
 
 	bArr, err := os.ReadFile("./configs/definition.json")
 
@@ -98,7 +105,13 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 	for i, res := range results {
 
-		entry := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, res.StartTS, res.EndTS)
+		entry, err := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, res.StartTS, res.EndTS)
+
+		if err != nil {
+			logging.LogError(err, "error executing mongodb query", "GetShiftTargets")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 
 		startEntry, ok := entry[0].Value.(int64)
 		endEntry, _ := entry[len(entry)-1].Value.(int64)
