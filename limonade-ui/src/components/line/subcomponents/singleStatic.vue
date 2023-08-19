@@ -23,6 +23,7 @@ defineProps({
 .order-box {
     display: flex;
     width: 31%;
+    padding: 2px; 
     min-width: 100px;
     flex-direction: column;
     height: 48%;

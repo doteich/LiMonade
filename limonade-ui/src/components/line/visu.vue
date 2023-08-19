@@ -68,7 +68,7 @@ function getStateColor(id, mid) {
 watch(getAlarms, (nState) => {
     nState.forEach(async (el, idx) => {
         if (el.aid > 0) {
-         
+
             let aRes = await store.fetchAlarmDescription(line, el.mid, el.aid)
             if (!aRes) {
 
@@ -85,8 +85,8 @@ watch(getAlarms, (nState) => {
 watch(getStates, (nState, oState) => {
     nState.forEach(async (el, idx) => {
         if (oState.some(e => e.sid == el.sid && e.mid == el.mid)) {
-                return
-            }
+            return
+        }
         let sRes = await store.fetchStateDescription(line, el.mid, el.sid)
         if (!sRes) {
 
@@ -115,8 +115,7 @@ watch(getStates, (nState, oState) => {
                         <p class="machine-state"><span class="status-num"
                                 :style="{ 'backgroundColor': getStateColor(slotProps.item.state, slotProps.item.id) }">{{
                                     slotProps.item.state }}</span><span class="status-string">{{
-        getStateName(slotProps.item.state, slotProps.item.id) }}</span></p>
-
+                                        getStateName(slotProps.item.state, slotProps.item.id) }}</span></p>
                         <div class="image-container">
                             <img src="../../assets/packing-machine-svgrepo-com.svg">
                             <!-- <img :src="slotProps.item.img"> -->
@@ -166,7 +165,7 @@ watch(getStates, (nState, oState) => {
 }
 
 .image-container {
-    height: 70%;
+    height: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -181,7 +180,7 @@ watch(getStates, (nState, oState) => {
     cursor: pointer;
     min-width: 13vw;
     border-radius: 2px;
-    height: 22vh;
+    height: 15vh;
     padding: 0;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
@@ -202,12 +201,12 @@ watch(getStates, (nState, oState) => {
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
     margin: 0;
     display: flex;
-    height: 15%;
+    height: 27%;
 
 }
 
 .machine-state>span {
-    padding: 10px;
+    padding: 3%;
 }
 
 .status-num {
@@ -222,7 +221,7 @@ watch(getStates, (nState, oState) => {
     width: 13vw;
     animation-name: example;
     animation-duration: 2s;
-    max-height: 6vh;
+    max-height: 10vh;
 
 }
 

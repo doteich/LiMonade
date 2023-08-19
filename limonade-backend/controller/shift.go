@@ -30,7 +30,7 @@ type result struct {
 	StartTS  time.Time `json:"startTs"`
 }
 
-const pace float64 = 3870
+const pace float64 = 1200
 
 func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
@@ -111,6 +111,10 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 			logging.LogError(err, "error executing mongodb query", "GetShiftTargets")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
+		}
+
+		if len(entry) < 1 {
+			continue
 		}
 
 		startEntry, ok := entry[0].Value.(int64)

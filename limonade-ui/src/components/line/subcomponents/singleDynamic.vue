@@ -23,6 +23,7 @@ defineProps({
     display: flex;
     flex-direction: row;
     height: 4vmin;
+    min-width: 180px;
     min-height: 40px;
     margin: 2px;
     width: 32%;

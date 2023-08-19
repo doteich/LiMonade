@@ -10,7 +10,7 @@ const store = useLineDataStore()
     <section>
         <div class="line-progress" v-for="group in store.getMachineAreas" :key="group"
             :style="{ width: group.ratio * 100 + '%' }">
-            <h2>Progress - {{ group.name }}</h2>
+            <h2>Fortschritt - {{ group.name }}</h2>
             <ProgressSpinner v-if="!store.getLoadingState(group.name)" class="spinner"></ProgressSpinner>
             <progressBarChart v-if="store.getLoadingState(group.name)" :pObject="store.getProgressData(group.name)">
             </progressBarChart>

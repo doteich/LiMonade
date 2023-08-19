@@ -46,6 +46,7 @@ function changeRoute(id){
    
     flex-direction: column;
     width: 40vw;
+    max-height: 35%;
     background-color: var(--font-color-1);
     font-family: Arial, Helvetica, sans-serif;
     border: 1px solid var(--border-color-1);

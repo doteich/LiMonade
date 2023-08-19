@@ -28,8 +28,10 @@ function getAlarmsByDate(offset) {
                 <p @click="getAlarmsByDate(48)"><i class="bi bi-arrow-clockwise"></i>48h</p>
                 <p @click="getAlarmsByDate(168)"><i class="bi bi-arrow-clockwise"></i>7d</p>
             </div>
-            <alarmBoxDetailed v-for="alarm in alarmStore.getAlarms" :key="alarm.duration" :start=alarm.start :end=alarm.end
-                :value=alarm.value :duration=alarm.duration :text="alarm.text"></alarmBoxDetailed>
+            <div class="alarm-bar-alarms">
+                <alarmBoxDetailed v-for="alarm in alarmStore.getAlarms" :key="alarm.duration" :start=alarm.start
+                    :end=alarm.end :value=alarm.value :duration=alarm.duration :text="alarm.text"></alarmBoxDetailed>
+            </div>
         </div>
     </section>
 </template>
@@ -47,7 +49,15 @@ function getAlarmsByDate(offset) {
 .alarm-bar-loaded {
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
+.alarm-bar-alarms {
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .refresh-bar {

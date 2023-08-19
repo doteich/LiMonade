@@ -7,7 +7,7 @@ const store = useLineDataStore()
     <section>
         <div class="line-dynamic" v-for="group in store.getMachineAreas" :key="group.ratio"
             :style="{ width: group.ratio * 100 + '%' }">
-            <h2>Dynamic - {{ group.name }}</h2>
+            <h2>Zähler - {{ group.name }}</h2>
             <div class="dynamic-data">
                 <singleCounter  v-for="tag in store.getDynamicData(group.name)" :key="tag.name" :name="tag.name" :value="tag.value" :unit="tag.unit"></singleCounter>
             </div>

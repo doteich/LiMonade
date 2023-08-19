@@ -33,14 +33,14 @@ onMounted(() => {
 <style>
 .line-view {
     display: grid;
-    height: 94.5vh;
+    height: 99.5vh;
     min-width: 100%;
     grid-template-areas:
         "line"
         "progress"
         "dynamic"
         "static";
-    grid-template-rows: 36.5% 19% 19% 25%;
+    grid-template-rows: 33.5% 22% 19% 25%;
 }
 
 

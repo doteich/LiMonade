@@ -12,7 +12,7 @@ const store = useLineDataStore()
         
         <div class="line-static" v-for="group in store.getMachineAreas" :key="group"
             :style="{ width: group.ratio * 100 + '%' }">
-            <h2>Static - {{ group.name }}</h2>
+            <h2>Statische Daten - {{ group.name }}</h2>
             <ProgressSpinner v-if="!store.getLoadingState(group.name)" class="spinner"></ProgressSpinner>
             <div class="static-data" v-if="store.getLoadingState(group.name)">
                 <singleStatic v-for="el in store.getStaticData(group.name)" :key="el.nodeName" :name="el.displayName"
