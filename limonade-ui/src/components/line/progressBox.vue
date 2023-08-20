@@ -1,7 +1,10 @@
 <script setup>
 import { useLineDataStore } from "@/stores/line/lineData"
 import progressBarChart from "./subcomponents/progressBarChart.vue"
+import shiftChart from "./subcomponents/shiftChart.vue"
 import ProgressSpinner from 'primevue/progressspinner';
+import ProgressData from "./subcomponents/progressData.vue"
+
 
 const store = useLineDataStore()
 
@@ -12,9 +15,20 @@ const store = useLineDataStore()
             :style="{ width: group.ratio * 100 + '%' }">
             <h2>Fortschritt - {{ group.name }}</h2>
             <ProgressSpinner v-if="!store.getLoadingState(group.name)" class="spinner"></ProgressSpinner>
-            <progressBarChart v-if="store.getLoadingState(group.name)" :pObject="store.getProgressData(group.name)">
-            </progressBarChart>
+            <div v-if="store.getLoadingState(group.name)">
+                <div class="progress-data">
+                    <ProgressData :value="store.getProgressData(group.name).pace" unit="Stk/Min" icon="speedometer2">
+                    </ProgressData>
+                    <ProgressData :value="store.getProgressData(group.name).finish" unit="Minuten" icon="hourglass-split">
+                    </ProgressData>
+                    <ProgressData :value="store.getProgressData(group.name).finishTS" icon="calendar-week"></ProgressData>
+                </div>
 
+                <shiftChart v-if="store.getProgressData(group.name).type == 'shift'" :pObject="store.getProgressData(group.name)"></shiftChart>
+
+                <progressBarChart :pObject="store.getProgressData(group.name)" v-else>
+                </progressBarChart>
+            </div>
         </div>
 
     </section>
@@ -31,12 +45,13 @@ const store = useLineDataStore()
 }
 
 .spinner {
-
     margin-top: auto;
     margin-bottom: 1vh;
+}
 
-
-
+.progress-data {
+    display: flex;
+    align-items: center;
 }
 </style>
 

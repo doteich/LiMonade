@@ -114,7 +114,26 @@
                 "dayOverlap": false
             }
         ],
-        "Sunday": []
+        "Sunday": [
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 11,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 12,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "NS",
+                "start": 17,
+                "end": 18,
+                "dayOverlap": false
+            }
+        ]
     },
     "lines": [
         {
@@ -122,18 +141,19 @@
             "name": "Linie 1",
             "subtitle": "Packaging of Something",
             "numberOfMachines": 5,
+            "nominalSpeed": 600,
             "data": [
                 {
                     "database": "lms_packaging",
                     "nodeName": "Order",
                     "displayName": "Auftrag",
-                    "value":""
+                    "value": ""
                 },
                 {
                     "database": "lms_packaging",
                     "nodeName": "Order",
                     "displayName": "Auftrag",
-                    "value":""
+                    "value": ""
                 }
             ]
         }

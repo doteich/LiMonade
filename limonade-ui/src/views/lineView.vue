@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from "vue"
+import { onMounted, onUnmounted } from "vue"
 import { useRoute } from 'vue-router';
 import { useLineDataStore } from "@/stores/line/lineData"
 import lineVisu from "../components/line/visu.vue"
@@ -15,6 +15,11 @@ onMounted(() => {
     store.fetchConfig(route)
     // store.startSockets()
     // store.fetchStaticData()
+})
+
+onUnmounted(()=>{
+    store.resetSockets()
+    store.$reset()
 })
 
 </script>
@@ -40,7 +45,7 @@ onMounted(() => {
         "progress"
         "dynamic"
         "static";
-    grid-template-rows: 33.5% 22% 19% 25%;
+    grid-template-rows: 30% 22% 18% 24%;
 }
 
 

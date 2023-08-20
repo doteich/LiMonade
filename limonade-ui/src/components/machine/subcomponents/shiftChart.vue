@@ -6,11 +6,6 @@ import axios from "axios"
 import annotationPlugin from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-// const ist = ref(80)
-// const soll = ref(100)
-// const count = ref(1)
-// const shift = ref("")
-
 const show = ref(true)
 
 
@@ -203,7 +198,4 @@ async function addData() {
 </template>
 
 <style scoped>
-.stest {
-  background: rgb(39, 207, 115);
-}
 </style>

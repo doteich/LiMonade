@@ -10,7 +10,8 @@ export const useLineDataStore = defineStore("lineData", {
         {
             restURL: "http://localhost:3000",
             refreshInterval: 60,
-            name: "", 
+            name: "",
+            id: "",
             lineDefinition: [],
 
         }),
@@ -96,15 +97,19 @@ export const useLineDataStore = defineStore("lineData", {
                 let finishTS = new Date()
                 finishTS.setMinutes(finishTS.getMinutes() + finish)
 
-
-
                 let obj = {
                     pace: pace.toFixed(2),
                     finish: finish.toFixed(2),
                     finishTS: finishTS.toLocaleString(),
                     target,
                     count: count.value,
-                    progress: ((Number(count.value) / Number(target)) * 100).toFixed(1)
+                    progress: ((Number(count.value) / Number(target)) * 100).toFixed(1),
+                    type: config.chartType,
+                    tsIdKey: config.tsIdKey,
+                    counterIdKey: config.counterIdKey,
+                    url: state.restURL,
+                    lineid: state.id,
+                    db: state.lineDefinition.find(g => group == g.name).database
                 }
 
                 return obj
@@ -113,13 +118,18 @@ export const useLineDataStore = defineStore("lineData", {
         getLoadingState(state) {
             return (group) => state.lineDefinition.find(g => group == g.name).isLoaded
         },
-        getLineName(state){
+        getLineName(state) {
             return state.name
         }
 
 
     },
     actions: {
+        resetSockets() {
+            sockets.forEach(socket => socket.close())
+            intervals.forEach(iv => clearInterval(iv))
+
+        },
         async fetchConfig(lineName) {
             try {
                 let params = new URLSearchParams()
@@ -128,6 +138,7 @@ export const useLineDataStore = defineStore("lineData", {
                 let res = await axios.get(`${this.restURL}/config`, { params })
                 this.lineDefinition = res.data.data
                 this.name = res.data.displayName
+                this.id = lineName
                 this.startSockets()
                 this.fetchStaticData()
                 this.intervalHandler()
@@ -141,6 +152,7 @@ export const useLineDataStore = defineStore("lineData", {
             this.lineDefinition.forEach((group, idx) => {
                 let socket
                 socket = new WebSocket(group.socket)
+
                 socket.addEventListener('open', () => {
                     console.log("Socket opened for machine group: " + idx)
                     let payload = {
@@ -166,13 +178,13 @@ export const useLineDataStore = defineStore("lineData", {
         },
 
         intervalHandler() {
-            for (let int of intervals){
+            for (let int of intervals) {
                 clearInterval(int)
             }
 
             let i = setInterval(() => {
                 this.fetchStaticData()
-            }, this.refreshInterval*1000)
+            }, this.refreshInterval * 1000)
             intervals.push(i)
         },
 
@@ -250,8 +262,8 @@ export const useLineDataStore = defineStore("lineData", {
                 console.log(err)
             }
         },
-        setRefreshInterval(value){
-            this.refreshInterval = value 
+        setRefreshInterval(value) {
+            this.refreshInterval = value
             this.intervalHandler()
         }
 

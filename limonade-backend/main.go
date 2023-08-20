@@ -22,9 +22,7 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Use(cors.Handler(cors.Options{
-		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"https://*", "http://*"},
-		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		ExposedHeaders:   []string{"Link"},
@@ -36,14 +34,15 @@ func main() {
 
 	router.Get("/timeseries", controller.GetDataByNodeName)
 	router.Get("/timeseries/shifts", controller.GetShiftTargets)
+	router.Get("/distinct", controller.GetLastEntry)
 	router.Get("/duration", controller.GetDataDuration)
 	router.Get("/last", controller.GetLastEntry)
 	router.Get("/config", controller.FetchConfig)
 	router.Get("/config/alarm", controller.FetchAlarm)
 	router.Get("/config/state", controller.FetchState)
 
-	fs := http.FileServer(http.Dir("/etc/"))
-	router.Handle("/etc/*", http.StripPrefix("/etc/", fs))
+	// fs := http.FileServer(http.Dir("/etc/"))
+	// router.Handle("/etc/*", http.StripPrefix("/etc/", fs))
 
 	http.ListenAndServe("127.0.0.1:3000", router)
 

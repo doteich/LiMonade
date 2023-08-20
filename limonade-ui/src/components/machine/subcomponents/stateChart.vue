@@ -32,7 +32,8 @@ let config = {
                     return context[0].dataset.label
                 }
             }
-        }
+        },
+        datalabels: null
     },
     scales: {
         x: {
@@ -69,7 +70,7 @@ onMounted(() => {
     let end = new Date();
     end.setUTCHours(23, 59, 59, 999);
 
-  
+
 
 })
 

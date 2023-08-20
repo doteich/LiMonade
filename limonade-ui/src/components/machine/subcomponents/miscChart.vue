@@ -23,7 +23,9 @@ let config =
             labels: {
                 color: "black"
             }
-        }
+        },
+        datalabels: null
+        
     },
     scales: {
         x: {

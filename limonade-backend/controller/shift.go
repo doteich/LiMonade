@@ -11,7 +11,13 @@ import (
 )
 
 type workweek struct {
-	Days map[string][]shift `json:"shifts"`
+	Days  map[string][]shift `json:"shifts"`
+	Lines []lineconfig       `json:"lines"`
+}
+
+type lineconfig struct {
+	Id           string  `json:"id"`
+	NominalSpeed float64 `json:"nominalSpeed"`
 }
 
 type shift struct {
@@ -30,13 +36,12 @@ type result struct {
 	StartTS  time.Time `json:"startTs"`
 }
 
-const pace float64 = 1200
-
 func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 	nodeName := r.URL.Query().Get("nodeName")
 	tsIdentifier := r.URL.Query().Get("tsIdentifier")
 	collection := r.URL.Query().Get("collection")
+	lineId := r.URL.Query().Get("lineId")
 
 	tsEntry, err := mongodb.NewMDBHandler.FindTopResults(collection, tsIdentifier)
 
@@ -62,6 +67,18 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	var pace float64
+
+	for _, line := range ww.Lines {
+		if line.Id == lineId {
+			pace = line.NominalSpeed
+		} else {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("missing parameter lineid"))
+			return
+		}
 	}
 
 	start := tsEntry[0].Timestamp.In(loc)

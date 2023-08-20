@@ -96,7 +96,6 @@ watch(getAlarm, async (newVal) => {
             </div>
             <stateChart v-if="machineStore.getFetchState"></stateChart>
             <div class="indicators">
-                <shiftChart></shiftChart>
                 
             </div>
 
