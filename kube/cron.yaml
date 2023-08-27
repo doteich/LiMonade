@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: s3-sync-cronjob
+spec:
+  schedule: "*/5 * * * *"  # Run every hour at the 0th minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          volumes:
+            - name: shared-data
+              persistentVolumeClaim:
+                claimName: shared-data-pvc
+
+          containers:
+            - name: s3-init-container
+              image: amazon/aws-cli:latest
+              volumeMounts:
+                - name: shared-data
+                  mountPath: /shared-data
+              env:
+                - name: AWS_ACCESS_KEY_ID
+                  value: KEY
+                - name: AWS_SECRET_ACCESS_KEY
+                  value: SECRET
+              command: ["sh", "-c"]
+              args:
+                - aws s3 sync s3://lm-configs/configs /shared-data
+
+          restartPolicy: Never
+
+          

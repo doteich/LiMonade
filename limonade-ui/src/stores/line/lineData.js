@@ -21,9 +21,33 @@ export const useLineDataStore = defineStore("lineData", {
             for (let group of state.lineDefinition) {
                 for (let machine of group.machines) {
 
-                    machine.state = group.dynamicData.filter(el => el.name == machine.stateNode)[0].value
-                    machine.alarm = group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value
-                    machines.push(machine)
+                    if (machine.altRouting) {
+                        let evalNode = group.staticData.find(el => el.nodeName == machine.routing.node).value
+
+                        switch (machine.routing.expr) {
+                            case "isTrue":
+                                if (evalNode) {
+                                    machine.state = group.dynamicData.filter(el => el.name == machine.stateNode)[0].value
+                                    machine.alarm = group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value
+                                    machines.push(machine)
+                                }
+                                break
+
+
+                            case "isFalse":
+                                if (!evalNode) {
+                                    machine.state = group.dynamicData.filter(el => el.name == machine.stateNode)[0].value
+                                    machine.alarm = group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value
+                                    machines.push(machine)
+                                }
+                                break
+                        }
+                    } else {
+                        machine.state = group.dynamicData.filter(el => el.name == machine.stateNode)[0].value
+                        machine.alarm = group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value
+                        machines.push(machine)
+                    }
+
                 }
             }
             return machines
@@ -97,10 +121,10 @@ export const useLineDataStore = defineStore("lineData", {
                 let finish = ((target - count.value) / pace)
                 let finishTS = new Date()
                 finishTS.setMinutes(finishTS.getMinutes() + finish)
-                
+
                 finish = finish.toFixed(2)
 
-                if (finish < 1){
+                if (finish < 1) {
                     finish = "-"
                     finishTS = "-"
                 }

@@ -44,6 +44,6 @@ func main() {
 	// fs := http.FileServer(http.Dir("/etc/"))
 	// router.Handle("/etc/*", http.StripPrefix("/etc/", fs))
 
-	http.ListenAndServe(":3000", router)
+	http.ListenAndServe("127.0.0.1:3000", router)
 
 }

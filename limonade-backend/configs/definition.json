@@ -120,86 +120,24 @@
         {
             "id": "line1",
             "name": "Linie 1",
-            "subtitle": "AVT Filterkaffee",
+            "subtitle": "Verpackung Whatever",
             "numberOfMachines": 6,
             "nominalSpeed": 2125,
             "data": [
                 {
-                    "database": "goglio_line1_general",
-                    "nodeName": "WS_Cur_Order_ID",
-                    "displayName": "Auftrag Goglio",
+                    "database": "lms_packaging",
+                    "nodeName": "Order",
+                    "displayName": "Auftrag Packaging",
                     "value":""
                 },
                 {
-                    "database": "lp_line1_general",
-                    "nodeName": "WS_Cur_Order_ID",
-                    "displayName": "Auftrag Lorenz Pan",
-                    "value":""
-                }
-            ]
-        },
-        {
-            "id": "line2",
-            "name": "Linie 2",
-            "subtitle": "AVT Filterkaffee",
-            "numberOfMachines": 6,
-            "nominalSpeed": 1062.5,
-            "data": [
-                {
-                    "database": "goglio_line2_general",
-                    "nodeName": "WS_Cur_Order_ID",
-                    "displayName": "Auftrag Goglio",
-                    "value":""
-                },
-                {
-                    "database": "lp_line2_general",
-                    "nodeName": "WS_Cur_Order_ID",
-                    "displayName": "Auftrag Lorenz Pan",
-                    "value":""
-                }
-            ]
-        },
-        {
-            "id": "line3",
-            "name": "Linie 3",
-            "subtitle": "AVT GB",
-            "numberOfMachines": 5,
-            "nominalSpeed": 2500,
-            "data": [
-                {
-                    "database": "goglio_line3_general",
-                    "nodeName": "WS_Cur_Order_ID",
-                    "displayName": "Auftrag Goglio",
-                    "value":""
-                },
-                {
-                    "database": "lp_line3_general",
-                    "nodeName": "WS_Cur_Order_ID",
-                    "displayName": "Auftrag Lorenz Pan",
-                    "value":""
-                }
-            ]
-        },
-        {
-            "id": "line4",
-            "name": "Linie 4",
-            "subtitle": "AVT GB",
-            "numberOfMachines": 5,
-            "nominalSpeed": 2187.5,
-            "data": [
-                {
-                    "database": "goglio_line4_general",
-                    "nodeName": "WS_Cur_Order_ID",
-                    "displayName": "Auftrag Goglio",
-                    "value":""
-                },
-                {
-                    "database": "lp_line4_general",
-                    "nodeName": "WS_Cur_Order_ID",
-                    "displayName": "Auftrag Lorenz Pan",
+                    "database": "lms_palettierung",
+                    "nodeName": "Order",
+                    "displayName": "Auftrag Palettierung",
                     "value":""
                 }
             ]
         }
+
     ]
 }

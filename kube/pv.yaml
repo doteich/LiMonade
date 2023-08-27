@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: shared-data-pv
+spec:
+  capacity:
+    storage: 128Mi  # Adjust the size as needed
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain  # Change according to your needs
+  storageClassName: microk8s-hostpath  # Modify based on your storage class
+  # Add your specific storage details here based on your storage soluti
