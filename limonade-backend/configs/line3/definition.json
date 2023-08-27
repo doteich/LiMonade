@@ -3,7 +3,7 @@
     "data": [
         {
             "name": "Verpackung",
-            "socket": "ws://localhost:8080/ws",
+            "socket": "wss://datalogger-iep-rheine.schwarz/ws5",
             "database": "goglio_line3_general",
             "isLoaded": false,
             "machines": [
@@ -110,6 +110,38 @@
                     "show": false
                 },
                 {
+                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Scrap_CW\"",
+                    "name": "Ausschl.Waage",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Scrap_Xray\"",
+                    "name": "Ausschl.Xray",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Scrap_Softbags\"",
+                    "name": "Ausschl.Goglio",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Carton_Consumption\"",
+                    "name": "Kartons",
+                    "unit": "ST",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
                     "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Filled_Bags\"",
                     "name": "Päckchen",
                     "unit": "ST",
@@ -118,17 +150,17 @@
                     "show": true
                 },
                 {
-                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Valves_Applied\"",
-                    "name": "Ventile",
+                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Labels_Applied\"",
+                    "name": "Etiketten",
                     "unit": "ST",
                     "type": "counter",
                     "value": 0,
                     "show": true
                 },
                 {
-                    "nodeId": "ns=3;s=\"DB_SAP Counter\".\"CT_Counter_Carton_Consumption\"",
-                    "name": "Trays",
-                    "unit": "ST",
+                    "nodeId": "ns=3;s=\"DB_SAP Current Order\".\"CT_CurrentOrder_Nominal_Weight\"",
+                    "name": "Gewicht",
+                    "unit": "g",
                     "type": "counter",
                     "value": 0,
                     "show": true
@@ -144,12 +176,20 @@
                     "show": true
                 },
                 {
-                    "displayName": "Target Quantity",
+                    "displayName": "Materialnummer",
+                    "nodeName": "CT_CurrentOrder_Material_Number",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": false,
+                    "show": true
+                },
+                {
+                    "displayName": "Zielmenge",
                     "nodeName": "CT_CurrentOrder_Order_Quantity",
                     "value": "",
                     "timestamp": "",
-                    "showTS": true,
-                    "show": false
+                    "showTS": false,
+                    "show": true
                 },
                 {
                     "displayName": "Filled Bags",
@@ -158,17 +198,26 @@
                     "timestamp": "",
                     "showTS": true,
                     "show": false
+                },
+                {
+                    "displayName": "Gew./Packung",
+                    "nodeName": "CT_CurrentOrder_Nominal_Weight",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": false,
+                    "show": false
                 }
             ],
             "progressConfig": {
                 "tsIdKey": "WS_Cur_Order_ID",
                 "counterIdKey": "CT_Counter_Filled_Bags",
-                "targetIdKey": "CT_CurrentOrder_Order_Quantity"
+                "targetIdKey": "CT_CurrentOrder_Order_Quantity",
+                "chartType": "shift"
             }
         },
         {
             "name": "Palettierung",
-            "socket": "ws://localhost:8081/ws",
+            "socket": "ws://localhost:8084/ws",
             "database": "lp_line3_general",
             "isLoaded": false,
             "machines": [
@@ -215,6 +264,7 @@
                     "value": 0,
                     "show": true
                 }
+                
             ],
             "staticData": [
                 {
@@ -240,7 +290,16 @@
                     "timestamp": "",
                     "showTS": true,
                     "show": false
+                },
+                {
+                    "displayName": "HU",
+                    "nodeName": "WS_SSCC_CurrentOrder",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": false
                 }
+                
             ],
             "progressConfig": {
                 "tsIdKey": "WS_Cur_Order_ID",

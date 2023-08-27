@@ -1,11 +1,12 @@
 <script setup>
-import {useCentralDataStore} from '@/stores/machine/centralDataStore'
+import { useCentralDataStore } from '@/stores/machine/centralDataStore'
 
 
 const store = useCentralDataStore()
 
 defineProps({
     name: String,
+    displayName: String,
     value: Number,
     unit: String,
 })
@@ -13,14 +14,14 @@ defineProps({
 function fetchCounterData(name) {
     store.fetchChartData(name)
     //miscStore.setActiveComponent("chart")
-    
+
 }
 
 </script>
 
 <template>
     <div class="counter">
-        <h5>{{name }}</h5>
+        <h5>{{ displayName }}</h5>
         <p>{{ parseFloat(value.toFixed(3)) }}</p>
         <p class="unit">{{ unit }}</p>
         <i class="bi bi-bar-chart-line-fill" @click="fetchCounterData(name)"></i>
@@ -44,11 +45,11 @@ function fetchCounterData(name) {
 
 .counter h5 {
     margin: 10px;
-   word-wrap: break-word;
+    word-wrap: break-word;
     font-size: 15px;
     padding: 3px;
     width: 40%;
-    border-bottom:1px solid var(--border-color-1);
+    border-bottom: 1px solid var(--border-color-1);
 }
 
 .counter p {
@@ -59,14 +60,14 @@ function fetchCounterData(name) {
     width: 50%;
 }
 
-.unit{
+.unit {
     margin-left: auto;
-    margin-right: 5% ;
+    margin-right: 5%;
     width: 10% !important;
     font-size: 15px !important;
 }
 
-.counter i{
+.counter i {
     color: var(--theme-color-2);
     cursor: pointer;
     margin-left: auto;
@@ -78,7 +79,7 @@ function fetchCounterData(name) {
 
 }
 
-.counter i:hover{
+.counter i:hover {
     background-color: var(--theme-color-2);
     color: var(--font-color-1);
 }

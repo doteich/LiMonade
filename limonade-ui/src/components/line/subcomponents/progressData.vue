@@ -24,6 +24,7 @@ const props = defineProps({
 .progress-data-entry {
     display: flex;
     width: 32.8%;
+    min-width: 135px;
     margin: 2px 0.2%;
     align-items: center;
     border: 1px solid var(--border-color-1);

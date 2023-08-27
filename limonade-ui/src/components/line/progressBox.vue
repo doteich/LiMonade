@@ -17,9 +17,9 @@ const store = useLineDataStore()
             <ProgressSpinner v-if="!store.getLoadingState(group.name)" class="spinner"></ProgressSpinner>
             <div v-if="store.getLoadingState(group.name)">
                 <div class="progress-data">
-                    <ProgressData :value="store.getProgressData(group.name).pace" unit="Stk/Min" icon="speedometer2">
+                    <ProgressData :value="store.getProgressData(group.name).pace" unit="Stk/min" icon="speedometer2">
                     </ProgressData>
-                    <ProgressData :value="store.getProgressData(group.name).finish" unit="Minuten" icon="hourglass-split">
+                    <ProgressData :value="store.getProgressData(group.name).finish" unit="min" icon="hourglass-split">
                     </ProgressData>
                     <ProgressData :value="store.getProgressData(group.name).finishTS" icon="calendar-week"></ProgressData>
                 </div>
@@ -52,6 +52,7 @@ const store = useLineDataStore()
 .progress-data {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 }
 </style>
 

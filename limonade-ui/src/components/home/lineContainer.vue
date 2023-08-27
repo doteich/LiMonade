@@ -65,7 +65,6 @@ function changeRoute(id){
 .timeline-bubble {
     background: var(--theme-color-2);
     color: var(--theme-color-2);
-    ;
     min-height: 20px;
     min-width: 20px;
     max-height: 20px;

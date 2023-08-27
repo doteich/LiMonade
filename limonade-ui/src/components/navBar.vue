@@ -72,8 +72,8 @@ function switchRoute(index) {
 
 <style>
 nav {
-    height: 24px;
-    margin: 0.5vh 0.2vh 0.2vh 0.5vh;
+    height: 30px;
+    margin: 0.5vh 0.2vh 0.5vh 0.5vh;
     display: flex;
     border-radius: 3px;
     align-content: center;
@@ -81,14 +81,13 @@ nav {
 }
 
 .nav-routes {
-    
     display: flex;
     align-items: center;
 }
 
 .nav-route-name>p {
     margin: 0;
-    padding: 3px 0px;
+    padding: 4px 0px;
 }
 
 .nav-refresh {
@@ -103,19 +102,18 @@ nav {
 
 .nav-refresh>input {
     width: 5vw;
-    height: 24px;
+    height: 25px;
     border: none;
     background: white;
     border-radius: 4px;
     font-size: 15px;
     padding-left: 2vw;
     font-weight: bolder;
-
 }
 
 .nav-refresh-unit {
-  padding: 10px;
-    
+    padding: 5px;
+
 }
 
 
@@ -123,10 +121,10 @@ nav {
     font-size: 20px;
     background: var(--theme-color-1);
     padding: 12px;
-    height: 2.3vh;
-    width: 2.3vh;
+    width: 40px;
     color: var(--font-color-1);
     display: flex;
+    height: 100%;
     align-items: center;
     justify-content: center;
     border-top-left-radius: 5px;
@@ -137,7 +135,7 @@ nav {
 .nav-route-name {
 
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
-
+    height: 100%;
     display: flex;
     align-items: center;
     padding: 0 10px;
@@ -149,13 +147,13 @@ nav {
 }
 
 .nav-icon-alt {
+    height: 100%;
     font-size: 20px;
     background: var(--theme-color-2);
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
-    padding: 2px;
-    height: 2.3vh;
-    width: 2.3vh;
+    padding: 12px;
+    width: 40px;
     color: var(--font-color-1);
     display: flex;
     align-items: center;

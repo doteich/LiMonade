@@ -92,14 +92,22 @@ export const useLineDataStore = defineStore("lineData", {
                 let target = data.find(obj => obj.nodeName == config.targetIdKey).value
 
                 let timeDiff = (count.timestamp - ts) / (1000 * 60)
+
                 let pace = (count.value / timeDiff)
-                let finish = ((target / pace))
+                let finish = ((target - count.value) / pace)
                 let finishTS = new Date()
                 finishTS.setMinutes(finishTS.getMinutes() + finish)
+                
+                finish = finish.toFixed(2)
+
+                if (finish < 1){
+                    finish = "-"
+                    finishTS = "-"
+                }
 
                 let obj = {
                     pace: pace.toFixed(2),
-                    finish: finish.toFixed(2),
+                    finish: finish,
                     finishTS: finishTS.toLocaleString(),
                     target,
                     count: count.value,
