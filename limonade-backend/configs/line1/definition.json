@@ -151,7 +151,8 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": true
+                    "show": true,
+                    "distinct": true
                 },
                 {
                     "displayName": "Target Quantity",
@@ -159,7 +160,8 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": false
+                    "show": false,
+                    "distinct": false
                 },
                 {
                     "displayName": "Bags",
@@ -167,7 +169,8 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": false
+                    "show": false,
+                    "distinct": false
                 },
                 {
                     "displayName": "AltActive",
@@ -175,7 +178,8 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": false
+                    "show": false,
+                    "distinct": false
                 }
             ],
             "progressConfig": {
@@ -248,7 +252,8 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": true
+                    "show": true,
+                    "distinct": true
                 },
                 {
                     "displayName": "Packages",
@@ -256,7 +261,8 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": true
+                    "show": true,
+                    "distinct": false
                 },
                 {
                     "displayName": "Target Quantity",
@@ -264,7 +270,8 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": true
+                    "show": true,
+                    "distinct": false
                 }
             ],
             "progressConfig": {

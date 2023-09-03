@@ -42,7 +42,7 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 	collection := r.URL.Query().Get("collection")
 	lineId := r.URL.Query().Get("lineId")
 
-	tsEntry, err := mongodb.NewMDBHandler.FindTopResults(collection, tsIdentifier)
+	tsEntry, err := mongodb.NewMDBHandler.FindDistinct(collection, tsIdentifier)
 
 	if err != nil {
 		logging.LogError(err, "error executing mongodb query", "GetShiftTargets")

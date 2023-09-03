@@ -41,7 +41,7 @@ defineProps({
 }
 
 .alarm-display>div>i {
-    font-size: 30px;
+    font-size: 1.5em
 }
 
 .alarm-display>p {

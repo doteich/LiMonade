@@ -226,10 +226,10 @@ export const useLineDataStore = defineStore("lineData", {
                 line.staticData.forEach(async (node, index, source) => {
 
                     if (index === source.length - 1) {
-                        let finish = await this.fetchNodeData(line.name, line.database, node.nodeName, true)
+                        let finish = await this.fetchNodeData(line.name, line.database, node.nodeName, node.distinct, true)
                         line.isLoaded = finish
                     } else {
-                        this.fetchNodeData(line.name, line.database, node.nodeName, false)
+                        this.fetchNodeData(line.name, line.database, node.nodeName, node.distinct, false)
 
                     }
                 })
@@ -238,11 +238,12 @@ export const useLineDataStore = defineStore("lineData", {
 
         },
 
-        async fetchNodeData(group, db, node, isLast) {
+        async fetchNodeData(group, db, node, distinct, isLast) {
             try {
                 let params = new URLSearchParams()
                 params.append("nodeName", node)
                 params.append("collection", db)
+                params.append("distinct", distinct)
                 let res = await axios.get(`${this.restURL}/last`, { params })
                 let el = this.lineDefinition.find(line => line.name == group).staticData.find(obj => obj.nodeName === node)
                 el.value = res.data[0].Value

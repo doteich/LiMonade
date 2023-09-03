@@ -85,7 +85,7 @@ func (mh *MongoHandler) QueryByNodeName(collection string, nodeName string, tsSt
 	return res, nil
 }
 
-func (mh *MongoHandler) FindTopResults(collection string, nodeName string) ([]TimeSeriesData, error) {
+func (mh *MongoHandler) FindDistinct(collection string, nodeName string) ([]TimeSeriesData, error) {
 	coll := mh.client.Database(mh.database).Collection(collection)
 
 	pipeline := bson.A{

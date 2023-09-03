@@ -26,54 +26,54 @@ export const useMiscStore = defineStore("miscData", {
 
         },
         orderData: [{
-                displayName: "Current Order",
-                nodeName: "Order",
-                value: "",
-                timestamp: "",
-                showTS: true,
-            },
-            {
-                displayName: "Material Number",
-                nodeName: "Material",
-                value: "",
-                timestamp: "",
-                showTS: true,
-            },
-            {
-                displayName: "Batch",
-                nodeName: "Batch",
-                value: "",
-                timestamp: "",
-                showTS: false,
-            },
-            {
-                displayName: "SLED",
-                nodeName: "SLED",
-                value: "",
-                timestamp: "",
-                showTS: false,
-            },
-            {
-                displayName: "Recipe",
-                nodeName: "Recipe",
-                value: "",
-                timestamp: "",
-                showTS: false,
-            },
-            {
-                displayName: "Target Quantity",
-                nodeName: "Target Quantity",
-                value: "",
-                timestamp: "",
-                showTS: true,
-            },
-            {
-                displayName: "Trays",
-                nodeName: "Trays",
-                value: "",
-                timestamp: "",
-                showTS: false,
-            },
+            displayName: "Current Order",
+            nodeName: "Order",
+            value: "",
+            timestamp: "",
+            showTS: true,
+        },
+        {
+            displayName: "Material Number",
+            nodeName: "Material",
+            value: "",
+            timestamp: "",
+            showTS: true,
+        },
+        {
+            displayName: "Batch",
+            nodeName: "Batch",
+            value: "",
+            timestamp: "",
+            showTS: false,
+        },
+        {
+            displayName: "SLED",
+            nodeName: "SLED",
+            value: "",
+            timestamp: "",
+            showTS: false,
+        },
+        {
+            displayName: "Recipe",
+            nodeName: "Recipe",
+            value: "",
+            timestamp: "",
+            showTS: false,
+        },
+        {
+            displayName: "Target Quantity",
+            nodeName: "Target Quantity",
+            value: "",
+            timestamp: "",
+            showTS: true,
+        },
+        {
+            displayName: "Trays",
+            nodeName: "Trays",
+            value: "",
+            timestamp: "",
+            showTS: false,
+        },
         ],
         calculatedTemplate: {
             displayName: "",
@@ -101,32 +101,32 @@ export const useMiscStore = defineStore("miscData", {
 
             let calculatedData = [{
 
-                    displayName: "PCs Per Hour",
-                    value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000)).toFixed(0),
-                    unit: "PCs/h",
+                displayName: "PCs Per Hour",
+                value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000)).toFixed(0),
+                unit: "PCs/h",
 
-                },
-                {
+            },
+            {
 
-                    displayName: "PCs Per Minute",
-                    value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 60000)).toFixed(0),
-                    unit: "PCs/min",
+                displayName: "PCs Per Minute",
+                value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 60000)).toFixed(0),
+                unit: "PCs/min",
 
-                },
-                {
+            },
+            {
 
-                    displayName: "Estimated Finish in Hours",
-                    value: (state.orderData.filter(el => el.nodeName == 'Target Quantity')[0].value / (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000))).toFixed(2),
-                    unit: "h",
+                displayName: "Estimated Finish in Hours",
+                value: (state.orderData.filter(el => el.nodeName == 'Target Quantity')[0].value / (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000))).toFixed(2),
+                unit: "h",
 
-                },
-                {
+            },
+            {
 
-                    displayName: "Estimated Finish Time",
-                    value: this.calcCompletionTime,
-                    unit: "",
+                displayName: "Estimated Finish Time",
+                value: this.calcCompletionTime,
+                unit: "",
 
-                },
+            },
 
 
             ]
@@ -143,17 +143,22 @@ export const useMiscStore = defineStore("miscData", {
         },
         async fetchChartData(url, database, nodeName, start, end) {
             try {
+
+
                 if (!start) {
                     start = new Date()
                     start.setHours(start.getHours() - 1)
+                    let sHour = start.getHours()
                     start = start.toISOString()
+                    this.chartData.input.start = `${start.split("T")[0]}T${sHour}:${start.split("T")[1].split(":")[1]}:${start.split("T")[1].split(":")[2]}` 
                 }
 
                 if (!end) {
-                    end = new Date().toISOString()
+                    end = new Date()
+                    let eHour = end.getHours()
+                    end = end.toISOString()
+                    this.chartData.input.end = `${end.split("T")[0]}T${eHour}:${end.split("T")[1].split(":")[1]}:${end.split("T")[1].split(":")[2]}` 
                 }
-
-
 
                 const params = new URLSearchParams();
                 params.append("collection", database)
@@ -169,9 +174,6 @@ export const useMiscStore = defineStore("miscData", {
                 this.chartData.dataset.label = nodeName
 
                 this.chartData.input.nodeName = nodeName
-                this.chartData.input.start = start
-                this.chartData.input.end = end
-
                 this.setActiveComponent("chart")
 
 
