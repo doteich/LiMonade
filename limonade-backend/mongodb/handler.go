@@ -136,16 +136,10 @@ func (mh *MongoHandler) FindTopResults(collection string, nodeName string) ([]Ti
 	return res[:1], nil
 }
 
-func (mh *MongoHandler) FindLast(collection string, nodeName string, tsStart time.Time, tsEnd time.Time) ([]TimeSeriesData, error) {
+func (mh *MongoHandler) FindLast(collection string, nodeName string) ([]TimeSeriesData, error) {
 	coll := mh.client.Database(mh.database).Collection(collection)
 	filter := bson.D{
 		{Key: "meta.nodeName", Value: nodeName},
-		{Key: "ts",
-			Value: bson.D{
-				{Key: "$gte", Value: tsStart},
-				{Key: "$lt", Value: tsEnd},
-			},
-		},
 	}
 
 	sortParams := bson.D{{Key: "ts", Value: -1}}

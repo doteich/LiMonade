@@ -11,13 +11,6 @@ import navBar  from "./components/navBar.vue"
   <main>
     <router-view></router-view>
   </main>
-  <footer>
-
-    <img src="./assets/limonade.svg">
-    <a href="https://github.com/doteich/LiMonade">
-      <p>LiMoNade</p>
-    </a>
-  </footer>
 </template>
 
 

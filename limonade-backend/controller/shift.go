@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"limonade-backend/logging"
 	"limonade-backend/mongodb"
 	"net/http"
@@ -51,22 +50,38 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	unitEntry, err := mongodb.NewMDBHandler.FindLast(collection, "CT_CurrentOrder_Nominal_Weight") // Change this line, to make the param available over URL Query
+
+	if err != nil {
+		logging.LogError(err, "error executing mongodb query", "GetShiftTargets")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	unit := float64(unitEntry[0].Value.(int64)) / 1000
+
 	bArr, err := os.ReadFile("./configs/definition.json")
 
 	if err != nil {
-		fmt.Println(err)
+		logging.LogError(err, "error while reading from definition file", "GetShiftTargets")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	var ww workweek
 
 	if err := json.Unmarshal(bArr, &ww); err != nil {
-		fmt.Println(err)
+		logging.LogError(err, "error while reading parsing definition file", "GetShiftTargets")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	loc, err := time.LoadLocation("Europe/Berlin")
 
 	if err != nil {
-		fmt.Println(err)
+		logging.LogError(err, "unable to load time location", "GetShiftTargets")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
 	}
 
 	var pace float64
@@ -74,16 +89,12 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 	for _, line := range ww.Lines {
 		if line.Id == lineId {
 			pace = line.NominalSpeed
-		} else {
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write([]byte("missing parameter lineid"))
-			return
 		}
 	}
 
 	start := tsEntry[0].Timestamp.In(loc)
 
-	fmt.Println(start)
+	//fmt.Println(start)
 
 	now := time.Now()
 
@@ -111,11 +122,11 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 
 	}
 
-	isProd, cShift, dev := ww.getCurrentShift(weekDay, now)
+	isProd, cShift, dev := ww.getCurrentShift(weekDay, now.In(loc))
 
 	if isProd {
-		cShiftStart := time.Date(now.Year(), now.Month(), now.Day(), cShift.Start, 0, 0, 0, now.Location())
-		results = append(results, result{Duration: now.Sub(cShiftStart).Hours() + float64(dev), EndTS: now, Name: cShift.Name, StartTS: cShiftStart})
+		cShiftStart := time.Date(now.Year(), now.Month(), now.Day(), cShift.Start, 0, 0, 0, loc)
+		results = append(results, result{Duration: now.Sub(cShiftStart).Hours() + float64(dev), EndTS: now.In(loc), Name: cShift.Name, StartTS: cShiftStart})
 	}
 
 	results[0].Duration = results[0].EndTS.Sub(start).Hours()
@@ -130,6 +141,8 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		results[i].Target = int(res.Duration * pace)
+
 		if len(entry) < 1 {
 			continue
 		}
@@ -138,18 +151,24 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 		endEntry, _ := entry[len(entry)-1].Value.(int64)
 
 		if ok {
-			results[i].Actual = int(endEntry - startEntry)
+			results[i].Actual = int(float64(endEntry-startEntry) * unit)
 		}
 
 		if i == 0 {
-			results[i].Actual = int(endEntry)
+			results[i].Actual = int(float64(endEntry) * unit)
 		}
 
-		results[i].Target = int(res.Duration * pace)
 	}
 
-	resp, _ := json.Marshal(results)
+	resp, err := json.Marshal(results)
 
+	if err != nil {
+		logging.LogError(err, "unable to marshal json response", "GetShiftTargets")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 	w.Write(resp)
 
 }
@@ -177,11 +196,11 @@ func (ww *workweek) getCurrentShift(wd string, t time.Time) (bool, shift, int) {
 	for _, s := range d {
 		if s.DayOverlap {
 			if t.Hour() >= s.Start || t.Hour() < s.End {
-				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, wd)
+				//fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, wd)
 				return true, s, 24
 			}
 		} else if t.Hour() < s.End && t.Hour() >= s.Start {
-			fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, wd)
+			//fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, wd)
 			return true, s, 0
 		}
 	}
@@ -191,13 +210,13 @@ func (ww *workweek) getCurrentShift(wd string, t time.Time) (bool, shift, int) {
 	for _, s := range d {
 		if s.DayOverlap {
 			if t.Hour() >= s.Start || t.Hour() < s.End {
-				fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, next)
+				//fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, next)
 				return true, s, 0
 			}
 		}
 	}
 
-	fmt.Printf("No current shift found \n")
+	//fmt.Printf("No current shift found \n")
 
 	return false, shift{}, 0
 

@@ -14,7 +14,8 @@
                     "stateNode": "State",
                     "state": 0,
                     "alarmNode": "Alarm",
-                    "alarm": 0
+                    "alarm": 0,
+                    "altRouting": false
                 },
                 {
                     "name": "Tray Packer",
@@ -23,7 +24,26 @@
                     "stateNode": "State_Machine2",
                     "state": 0,
                     "alarmNode": "Alarm_Machine2",
-                    "alarm": 0
+                    "alarm": 0,
+                    "altRouting": true,
+                    "routing": {
+                        "expr": "isFalse",
+                        "node": "AltActive"
+                    }
+                },
+                {
+                    "name": "Tray Packer Alt",
+                    "id": "m2",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State_MachineAlt",
+                    "state": 0,
+                    "alarmNode": "Alarm_Machine2",
+                    "alarm": 0,
+                    "altRouting": true,
+                    "routing": {
+                        "expr": "isTrue",
+                        "node": "AltActive"
+                    }
                 }
             ],
             "dynamicData": [
@@ -46,6 +66,22 @@
                 {
                     "nodeId": "ns=2;s=Machines.Packaging.State.State_Machine2",
                     "name": "State_Machine2",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.State_MachineAlt",
+                    "name": "State_MachineAlt",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.AltActive",
+                    "name": "AltActive",
                     "unit": "",
                     "type": "state",
                     "value": 0,
@@ -132,13 +168,21 @@
                     "timestamp": "",
                     "showTS": true,
                     "show": false
+                },
+                {
+                    "displayName": "AltActive",
+                    "nodeName": "AltActive",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": false
                 }
             ],
             "progressConfig": {
                 "tsIdKey": "Order",
                 "counterIdKey": "Bags",
                 "targetIdKey": "Target Quantity",
-                "chartType": "shift",
+                "chartType": "default",
                 "machinePace": 400
             }
         },
@@ -155,7 +199,8 @@
                     "stateNode": "State",
                     "state": 0,
                     "alarmNode": "Alarm",
-                    "alarm": 0
+                    "alarm": 0,
+                    "altRouting": false
                 }
             ],
             "dynamicData": [

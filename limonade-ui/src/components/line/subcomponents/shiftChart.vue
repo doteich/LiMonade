@@ -30,12 +30,12 @@ function refreshChart() {
 
 
 const data = {
-  labels: ['Qty'],
+  labels: ['kg'],
   datasets: [
     {
       label: 'Ist',
       data: [
-        { x: [0, 0], y: "Qty" },
+        { x: [0, 0], y: "kg" },
       ],
       backgroundColor: "hsl(209, 47%, 20%)",
 
@@ -43,14 +43,14 @@ const data = {
     {
       label: 'Soll',
       data: [
-        { x: [0, 0], y: "Qty" },
+        { x: [0, 0], y: "kg" },
       ],
       backgroundColor: "crimson",
     },
     {
       label: 'Über',
       data: [
-        { x: [0, 0], y: "Qty" },
+        { x: [0, 0], y: "kg" },
       ],
       backgroundColor: "rgb(39, 207, 115)",
     },
@@ -60,10 +60,10 @@ const data = {
 
 const config = {
   barPercentage: 1,
-  responsive: true,
-  categoryPercentage: 0.7,
+  categoryPercentage: 0.6,
+  height: 100,
   maintainAspectRatio: false,
-  aspectRatio: 1,
+  aspectRatio: 10,
   type: 'bar',
   borderWidth: 0,
   data: data,
@@ -72,7 +72,7 @@ const config = {
     annotation: {
       annotations: {
       },
-
+      adjustScaleRange: true
     },
     datalabels: {
       labels: {
@@ -86,7 +86,13 @@ const config = {
         if (context.dataIndex == 0 || data[0] == data[1]) {
           return ""
         } else {
-          return data[1] - data[0]
+          if (context.dataset.label == "Über") {
+            return "+" + (data[1] - data[0])
+          } else if (context.dataset.label == "Soll") {
+            return "-" + (data[1] - data[0])
+          } else {
+            return data[1] - data[0]
+          }
         }
       }
     },
@@ -132,7 +138,7 @@ const config = {
 async function addData() {
 
   data.datasets.forEach(set => {
-    set.data = [{ x: [0, 0], y: "Qty" }]
+    set.data = [{ x: [0, 0], y: "kg" }]
   })
 
   let params = new URLSearchParams()
@@ -157,13 +163,13 @@ async function addData() {
     let uEntry = {}
 
     if (diff > 0) {
-      iEntry = { x: [last, s], y: "Qty" }
-      sEntry = { x: [s, s], y: "Qty" }
-      uEntry = { x: [s, s + diff], y: "Qty" }
+      iEntry = { x: [last, s], y: "kg" }
+      sEntry = { x: [s, s], y: "kg" }
+      uEntry = { x: [s, s + diff], y: "kg" }
     } else {
-      iEntry = { x: [last, n], y: "Qty" }
-      sEntry = { x: [n, s], y: "Qty" }
-      uEntry = { x: [s, s], y: "Qty" }
+      iEntry = { x: [last, n], y: "kg" }
+      sEntry = { x: [n, s], y: "kg" }
+      uEntry = { x: [s, s], y: "kg" }
     }
 
     data.datasets[0].data.push(iEntry)
@@ -199,22 +205,31 @@ async function addData() {
 </script>
 
 <template>
-  <div class="shift-chart">
-    <pv-chart v-if="show" :plugins="plugins" type="bar" :data="data" :options="config" style="height:100%;"></pv-chart>
+  <div class="shift-chart-container">
+    <div class="shift-chart">
+      <pv-chart v-if="show" :plugins="plugins" type="bar" :data="data" :options="config"></pv-chart>
+    </div>
   </div>
 </template>
 
 <style scoped>
-.shift-chart {
-  width: 99%;
-  margin: 0.5% 0.5%;
-  box-shadow: 1px 1px 4px 0px var(--border-color-1);
-  margin-bottom: 5px;
-  height: 73%;
-  padding: 7px;
-  border: 1px solid var(--border-color-1)
+.p-chart {
+  height: 10vh !important;
 }
 
+.shift-chart-container {
+  width: 99%;
+  border: 1px solid var(--border-color-1);
+  height: 68%;
+  padding: 7px;
+  box-shadow: 1px 1px 4px 0px var(--border-color-1);
+  margin: 0.5% 0.5%;
+  margin-bottom: 5px;
+}
+
+
+
+@media (max-width: 1920px) {}
 
 
 .shift-chart>h4 {

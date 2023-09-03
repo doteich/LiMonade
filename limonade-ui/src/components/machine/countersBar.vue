@@ -10,7 +10,7 @@ const store = useCentralDataStore()
     <section class="counters-bar">
         <h2>Dynamic Data</h2>
         <single-counter v-for="counter in store.getCounters" :key="counter.name" :name=counter.name
-            :value=counter.value :unit="counter.unit"></single-counter>
+            :value=counter.value :unit="counter.unit" :displayName="counter.displayName"></single-counter>
     </section>
 </template>
 

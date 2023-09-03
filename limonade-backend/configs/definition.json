@@ -114,48 +114,30 @@
                 "dayOverlap": false
             }
         ],
-        "Sunday": [
-            {
-                "name": "FS",
-                "start": 6,
-                "end": 11,
-                "dayOverlap": false
-            },
-            {
-                "name": "SS",
-                "start": 12,
-                "end": 14,
-                "dayOverlap": false
-            },
-            {
-                "name": "NS",
-                "start": 17,
-                "end": 18,
-                "dayOverlap": false
-            }
-        ]
+        "Sunday": []
     },
     "lines": [
         {
             "id": "line1",
             "name": "Linie 1",
-            "subtitle": "Packaging of Something",
-            "numberOfMachines": 5,
-            "nominalSpeed": 600,
+            "subtitle": "Verpackung Whatever",
+            "numberOfMachines": 6,
+            "nominalSpeed": 2125,
             "data": [
                 {
                     "database": "lms_packaging",
                     "nodeName": "Order",
-                    "displayName": "Auftrag",
-                    "value": ""
+                    "displayName": "Auftrag Packaging",
+                    "value":""
                 },
                 {
-                    "database": "lms_packaging",
+                    "database": "lms_palettierung",
                     "nodeName": "Order",
-                    "displayName": "Auftrag",
-                    "value": ""
+                    "displayName": "Auftrag Palettierung",
+                    "value":""
                 }
             ]
         }
+
     ]
 }

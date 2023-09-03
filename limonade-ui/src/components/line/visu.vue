@@ -221,7 +221,9 @@ watch(getStates, (nState, oState) => {
     width: 13vw;
     animation-name: example;
     animation-duration: 2s;
-    max-height: 10vh;
+    max-height: 7vh;
+    overflow-x: hidden;
+    overflow-y: auto;
 
 }
 
@@ -248,6 +250,7 @@ watch(getStates, (nState, oState) => {
     flex-direction: column;
     align-items: center;
     font-weight: bold;
+    justify-content: stretch;
 }
 
 .alarm-num>p {
