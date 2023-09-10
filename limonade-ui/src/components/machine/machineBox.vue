@@ -1,14 +1,13 @@
 <script setup>
 import { useCentralDataStore } from '@/stores/machine/centralDataStore'
 import { useMachineDataStore } from '@/stores/machine/machineData'
-import { computed, ref, watch } from "vue"
+import { ref, watch } from "vue"
 import { storeToRefs } from 'pinia'
 import ProgressSpinner from 'primevue/progressspinner';
 import stateChart from "./subcomponents/stateChart.vue"
 import alarmBox from "./subcomponents/alarmBox.vue"
 import stateBox from "./subcomponents/stateBox.vue"
-//import productivityCockpitChart from "../machine/subcomponents/productivityCockpitChart.vue"
-import shiftChart from "../machine/subcomponents/shiftChart.vue"
+import paceOverview from './subcomponents/paceOverview.vue';
 
 
 
@@ -94,10 +93,11 @@ watch(getAlarm, async (newVal) => {
                 <stateBox :state="machineState.state" :color="machineState.color" :text="machineState.text"></stateBox>
                 <alarmBox :code="alarm.id" :text="alarm.text"></alarmBox>
             </div>
-            <stateChart v-if="machineStore.getFetchState"></stateChart>
             <div class="indicators">
-                
+                <paceOverview v-if="store.machineDefinition.hasPace" :unit="store.getPaceConfig.unit" :pace="store.getPaceConfig.pace" :delta="store.getPaceConfig.delta"></paceOverview>
             </div>
+            <stateChart v-if="machineStore.getFetchState"></stateChart>
+           
 
         </div>
     </section>
@@ -143,6 +143,6 @@ watch(getAlarm, async (newVal) => {
 }
 
 .indicators {
-    padding: 1%;
+   
 }
 </style>

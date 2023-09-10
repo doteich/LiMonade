@@ -34,6 +34,7 @@ func main() {
 
 	router.Get("/timeseries", controller.GetDataByNodeName)
 	router.Get("/timeseries/shifts", controller.GetShiftTargets)
+	router.Get("/timeseries/delta", controller.GetDelta)
 	router.Get("/distinct", controller.GetLastEntry)
 	router.Get("/duration", controller.GetDataDuration)
 	router.Get("/last", controller.GetLastEntry)

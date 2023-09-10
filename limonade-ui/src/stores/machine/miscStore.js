@@ -1,9 +1,7 @@
 import { defineStore } from 'pinia'
-import { useGlobalVars } from "./globalVars"
 
 import axios from "axios"
 
-//const resturl = "http://localhost:3000"
 
 export const useMiscStore = defineStore("miscData", {
     state: () => ({
@@ -25,61 +23,7 @@ export const useMiscStore = defineStore("miscData", {
             }
 
         },
-        orderData: [{
-            displayName: "Current Order",
-            nodeName: "Order",
-            value: "",
-            timestamp: "",
-            showTS: true,
-        },
-        {
-            displayName: "Material Number",
-            nodeName: "Material",
-            value: "",
-            timestamp: "",
-            showTS: true,
-        },
-        {
-            displayName: "Batch",
-            nodeName: "Batch",
-            value: "",
-            timestamp: "",
-            showTS: false,
-        },
-        {
-            displayName: "SLED",
-            nodeName: "SLED",
-            value: "",
-            timestamp: "",
-            showTS: false,
-        },
-        {
-            displayName: "Recipe",
-            nodeName: "Recipe",
-            value: "",
-            timestamp: "",
-            showTS: false,
-        },
-        {
-            displayName: "Target Quantity",
-            nodeName: "Target Quantity",
-            value: "",
-            timestamp: "",
-            showTS: true,
-        },
-        {
-            displayName: "Trays",
-            nodeName: "Trays",
-            value: "",
-            timestamp: "",
-            showTS: false,
-        },
-        ],
-        calculatedTemplate: {
-            displayName: "",
-            value: "",
-            unit: "",
-        }
+      
     }),
     getters: {
         getActiveComponent(state) {
@@ -97,40 +41,8 @@ export const useMiscStore = defineStore("miscData", {
             return date.toLocaleString()
         },
 
-        getCalculatedData(state) {
+        getCalculatedData() {
 
-            let calculatedData = [{
-
-                displayName: "PCs Per Hour",
-                value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000)).toFixed(0),
-                unit: "PCs/h",
-
-            },
-            {
-
-                displayName: "PCs Per Minute",
-                value: (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 60000)).toFixed(0),
-                unit: "PCs/min",
-
-            },
-            {
-
-                displayName: "Estimated Finish in Hours",
-                value: (state.orderData.filter(el => el.nodeName == 'Target Quantity')[0].value / (state.orderData.filter(el => el.nodeName == 'Trays')[0].value / ((new Date() - state.orderData.filter(el => el.nodeName == 'Order')[0].timestamp) / 3600000))).toFixed(2),
-                unit: "h",
-
-            },
-            {
-
-                displayName: "Estimated Finish Time",
-                value: this.calcCompletionTime,
-                unit: "",
-
-            },
-
-
-            ]
-            return calculatedData
         }
     },
     actions: {

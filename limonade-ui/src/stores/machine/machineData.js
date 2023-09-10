@@ -10,6 +10,11 @@ export const useMachineDataStore = defineStore("machineData", {
     state: () => ({
         fetched: false,
         datasets: [],
+        pace: {
+            timespan: 10,
+            delta: 0,
+            pace: 0
+        }
     }),
     getters: {
         getFetchState: (state) => {
@@ -17,7 +22,7 @@ export const useMachineDataStore = defineStore("machineData", {
         },
 
         getDatasets: (state) => {
-           return state.datasets
+            return state.datasets
 
         },
         getProductiveTime(state) {
@@ -39,6 +44,9 @@ export const useMachineDataStore = defineStore("machineData", {
             }
 
 
+        },
+        getPace(state){
+            return state.pace
         }
     },
     actions: {
@@ -96,29 +104,30 @@ export const useMachineDataStore = defineStore("machineData", {
 
                 let res = await axios.get(`${url}/duration`, { params })
 
-           
+
                 let filteredData
                 let entry
-              
+
 
                 if (res.data) {
                     res.data.forEach((el) => {
-                       
+
                         filteredData = this.datasets.filter(entry => entry.id == el.value)
                         entry = { x: [new Date(el.start), new Date(el.end)], y: "Status", duration: el.duration }
                         filteredData[0].data.push(entry)
-                        
+
                     })
 
                     this.fetched = true
                 }
 
-              
+
 
             } catch (err) {
 
                 console.error(err)
             }
         },
+  
     }
 })

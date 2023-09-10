@@ -17,6 +17,11 @@ export const useCentralDataStore = defineStore("centralDataStore", {
             socket: "",
             stateNode: "",
             alarmNode: "",
+            hasPace: false,
+            paceConfig: {
+                unit: "",
+                paceNode: "",
+            },
             dynamicData: [],
             staticData: []
         }
@@ -59,6 +64,9 @@ export const useCentralDataStore = defineStore("centralDataStore", {
             let staticData = state.machineDefinition.staticData.filter(el => el.show)
             return staticData
         },
+        getPaceConfig(state){
+            return state.machineDefinition.paceConfig
+        },
 
     },
     actions: {
@@ -81,7 +89,7 @@ export const useCentralDataStore = defineStore("centralDataStore", {
                 this.isLoaded = true
             }
             catch (err) {
-                console.log(err)
+                console.error(err)
             }
         },
         startSockets() {
@@ -132,7 +140,7 @@ export const useCentralDataStore = defineStore("centralDataStore", {
                 el[0].timestamp = new Date(res.data[0].ts)
 
             } catch (err) {
-                console.log(err)
+                console.error(err)
             }
         },
         updateAlarms() {
@@ -151,7 +159,9 @@ export const useCentralDataStore = defineStore("centralDataStore", {
             const machineStore = useMachineDataStore()
             machineStore.initDataSet(this.restURL, this.line, this.machine)
             machineStore.fetchMachineData(this.restURL, this.machineDefinition.database, this.machineDefinition.stateNode)
-
+            if (this.machineDefinition.hasPace){
+                this.fetchPaceData(10)
+            }
 
         },
         fetchChartData(node, start, end) {
@@ -207,6 +217,26 @@ export const useCentralDataStore = defineStore("centralDataStore", {
                 console.log(err)
 
             }
+        },
+        async fetchPaceData(tspan){
+            console.log(tspan)
+            let end = new Date().toISOString()
+            let start = new Date()
+            start.setMinutes(start.getMinutes()- tspan)
+            start = start.toISOString()
+
+            const params = new URLSearchParams();
+            params.append("collection",  this.machineDefinition.database)
+            params.append("nodeName",  this.machineDefinition.paceConfig.paceNode)
+            params.append("start", start)
+            params.append("end", end)
+
+            let res = await axios.get(`${this.restURL}/timeseries/delta`, { params })
+
+            this.machineDefinition.paceConfig.delta = res.data.delta
+            this.machineDefinition.paceConfig.pace = (res.data.delta / tspan).toFixed(2)
+            this.machineDefinition.paceConfig.tspan = tspan
+
         }
 
     }
