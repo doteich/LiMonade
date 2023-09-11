@@ -1,0 +1,285 @@
+{
+    "displayName": "Linie 1",
+    "data": [
+        {
+            "name": "Packaging",
+            "socket": "ws://localhost:8080/ws",
+            "database": "lms_packaging",
+            "isLoaded": false,
+            "machines": [
+                {
+                    "name": "Verpackung",
+                    "id": "m1",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State",
+                    "state": 0,
+                    "alarmNode": "Alarm",
+                    "alarm": 0,
+                    "altRouting": false
+                },
+                {
+                    "name": "Tray Packer",
+                    "id": "m2",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State_Machine2",
+                    "state": 0,
+                    "alarmNode": "Alarm_Machine2",
+                    "alarm": 0,
+                    "altRouting": true,
+                    "routing": {
+                        "expr": "isFalse",
+                        "node": "AltActive"
+                    }
+                },
+                {
+                    "name": "Tray Packer Alt",
+                    "id": "m2",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State_MachineAlt",
+                    "state": 0,
+                    "alarmNode": "Alarm_Machine2",
+                    "alarm": 0,
+                    "altRouting": true,
+                    "routing": {
+                        "expr": "isTrue",
+                        "node": "AltActive"
+                    }
+                }
+            ],
+            "dynamicData": [
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.Alarm",
+                    "name": "Alarm",
+                    "unit": "",
+                    "type": "alarm",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.Alarm_Machine2",
+                    "name": "Alarm_Machine2",
+                    "unit": "",
+                    "type": "alarm",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.State_Machine2",
+                    "name": "State_Machine2",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.State_MachineAlt",
+                    "name": "State_MachineAlt",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.AltActive",
+                    "name": "AltActive",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.State.State",
+                    "name": "State",
+                    "unit": "",
+                    "type": "state",
+                    "value": 0,
+                    "show": false
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.Counters.Bags",
+                    "name": "Bags",
+                    "unit": "",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.Counters.Trays",
+                    "name": "Trays",
+                    "unit": "",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.Counters.Labels",
+                    "name": "Labels",
+                    "unit": "",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorAmps",
+                    "name": "Motor Amps",
+                    "unit": "A",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorVoltage",
+                    "name": "Motor Voltage",
+                    "unit": "V",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorTemperature",
+                    "name": "Motor Temperature",
+                    "unit": "°C",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true
+                }
+            ],
+            "staticData": [
+                {
+                    "displayName": "Current Order",
+                    "nodeName": "Order",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true,
+                    "distinct": true
+                },
+                {
+                    "displayName": "Target Quantity",
+                    "nodeName": "Target Quantity",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": false,
+                    "distinct": false
+                },
+                {
+                    "displayName": "Bags",
+                    "nodeName": "Bags",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": false,
+                    "distinct": false
+                },
+                {
+                    "displayName": "AltActive",
+                    "nodeName": "AltActive",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": false,
+                    "distinct": false
+                }
+            ],
+            "progressConfig": {
+                "tsIdKey": "Order",
+                "counterIdKey": "Bags",
+                "targetIdKey": "Target Quantity",
+                "chartType": "default",
+                "machinePace": 400
+            }
+        },
+        {
+            "name": "Palettizing",
+            "socket": "ws://localhost:8081/ws",
+            "database": "lms_palettierung",
+            "isLoaded": false,
+            "machines": [
+                {
+                    "name": "Palettierung",
+                    "id": "m3",
+                    "img": "http://127.0.0.1:3000/etc/machine.svg",
+                    "stateNode": "State",
+                    "state": 0,
+                    "alarmNode": "Alarm",
+                    "alarm": 0,
+                    "altRouting": false
+                }
+            ],
+            "dynamicData": [
+                {
+                    "nodeId": "ns=2;s=Machines.Palettierung.State.Alarm",
+                    "name": "Alarm",
+                    "unit": "",
+                    "type": "alarm",
+                    "value": 0,
+                    "show": false,
+                    "meta": ""
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Palettierung.State.State",
+                    "name": "State",
+                    "unit": "pcs",
+                    "type": "state",
+                    "value": 0,
+                    "show": false,
+                    "meta": ""
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Palettierung.Counters.HU",
+                    "name": "HUs",
+                    "unit": "pcs",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true,
+                    "meta": ""
+                },
+                {
+                    "nodeId": "ns=2;s=Machines.Palettierung.Counters.Packages",
+                    "name": "Packages",
+                    "unit": "pcs",
+                    "type": "counter",
+                    "value": 0,
+                    "show": true,
+                    "meta": ""
+                }
+            ],
+            "staticData": [
+                {
+                    "displayName": "Current Order",
+                    "nodeName": "Order",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true,
+                    "distinct": true
+                },
+                {
+                    "displayName": "Packages",
+                    "nodeName": "Packages",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true,
+                    "distinct": false
+                },
+                {
+                    "displayName": "Target Quantity",
+                    "nodeName": "Target Quantity",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true,
+                    "distinct": false
+                }
+            ],
+            "progressConfig": {
+                "tsIdKey": "Order",
+                "counterIdKey": "Packages",
+                "targetIdKey": "Target Quantity",
+                "chartType": "default"
+            }
+        }
+    ]
+}

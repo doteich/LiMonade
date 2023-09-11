@@ -1,0 +1,142 @@
+{
+    "database": "lms_packaging",
+    "socket": "ws://localhost:8080/ws",
+    "name": "Verpackung",
+    "alarmNode": "Alarm",
+    "stateNode": "State",
+    "hasPace": true,
+    "paceConfig": {
+        "unit": "ST",
+        "paceNode":"Bags"
+    },
+    "dynamicData": [
+        {
+            "nodeId": "ns=2;s=Machines.Packaging.Counters.Bags",
+            "name": "Bags",
+            "displayName": "Bags",
+            "unit": "pcs",
+            "type": "counter",
+            "value": 0,
+            "show": true
+        },
+        {
+            "nodeId": "ns=2;s=Machines.Packaging.Counters.Labels",
+            "name": "Labels",
+            "displayName": "Labels",
+            "unit": "pcs",
+            "type": "counter",
+            "value": 0,
+            "show": true
+        },
+        {
+            "nodeId": "ns=2;s=Machines.Packaging.Counters.Trays",
+            "name": "Trays",
+            "displayName": "Trays",
+            "unit": "pcs",
+            "type": "counter",
+            "value": 0,
+            "show": true
+        },
+        {
+            "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorAmps",
+            "name": "Motor Amps",
+            "displayName": "Amps",
+            "unit": "A",
+            "type": "counter",
+            "value": 0,
+            "show": true
+        },
+        {
+            "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorVoltage",
+            "name": "Motor Voltage",
+            "displayName": "Voltage",
+            "unit": "V",
+            "type": "counter",
+            "value": 0,
+            "show": true
+        },
+        {
+            "nodeId": "ns=2;s=Machines.Packaging.MachineData.MotorTemperature",
+            "name": "Motor Temperature",
+            "displayName": "Temperature",
+            "unit": "°C",
+            "type": "counter",
+            "value": 0,
+            "show": true
+        },
+        {
+            "nodeId": "ns=2;s=Machines.Packaging.State.State",
+            "name": "State",
+            "unit": "",
+            "type": "state",
+            "value": -1,
+            "show": false
+        },
+        {
+            "nodeId": "ns=2;s=Machines.Packaging.State.Alarm",
+            "name": "Alarm",
+            "unit": "",
+            "type": "alarm",
+            "value": 0,
+            "show": false
+        }
+    ],
+    "staticData": [
+        {
+            "displayName": "Current Order",
+            "nodeName": "Order",
+            "value": "",
+            "timestamp": "",
+            "showTS": true,
+            "show": false
+        },
+        {
+            "displayName": "Material Number",
+            "nodeName": "Material",
+            "value": "",
+            "timestamp": "",
+            "showTS": true,
+            "show": true
+        },
+        {
+            "displayName": "Batch",
+            "nodeName": "Batch",
+            "value": "",
+            "timestamp": "",
+            "showTS": false,
+            "show": true
+        },
+        {
+            "displayName": "SLED",
+            "nodeName": "SLED",
+            "value": "",
+            "timestamp": "",
+            "showTS": true,
+            "show": true
+        },
+        {
+            "displayName": "Recipe",
+            "nodeName": "Recipe",
+            "value": "",
+            "timestamp": "",
+            "showTS": false,
+            "show": true
+        },
+        {
+            "displayName": "Target Quantity",
+            "nodeName": "Target Quantity",
+            "value": "",
+            "timestamp": "",
+            "showTS": true,
+            "show": false
+        },
+        {
+            "displayName": "Trays",
+            "nodeName": "Trays",
+            "value": "",
+            "timestamp": "",
+            "showTS": false,
+            "show": false
+        }
+    ]
+}
