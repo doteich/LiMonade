@@ -43,19 +43,19 @@
         "Wednesday": [
             {
                 "name": "NS",
-                "start": 22,
-                "end": 6,
-                "dayOverlap": true
-            },
-            {
-                "name": "FS",
-                "start": 6,
+                "start": 10,
                 "end": 14,
                 "dayOverlap": false
             },
             {
-                "name": "SS",
+                "name": "FS",
                 "start": 14,
+                "end": 15,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 16,
                 "end": 22,
                 "dayOverlap": false
             }
