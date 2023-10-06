@@ -1,0 +1,161 @@
+{
+    "shifts": {
+        "Monday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Tuesday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Wednesday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Thursday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Friday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
+            }
+        ],
+        "Saturday": [
+            {
+                "name": "NS",
+                "start": 22,
+                "end": 6,
+                "dayOverlap": true
+            },
+            {
+                "name": "FS",
+                "start": 6,
+                "end": 14,
+                "dayOverlap": false
+            }
+        ],
+        "Sunday": []
+    },
+    "lines": [
+        {
+            "id": "line1",
+            "name": "Linie 1",
+            "subtitle": "Verpackung Whatever",
+     
+            "machines": [
+                {   
+                    "id":"m1",
+                    "name": "Packaging",
+                    "database": "lms_packaging",
+                    "stateNode": "State"
+                },
+                {   
+                    "id":"m2",
+                    "name": "Tray Packer",
+                    "database": "lms_packaging",
+                    "stateNode": "State_Machine2"                },
+                {   
+                    "id":"m3",
+                    "name": "Palletierung",
+                    "database": "lms_palettierung",
+                    "stateNode": "State"
+                }
+            ],
+            "nominalSpeed": 2125,
+            "data": [
+                {
+                    "database": "lms_packaging",
+                    "nodeName": "Order",
+                    "displayName": "Auftrag Packaging",
+                    "value": ""
+                },
+                {
+                    "database": "lms_palettierung",
+                    "nodeName": "Order",
+                    "displayName": "Auftrag Palettierung",
+                    "value": ""
+                }
+            ]
+        }
+    ]
+}

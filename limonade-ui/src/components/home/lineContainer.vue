@@ -69,7 +69,7 @@ function changeRoute(id) {
 }
 
 .line-simple {
-    padding: 0 5%;
+    padding: 0 1%;
 
 }
 
@@ -79,6 +79,7 @@ function changeRoute(id) {
     width: 200px;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
     min-height: 30px;
+ 
     width: 100%;
     
 }

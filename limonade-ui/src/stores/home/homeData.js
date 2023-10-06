@@ -5,7 +5,8 @@ const restURL = "http://localhost:3000"
 
 export const useHomeDataStore = defineStore("homeDataStore", {
     state: () => ({
-        homeData: []
+        homeData: [],
+        ival: "", 
     }),
     getters: {
         getHomeData(state) {
@@ -14,6 +15,9 @@ export const useHomeDataStore = defineStore("homeDataStore", {
 
     },
     actions: {
+        clearStore(){
+            clearInterval(this.ival)
+        },
         async fetchHomeData() {
             try {
                 let params = new URLSearchParams()
@@ -21,6 +25,8 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 let res = await axios.get(`${restURL}/config`, { params })
                 this.homeData = res.data.lines
                 this.fetchAll()
+              this.ival =   setInterval(()=>{this.fetchAll()
+                }, 60000)
             }
             catch (err) {
                 console.error(err)

@@ -10,8 +10,8 @@ import (
 )
 
 type DeltaStruct struct {
-	NodeName string `json:"nodeName"`
-	Delta    int64  `json:"delta"`
+	NodeName string  `json:"nodeName"`
+	Delta    float64 `json:"delta"`
 }
 
 func GetDelta(w http.ResponseWriter, r *http.Request) {
@@ -69,35 +69,28 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var delta DeltaStruct
+	var iArr []interface{}
 	delta.NodeName = nodeName
 
 	switch l := len(res); {
 	case l == 0:
 		delta.Delta = 0
 	case l == 1:
-		first, ok := res[0].Value.(int64)
-		if !ok {
-			logging.LogError(errors.New(("error converting value to float64")), "", "GetDelta")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		delta.Delta = first
+		delta.Delta = 1
 	case l > 1:
-		first, ok := res[0].Value.(int64)
-		if !ok {
-			logging.LogError(errors.New(("error converting value to float64")), "", "GetDelta")
+
+		iArr = append(iArr, res[0].Value)
+		iArr = append(iArr, res[len(res)-1].Value)
+
+		fArr, err := assertTypes(iArr)
+
+		if err != nil {
+			logging.LogError(err, "", "GetDelta")
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
-		last, ok := res[len(res)-1].Value.(int64)
-		if !ok {
-			logging.LogError(errors.New(("error converting value to float64")), "", "GetDelta")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
-		delta.Delta = last - first
+		delta.Delta = fArr[1] - fArr[0]
 
 	}
 	b, err := json.Marshal(delta)
@@ -111,4 +104,27 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	w.Write(b)
 
+}
+
+func assertTypes(vArr []interface{}) ([]float64, error) {
+	var fArr []float64
+	var err error = nil
+
+	for _, i := range vArr {
+		switch v := i.(type) {
+		case int:
+			fArr = append(fArr, float64(v))
+		case int32:
+			fArr = append(fArr, float64(v))
+		case int64:
+			fArr = append(fArr, float64(v))
+		case float32:
+			fArr = append(fArr, float64(v))
+		case float64:
+			fArr = append(fArr, v)
+		default:
+			err = errors.New("invalid datatype - cannot convert value to f64")
+		}
+	}
+	return fArr, err
 }
