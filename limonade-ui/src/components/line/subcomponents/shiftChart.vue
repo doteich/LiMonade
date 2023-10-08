@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, onUnmounted } from 'vue'
 import { Chart } from 'chart.js';
 
 import axios from "axios"
@@ -7,6 +7,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 const show = ref(true)
+let interval = null
 
 const props = defineProps({
   pObject: Object
@@ -23,10 +24,13 @@ onMounted(() => {
 })
 
 function refreshChart() {
-  setInterval(() => {
+  interval = setInterval(() => {
     addData()
   }, 120000);
 }
+onUnmounted(()=>{
+  clearInterval(interval)
+})
 
 
 const data = {
@@ -143,10 +147,11 @@ async function addData() {
 
   let params = new URLSearchParams()
   params.append("collection", props.pObject.db)
-  params.append("tsIdentifier", props.pObject.tsIdKey)
+  params.append("limit", 3)
+  params.append("unit", "Size")
   params.append("nodeName", props.pObject.counterIdKey)
   params.append("lineId", props.pObject.lineid)
-  let res = await axios.get(`${props.pObject.url}/timeseries/shifts`, { params })
+  let res = await axios.get(`${props.pObject.url}/timeseries/shiftpaces`, { params })
 
   show.value = false
 

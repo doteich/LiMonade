@@ -112,6 +112,12 @@
                 "start": 6,
                 "end": 14,
                 "dayOverlap": false
+            },
+            {
+                "name": "SS",
+                "start": 14,
+                "end": 22,
+                "dayOverlap": false
             }
         ],
         "Sunday": []

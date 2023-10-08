@@ -219,7 +219,6 @@ export const useCentralDataStore = defineStore("centralDataStore", {
             }
         },
         async fetchPaceData(tspan){
-            console.log(tspan)
             let end = new Date().toISOString()
             let start = new Date()
             start.setMinutes(start.getMinutes()- tspan)

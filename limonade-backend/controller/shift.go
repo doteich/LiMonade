@@ -6,6 +6,7 @@ import (
 	"limonade-backend/mongodb"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -41,6 +42,7 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 	tsIdentifier := r.URL.Query().Get("tsIdentifier")
 	collection := r.URL.Query().Get("collection")
 	lineId := r.URL.Query().Get("lineId")
+	unitString := r.URL.Query().Get("unit")
 
 	tsEntry, err := mongodb.NewMDBHandler.FindDistinct(collection, tsIdentifier)
 
@@ -50,15 +52,21 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	unitEntry, err := mongodb.NewMDBHandler.FindLast(collection, "CT_CurrentOrder_Nominal_Weight") // Change this line, to make the param available over URL Query
+	var unit float64 = 1
 
-	if err != nil {
-		logging.LogError(err, "error executing mongodb query", "GetShiftTargets")
-		w.WriteHeader(http.StatusInternalServerError)
-		return
+	if unitString != "" {
+		unitEntry, err := mongodb.NewMDBHandler.FindLast(collection, unitString)
+
+		if err != nil {
+			logging.LogError(err, "error executing mongodb query", "GetShiftTargets")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		unit = float64(unitEntry[0].Value.(int64)) / 1000
 	}
 
-	unit := float64(unitEntry[0].Value.(int64)) / 1000
+	// Change this line, to make the param available over URL Query
 
 	bArr, err := os.ReadFile("./configs/definition.json")
 
@@ -219,5 +227,184 @@ func (ww *workweek) getCurrentShift(wd string, t time.Time) (bool, shift, int) {
 	//fmt.Printf("No current shift found \n")
 
 	return false, shift{}, 0
+
+}
+
+func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
+
+	nodeName := r.URL.Query().Get("nodeName")
+	limit := r.URL.Query().Get("limit")
+	collection := r.URL.Query().Get("collection")
+	lineId := r.URL.Query().Get("lineId")
+	unitString := r.URL.Query().Get("unit")
+
+	if limit == "" {
+		logging.LogGeneric("warning", "missing param: limit", "getShiftPaces")
+		return
+	}
+	ltd, err := strconv.ParseInt(limit, 10, 0)
+
+	if err != nil {
+		logging.LogError(err, "error while casting limit to int", "getShiftPaces")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var unit []float64
+
+	bArr, err := os.ReadFile("./configs/definition.json")
+
+	if err != nil {
+		logging.LogError(err, "error while reading from definition file", "getShiftPaces")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var ww workweek
+
+	if err := json.Unmarshal(bArr, &ww); err != nil {
+		logging.LogError(err, "error while reading parsing definition file", "getShiftPaces")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	loc, err := time.LoadLocation("Europe/Berlin")
+
+	if err != nil {
+		logging.LogError(err, "unable to load time location", "GetShiftTargets")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	var pace float64
+
+	for _, line := range ww.Lines {
+		if line.Id == lineId {
+			pace = line.NominalSpeed
+		}
+	}
+
+	start := time.Now()
+	startFixed := start.Round(time.Hour)
+
+	if start.Sub(startFixed) >= 0 {
+		startFixed = startFixed.Add(time.Hour)
+	}
+
+	weekDay := startFixed.Weekday().String()
+
+	var results []result
+
+	isProd, cShift, dev := ww.getCurrentShift(weekDay, start.In(loc))
+
+	if isProd {
+		cShiftStart := time.Date(start.Year(), start.Month(), start.Day(), cShift.Start, 0, 0, 0, loc)
+		results = append(results, result{Duration: start.Sub(cShiftStart).Hours() + float64(dev), EndTS: start.In(loc), Name: cShift.Name, StartTS: cShiftStart})
+	}
+
+	end := startFixed.Add(time.Hour * 7 * -24)
+
+	for startFixed.After(end) {
+
+		if len(results) == int(ltd) {
+			break
+		}
+
+		weekDay = startFixed.Weekday().String()
+		var found bool
+		var res result
+
+		found, res = ww.getShift(weekDay, startFixed)
+		if found {
+			results = append(results, res)
+		}
+
+		startFixed = startFixed.Add(time.Hour * -1)
+
+	}
+
+	for idx, shift := range results {
+
+		unit = []float64{1}
+
+		tsArr, err := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, shift.StartTS, shift.EndTS)
+
+		if err != nil {
+			logging.LogError(err, "error fetching timeseries", "getShiftPaces")
+			continue
+		}
+
+		if len(tsArr) < 2 {
+			continue
+		}
+
+		if unitString != "" {
+			u, err := mongodb.NewMDBHandler.FindLastByTime(collection, unitString, shift.StartTS)
+
+			if err != nil {
+				logging.LogError(err, "error fetching init unit", "getShiftPaces")
+				return
+			}
+
+			unit[0] = (float64(u[0].Value.(int64)) / 1000)
+
+		}
+
+		//tsArr[len(tsArr)-1].Value.(int64)
+
+		sum := float64(-tsArr[0].Value.(int64)) * unit[0]
+
+		var l int64 = 0
+
+		for i, e := range tsArr {
+			v, ok := e.Value.(int64)
+			if !ok {
+				logging.LogError(err, "error casting to int64", "getShiftPaces")
+				break
+			}
+
+			if l > v && i > 0 {
+
+				if unitString != "" {
+					u, err := mongodb.NewMDBHandler.FindLastByTime(collection, unitString, tsArr[i-1].Timestamp)
+
+					if err != nil {
+						logging.LogError(err, "error fetching unit", "getShiftPaces")
+						break
+					}
+
+					if len(u) < 1 {
+						unit = append(unit, 1)
+					} else {
+						unit = append(unit, float64(u[0].Value.(int64))/1000)
+					}
+				}
+
+				sum = sum + float64(l)*unit[len(unit)-2]
+
+			}
+			l = v
+		}
+
+		sum = sum + float64(tsArr[len(tsArr)-1].Value.(int64))*unit[len(unit)-1]
+
+		results[idx].Actual = int(sum)
+		results[idx].Target = int(shift.Duration * pace)
+
+	}
+	for i, j := 0, len(results)-1; i < j; i, j = i+1, j-1 {
+		results[i], results[j] = results[j], results[i]
+	}
+
+	resp, err := json.Marshal(results)
+
+	if err != nil {
+		logging.LogError(err, "unable to marshal json response", "GetShiftTargets")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(resp)
 
 }
