@@ -3,6 +3,7 @@
 import { ref } from "vue"
 import { useRouter } from 'vue-router';
 import Timeline from 'primevue/timeline';
+import ProgressBar from 'primevue/progressbar';
 
 const router = useRouter()
 
@@ -42,7 +43,12 @@ function changeRoute(id) {
 
             </Timeline>
 
+            <div v-if="line.progress">
+                <ProgressBar  :value="((line.progress.actual_value/line.progress.target_value)*100).toFixed(2)"></ProgressBar>
+            </div>
+
         </div>
+
     </div>
 </template>
 
@@ -52,7 +58,7 @@ function changeRoute(id) {
 
     flex-direction: column;
     width: 40vw;
-    max-height: 35%;
+
     background-color: var(--font-color-1);
     font-family: Arial, Helvetica, sans-serif;
     border: 1px solid var(--border-color-1);
@@ -79,12 +85,12 @@ function changeRoute(id) {
     width: 200px;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
     min-height: 30px;
- 
+
     width: 100%;
-    
+
 }
 
-.timeline-machine > span{
+.timeline-machine>span {
     padding: 0 10px;
 
 }
@@ -99,7 +105,7 @@ function changeRoute(id) {
     display: flex;
     align-items: center;
     justify-content: center;
-   
+
 }
 
 .timeline-bubble-value {
@@ -131,7 +137,7 @@ function changeRoute(id) {
     align-items: flex-start;
     justify-content: flex-start;
     flex-wrap: wrap;
-    height: 70%;
+    height: 50%;
 }
 
 .line-data>p {

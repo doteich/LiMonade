@@ -116,7 +116,7 @@
             {
                 "name": "SS",
                 "start": 14,
-                "end": 22,
+                "end": 15,
                 "dayOverlap": false
             }
         ],
@@ -126,42 +126,246 @@
         {
             "id": "line1",
             "name": "Linie 1",
-            "subtitle": "Verpackung Whatever",
-            "numberOfMachines": 6,
+            "subtitle": "AVT Filterkaffee",
             "machines": [
-                {   
-                    "id":"m1",
-                    "name": "Packaging",
-                    "database": "lms_packaging",
-                    "stateNode": "State"
+                {
+                    "id": "goglio",
+                    "name": "Goglio",
+                    "database": "goglio_line1_general",
+                    "stateNode": "Goglio"
                 },
-                {   
-                    "id":"m2",
-                    "name": "Tray Packer",
-                    "database": "lms_packaging",
-                    "stateNode": "State_Machine2"                },
-                {   
-                    "id":"m3",
-                    "name": "Palletierung",
-                    "database": "lms_palettierung",
-                    "stateNode": "State"
+                {
+                    "id": "cw",
+                    "name": "CW",
+                    "database": "goglio_line1_general",
+                    "stateNode": "Wipotec - Checkweigher"
+                },
+                {
+                    "id": "hywrap",
+                    "name": "Hywrap",
+                    "database": "goglio_line1_general",
+                    "stateNode": "IMA Hywrap20"
+                },
+                {
+                    "id": "af60",
+                    "name": "AF60",
+                    "database": "goglio_line1_general",
+                    "stateNode": "IMA AF60"
+                },
+                {
+                    "id": "mmp400",
+                    "name": "MMP400",
+                    "database": "goglio_line1_general",
+                    "stateNode": "IMA MMP400"
+                },
+                {
+                    "id": "lp",
+                    "name": "LP",
+                    "database": "lp_line1_general",
+                    "stateNode": "WS_Cur_State"
                 }
             ],
             "nominalSpeed": 2125,
             "data": [
                 {
-                    "database": "lms_packaging",
-                    "nodeName": "Order",
-                    "displayName": "Auftrag Packaging",
+                    "database": "goglio_line1_general",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "displayName": "Auftrag Goglio",
                     "value": ""
                 },
                 {
-                    "database": "lms_palettierung",
-                    "nodeName": "Order",
-                    "displayName": "Auftrag Palettierung",
+                    "database": "lp_line1_general",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "displayName": "Auftrag Lorenz Pan",
                     "value": ""
                 }
-            ]
+            ],
+            "progress": {
+                "database": "goglio_line1_general",
+                "enabled": true, 
+                "target": "CT_CurrentOrder_Order_Quantity",
+                "actual": "CT_Counter_Filled_Bags"
+            }
+        },
+        {
+            "id": "line2",
+            "name": "Linie 2",
+            "subtitle": "AVT Filterkaffee",
+            "machines": [
+                {
+                    "id": "goglio",
+                    "name": "Goglio",
+                    "database": "goglio_line2_general",
+                    "stateNode": "Goglio"
+                },
+                {
+                    "id": "cw",
+                    "name": "CW",
+                    "database": "goglio_line2_general",
+                    "stateNode": "Wipotec - Checkweigher"
+                },
+                {
+                    "id": "hywrap",
+                    "name": "Hywrap",
+                    "database": "goglio_line2_general",
+                    "stateNode": "IMA Hywrap20"
+                },
+                {
+                    "id": "af60",
+                    "name": "AF60",
+                    "database": "goglio_line2_general",
+                    "stateNode": "IMA AF60"
+                },
+                {
+                    "id": "mmp400",
+                    "name": "MMP400",
+                    "database": "goglio_line2_general",
+                    "stateNode": "IMA MMP400"
+                },
+                {
+                    "id": "lp",
+                    "name": "LP",
+                    "database": "lp_line2_general",
+                    "stateNode": "WS_Cur_State"
+                }
+            ],
+            "nominalSpeed": 1062.5,
+            "data": [
+                {
+                    "database": "goglio_line2_general",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "displayName": "Auftrag Goglio",
+                    "value": ""
+                },
+                {
+                    "database": "lp_line2_general",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "displayName": "Auftrag Lorenz Pan",
+                    "value": ""
+                }
+            ],
+            "progress": {
+                "database": "goglio_line2_general",
+                "enabled": true, 
+                "target": "CT_CurrentOrder_Order_Quantity",
+                "actual": "CT_Counter_Filled_Bags"
+            }
+        },
+        {
+            "id": "line3",
+            "name": "Linie 3",
+            "subtitle": "AVT GB",
+            "machines": [
+                {
+                    "id": "goglio",
+                    "name": "Goglio",
+                    "database": "goglio_line3_general",
+                    "stateNode": "Goglio"
+                },
+                {
+                    "id": "cw",
+                    "name": "CW",
+                    "database": "goglio_line3_general",
+                    "stateNode": "Wipotec - Checkweigher"
+                },
+                {
+                    "id": "xray",
+                    "name": "XRay",
+                    "database": "goglio_line3_general",
+                    "stateNode": "Wipotec - XRay"
+                },
+                {
+                    "id": "ima",
+                    "name": "IMA3",
+                    "database": "goglio_line3_general",
+                    "stateNode": "IMA 3"
+                },
+                {
+                    "id": "lp",
+                    "name": "LP",
+                    "database": "lp_line3_general",
+                    "stateNode": "WS_Cur_State"
+                }
+            ],
+            "nominalSpeed": 2500,
+            "data": [
+                {
+                    "database": "goglio_line3_general",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "displayName": "Auftrag Goglio",
+                    "value": ""
+                },
+                {
+                    "database": "lp_line3_general",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "displayName": "Auftrag Lorenz Pan",
+                    "value": ""
+                }
+            ],
+            "progress": {
+                "database": "goglio_line3_general",
+                "enabled": true, 
+                "target": "CT_CurrentOrder_Order_Quantity",
+                "actual": "CT_Counter_Filled_Bags"
+            }
+        },
+        {
+            "id": "line4",
+            "name": "Linie 4",
+            "subtitle": "AVT GB",
+            "machines": [
+                {
+                    "id": "goglio",
+                    "name": "Goglio",
+                    "database": "goglio_line4_general",
+                    "stateNode": "Goglio"
+                },
+                {
+                    "id": "cw",
+                    "name": "CW",
+                    "database": "goglio_line4_general",
+                    "stateNode": "Wipotec - Checkweigher"
+                },
+                {
+                    "id": "xray",
+                    "name": "XRay",
+                    "database": "goglio_line4_general",
+                    "stateNode": "Wipotec - XRay"
+                },
+                {
+                    "id": "ima",
+                    "name": "IMA4",
+                    "database": "goglio_line4_general",
+                    "stateNode": "IMA 4"
+                },
+                {
+                    "id": "lp",
+                    "name": "LP",
+                    "database": "lp_line4_general",
+                    "stateNode": "WS_Cur_State"
+                }
+            ],
+            "nominalSpeed": 2187.5,
+            "data": [
+                {
+                    "database": "goglio_line4_general",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "displayName": "Auftrag Goglio",
+                    "value": ""
+                },
+                {
+                    "database": "lp_line4_general",
+                    "nodeName": "WS_Cur_Order_ID",
+                    "displayName": "Auftrag Lorenz Pan",
+                    "value": ""
+                }
+            ],
+            "progress": {
+                "database": "goglio_line4_general",
+                "enabled": true, 
+                "target": "CT_CurrentOrder_Order_Quantity",
+                "actual": "CT_Counter_Filled_Bags"
+            }
         }
     ]
 }

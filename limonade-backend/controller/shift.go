@@ -300,6 +300,7 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 	if isProd {
 		cShiftStart := time.Date(start.Year(), start.Month(), start.Day(), cShift.Start, 0, 0, 0, loc)
 		results = append(results, result{Duration: start.Sub(cShiftStart).Hours() + float64(dev), EndTS: start.In(loc), Name: cShift.Name, StartTS: cShiftStart})
+		startFixed = cShiftStart
 	}
 
 	end := startFixed.Add(time.Hour * 7 * -24)

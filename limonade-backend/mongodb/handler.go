@@ -37,7 +37,7 @@ var NewMDBHandler MongoHandler
 
 func InitMongoDB(password string) {
 
-	connectionURL := "mongodb://appuser:" + password + "@192.168.178.107:31513/?directConnection=true"
+	connectionURL := "mongodb://appuser:" + password + "@localhost:61018/?directConnection=true"
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionURL))
 

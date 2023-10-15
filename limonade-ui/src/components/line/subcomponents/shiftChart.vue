@@ -148,7 +148,9 @@ async function addData() {
   let params = new URLSearchParams()
   params.append("collection", props.pObject.db)
   params.append("limit", 3)
-  params.append("unit", "Size")
+  if(props.pObject.unit){
+    params.append("unit", props.pObject.unit)
+  }
   params.append("nodeName", props.pObject.counterIdKey)
   params.append("lineId", props.pObject.lineid)
   let res = await axios.get(`${props.pObject.url}/timeseries/shiftpaces`, { params })

@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import { useLineDataStore } from "@/stores/line/lineData"
 import progressBarChart from "./subcomponents/progressBarChart.vue"
 import shiftChart from "./subcomponents/shiftChart.vue"
@@ -10,14 +11,39 @@ import paceChart from "./subcomponents/paceChart.vue";
 
 const store = useLineDataStore()
 
+
+const paceData = ref({
+    show: false,
+    node: "",
+    db: "",
+    unitTag: ""
+})
+
+function togglePaceChart(show, db, node, unitTag) {
+
+    if (show) {
+        paceData.value.db = db
+        paceData.value.node = node
+        paceData.value.show = true
+        paceData.value.unitTag = unitTag
+
+    } else {
+        paceData.value.show = false
+    }
+
+}
+
+
 </script>
 <template>
     <section>
+   
         <div class="line-progress" v-for="group in store.getMachineAreas" :key="group"
             :style="{ width: group.ratio * 100 + '%' }">
+          
             <div class="heading-controls">
                 <h3>Fortschritt - {{ group.name }} </h3>
-                <i class="bi bi-bar-chart-line-fill"></i>
+                <i class="bi bi-bar-chart-line-fill" @click="togglePaceChart(true, group.db, group.paceCounter, group.unit)"></i>
             </div>
             <ProgressSpinner v-if="!store.getLoadingState(group.name)" class="spinner"></ProgressSpinner>
             <div v-if="store.getLoadingState(group.name)">
@@ -33,10 +59,11 @@ const store = useLineDataStore()
 
                 <progressBarChart :pObject="store.getProgressData(group.name)" v-else>
                 </progressBarChart>
-                <paceChart :visible="true"></paceChart>
+          
+
             </div>
         </div>
-
+        <paceChart v-if="paceData.show" :db="paceData.db" :node="paceData.node" :unitTag="paceData.unitTag" @close="togglePaceChart(false)"></paceChart>
     </section>
 </template>
 <style scoped>
@@ -73,22 +100,22 @@ const store = useLineDataStore()
 
 }
 
-.heading-controls > i{
+.heading-controls>i {
     margin-left: auto;
     border: 1px solid var(--border-color-1);
     padding: 3px;
     cursor: pointer;
 }
 
-.heading-controls > i:hover{
+.heading-controls>i:hover {
     background: var(--theme-color-1);
 }
 
-.heading-controls > i:active{
+.heading-controls>i:active {
     transform: scale(0.9);
 }
 
-h3{
+h3 {
     padding: 0;
     margin: 0;
     font-size: 25px;
