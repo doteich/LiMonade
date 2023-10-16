@@ -90,6 +90,9 @@ export const useLineDataStore = defineStore("lineData", {
 
                 ratArr.push({
                     name: state.lineDefinition[index].name,
+                    db: state.lineDefinition[index].database,
+                    paceCounter: state.lineDefinition[index].progressConfig.counterIdKey,
+                    unit: state.lineDefinition[index].progressConfig.unitTag,
                     ratio: num / sum
                 })
 
@@ -105,6 +108,9 @@ export const useLineDataStore = defineStore("lineData", {
 
             }
         },
+
+
+
         getProgressData(state) {
             return (group) => {
                 let config = state.lineDefinition.find(g => group == g.name).progressConfig
@@ -139,6 +145,7 @@ export const useLineDataStore = defineStore("lineData", {
                     type: config.chartType,
                     tsIdKey: config.tsIdKey,
                     counterIdKey: config.counterIdKey,
+                    unit: config.unitTag,
                     url: state.restURL,
                     lineid: state.id,
                     db: state.lineDefinition.find(g => group == g.name).database
@@ -298,6 +305,57 @@ export const useLineDataStore = defineStore("lineData", {
         setRefreshInterval(value) {
             this.refreshInterval = value
             this.intervalHandler()
+        },
+
+        async setPace(group, tString) {
+
+
+            let line = this.lineDefinition.find(g => group == g.name)
+
+            if (tString == "AT") {
+                let data = line.staticData
+
+                let ts = data.find(obj => obj.nodeName == line.progressConfig.tsIdKey).timestamp
+                let count = data.find(obj => obj.nodeName == line.progressConfig.counterIdKey)
+
+                let timeDiff = (count.timestamp - ts) / (1000 * 60)
+
+                return (count.value / timeDiff).toFixed(2)
+            } else {
+                let end = new Date().toISOString()
+                let start = new Date()
+                start.setMinutes(start.getMinutes() - Number(tString))
+                start = start.toISOString()
+                let delta = await this.fetchPaceData(start, end, Number(tString), line.database, line.progressConfig.counterIdKey, "minute", "")
+                return delta
+            }
+
+
+        },
+
+        async fetchPaceData(start, end, tSpan, db, node, tCode, uCode) {
+            try {
+
+                const params = new URLSearchParams();
+                params.append("collection", db)
+                params.append("nodeName", node)
+                params.append("start", start)
+                params.append("end", end)
+                params.append("unit", uCode)
+
+                let res = await axios.get(`${this.restURL}/timeseries/delta`, { params })
+                let delta
+
+                tCode == "hour" ? delta = (res.data.delta / (tSpan / 60)).toFixed(2) : delta = (res.data.delta / tSpan).toFixed(2)
+
+
+                return delta
+            }
+
+            catch (err) {
+                console.error(err)
+            }
+
         }
 
 

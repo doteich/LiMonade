@@ -6,7 +6,7 @@ const restURL = "http://localhost:3000"
 export const useHomeDataStore = defineStore("homeDataStore", {
     state: () => ({
         homeData: [],
-        ival: "", 
+        ival: "",
     }),
     getters: {
         getHomeData(state) {
@@ -15,7 +15,7 @@ export const useHomeDataStore = defineStore("homeDataStore", {
 
     },
     actions: {
-        clearStore(){
+        clearStore() {
             clearInterval(this.ival)
         },
         async fetchHomeData() {
@@ -25,7 +25,8 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 let res = await axios.get(`${restURL}/config`, { params })
                 this.homeData = res.data.lines
                 this.fetchAll()
-              this.ival =   setInterval(()=>{this.fetchAll()
+                this.ival = setInterval(() => {
+                    this.fetchAll()
                 }, 60000)
             }
             catch (err) {
@@ -40,6 +41,10 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 line.machines.forEach((m, tidx) => {
                     this.fetchStateData(line.id, m.database, m.id, m.stateNode, idx, tidx)
                 })
+                if (line.progress.enabled){
+                    this.fetchProgressData(line.progress.database, line.progress.target, idx, "target")
+                    this.fetchProgressData(line.progress.database, line.progress.actual, idx, "actual")
+                }
             })
         },
         async fetchMetaData(db, node, lineIndex, tagIndex) {
@@ -50,6 +55,20 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 let res = await axios.get(`${restURL}/last`, { params })
                 this.homeData[lineIndex].data[tagIndex].value = res.data[0].Value
             } catch (err) {
+                console.error(err)
+            }
+        },
+        async fetchProgressData(db, node, lineIndex, key) {
+            try {
+                let params = new URLSearchParams()
+                params.append("collection", db)
+                params.append("nodeName", node)
+                let res = await axios.get(`${restURL}/last`, { params })
+                this.homeData[lineIndex].progress[key + "_value"] = res.data[0].Value
+                console.log(this.homeData[lineIndex])
+
+            }
+            catch (err) {
                 console.error(err)
             }
         },

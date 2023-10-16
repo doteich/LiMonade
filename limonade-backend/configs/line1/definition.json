@@ -186,8 +186,8 @@
                 "tsIdKey": "Order",
                 "counterIdKey": "Bags",
                 "targetIdKey": "Target Quantity",
-                "chartType": "default",
-                "machinePace": 400
+                "chartType": "shift",
+                "unit":"Size"
             }
         },
         {

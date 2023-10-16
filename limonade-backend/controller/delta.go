@@ -20,6 +20,7 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 	startString := r.URL.Query().Get("start")
 	endString := r.URL.Query().Get("end")
 	nodeName := r.URL.Query().Get("nodeName")
+	unit := r.URL.Query().Get("unit")
 
 	tsStart, err0 := time.Parse(time.RFC3339, startString)
 
@@ -92,6 +93,17 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 
 		delta.Delta = fArr[1] - fArr[0]
 
+		if unit != "" {
+			var nErr error
+			delta.Delta, nErr = convertWithUnit(collection, unit, delta.Delta, res[len(res)-1].Timestamp)
+
+			if nErr != nil {
+				logging.LogError(nErr, "error while converting delta with unit", "GetDelta")
+				delta.Delta = fArr[1] - fArr[0]
+			}
+
+		}
+
 	}
 	b, err := json.Marshal(delta)
 
@@ -127,4 +139,21 @@ func assertTypes(vArr []interface{}) ([]float64, error) {
 		}
 	}
 	return fArr, err
+}
+
+func convertWithUnit(collection string, unit string, delta float64, eTime time.Time) (float64, error) {
+
+	u, err := mongodb.NewMDBHandler.FindLastByTime(collection, unit, eTime)
+
+	if err != nil {
+		return 0, err
+	}
+	if len(u) < 1 {
+		return 0, errors.New("no unit found in provided time period")
+	}
+
+	nDelta := delta * (float64(u[0].Value.(int64)) / 1000)
+
+	return nDelta, nil
+
 }
