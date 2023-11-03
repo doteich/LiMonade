@@ -4,9 +4,7 @@ import { useLineDataStore } from "@/stores/line/lineData";
 import Dialog from 'primevue/dialog';
 import SelectButton from 'primevue/selectbutton';
 
-
 const store = useLineDataStore()
-
 
 const emit = defineEmits(["close"])
 
@@ -42,21 +40,16 @@ async function fetchDeltas() {
         
     }
 
-
     for (let i = 0; i < 9; i++) {
         let end = new Date()
         end.setMinutes(0, 0, 0);
         let start = new Date()
         start.setMinutes(0, 0, 0);
-
         end.setHours(end.getHours() - i);
         start.setHours(start.getHours() - i - 1);
-
         l.unshift(`${start.getHours()}:00 - ${end.getHours()}:00`)
-
         let rponse = await store.fetchPaceData(start.toISOString(), end.toISOString(), 60, props.db, props.node, "hour", ucode)
-
-        rponse < 0 ? res.unshift(0) : res.unshift(rponse)
+        rponse < 0 ? res.unshift(0) : res.unshift(rponse.split(".")[0])
     }
 
     data.value.labels = l

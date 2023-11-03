@@ -42,7 +42,7 @@ function togglePaceChart(show, db, node, unitTag) {
             :style="{ width: group.ratio * 100 + '%' }">
           
             <div class="heading-controls">
-                <h3>Fortschritt - {{ group.name }} </h3>
+                <h3>Leistung - {{ group.name }} </h3>
                 <i class="bi bi-bar-chart-line-fill" @click="togglePaceChart(true, group.db, group.paceCounter, group.unit)"></i>
             </div>
             <ProgressSpinner v-if="!store.getLoadingState(group.name)" class="spinner"></ProgressSpinner>

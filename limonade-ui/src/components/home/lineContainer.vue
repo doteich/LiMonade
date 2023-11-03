@@ -44,7 +44,14 @@ function changeRoute(id) {
             </Timeline>
 
             <div v-if="line.progress">
-                <ProgressBar  :value="((line.progress.actual_value/line.progress.target_value)*100).toFixed(2)"></ProgressBar>
+                <ProgressBar :value="((line.progress.actual_value / line.progress.target_value) * 100).toFixed(2)">
+                </ProgressBar>
+                <div class="progress-count">
+                    <div class="start-count"><div><i class="bi bi-geo"></i></div><span>{{ line.progress.actual_value }} </span></div>
+                    <div class="end-count"><span>{{ line.progress.target_value }} </span>
+                        <div><i class="bi bi-flag"></i></div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -57,15 +64,15 @@ function changeRoute(id) {
     display: flex;
 
     flex-direction: column;
-    width: 40vw;
-
+    width: 45vw;
+    height: 35vh;
     background-color: var(--font-color-1);
     font-family: Arial, Helvetica, sans-serif;
     border: 1px solid var(--border-color-1);
     border-radius: 1px;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
     border-radius: 5px;
-    margin: 2%;
+    margin: 30px;
     cursor: pointer;
 }
 
@@ -85,7 +92,6 @@ function changeRoute(id) {
     width: 200px;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
     min-height: 30px;
-
     width: 100%;
 
 }
@@ -174,4 +180,53 @@ function changeRoute(id) {
 .p-timeline-event-content {
     padding: 0 !important;
 }
+
+.progress-count {
+    display: flex;
+    margin: 0px 0px;
+}
+
+.start-count {
+    display: flex;
+    border-left: 1px solid var(--theme-color-2);
+    border-bottom: 1px solid var(--theme-color-2);
+    width: 15%;
+    align-items: center;
+}
+
+.start-count>span{
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+
+.start-count>div {
+    background: var(--theme-color-2);
+    color: white;
+    padding: 4px;
+}
+
+.end-count {
+    display: flex;
+    border-right: 1px solid var(--theme-color-2);
+    border-bottom: 1px solid var(--theme-color-2);
+    width: 15%;
+    margin-left: auto;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.end-count>div {
+    background: var(--theme-color-2);
+    color: white;
+    padding: 4px;
+}
+
+.end-count>span{
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+
+
 </style>
