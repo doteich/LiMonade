@@ -21,7 +21,7 @@ onUnmounted(() => {
     <section>
         <header>
        
-                <img src="../assets/spw.svg">
+                <img src="../assets/logo.svg">
          
             <h1>Line Monitoring</h1>
         </header>

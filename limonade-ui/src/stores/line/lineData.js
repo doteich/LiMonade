@@ -100,7 +100,24 @@ export const useLineDataStore = defineStore("lineData", {
             return ratArr
         },
         getDynamicData(state) {
-            return (group) => state.lineDefinition.find((g) => group === g.name).dynamicData.filter(el => el.show)
+            return (group) => {
+
+                let data = state.lineDefinition.find((g) => group === g.name).dynamicData.filter(el => el.show)
+
+                let toEval = data.filter(n => n.type == "ratio")
+
+                if (toEval || toEval.length > 0) {
+                    toEval.forEach(obj =>{
+                        obj.value = ((data.find(n => n.name == obj.ratioConf.dd).value/data.find(n => n.name == obj.ratioConf.dv).value)*100)
+                    })
+                }
+
+                console.log(data)
+
+                return data
+                //return state.lineDefinition.find((g) => group === g.name).dynamicData.filter(el => el.show)
+            }
+
         },
         getStaticData(state) {
             return (group) => {

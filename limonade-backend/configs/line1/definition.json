@@ -142,6 +142,30 @@
                     "type": "counter",
                     "value": 0,
                     "show": true
+                },
+                {
+                    "nodeId": "",
+                    "name": "Ratio B/T",
+                    "unit": "%",
+                    "type": "ratio",
+                    "ratioConf": {
+                        "dd": "Bags",
+                        "dv": "Trays"
+                    },
+                    "value": 0,
+                    "show": true
+                },
+                {
+                    "nodeId": "",
+                    "name": "Ratio B/M",
+                    "unit": "%",
+                    "type": "ratio",
+                    "ratioConf": {
+                        "dd": "Bags",
+                        "dv": "Motor Voltage"
+                    },
+                    "value": 0,
+                    "show": true
                 }
             ],
             "staticData": [
@@ -187,7 +211,7 @@
                 "counterIdKey": "Bags",
                 "targetIdKey": "Target Quantity",
                 "chartType": "shift",
-                "unit":"Size"
+                "unit": "Size"
             }
         },
         {
