@@ -22,9 +22,9 @@ defineProps({
 .counter {
     display: flex;
     flex-direction: row;
-    height: 4vmin;
+    height: 3vmin;
     min-width: 180px;
-    min-height: 40px;
+    min-height: 35px;
     margin: 2px;
     width: 32%;
     border: 1px solid var(--border-color-1);

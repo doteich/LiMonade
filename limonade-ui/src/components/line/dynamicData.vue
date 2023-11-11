@@ -32,7 +32,7 @@ const store = useLineDataStore()
     flex-direction: row;
     flex-wrap: wrap;
     width: 100%;
-    padding: 2px;
+    padding: 0px 2px;
 
 }
 
