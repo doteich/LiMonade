@@ -107,13 +107,10 @@ export const useLineDataStore = defineStore("lineData", {
                 let toEval = data.filter(n => n.type == "ratio")
 
                 if (toEval || toEval.length > 0) {
-                    toEval.forEach(obj =>{
-                        obj.value = ((data.find(n => n.name == obj.ratioConf.dd).value/data.find(n => n.name == obj.ratioConf.dv).value)*100)
+                    toEval.forEach(obj => {
+                        obj.value = ((data.find(n => n.name == obj.ratioConf.dd).value / data.find(n => n.name == obj.ratioConf.dv).value) * 100)
                     })
                 }
-
-                console.log(data)
-
                 return data
                 //return state.lineDefinition.find((g) => group === g.name).dynamicData.filter(el => el.show)
             }
@@ -121,7 +118,15 @@ export const useLineDataStore = defineStore("lineData", {
         },
         getStaticData(state) {
             return (group) => {
-                return state.lineDefinition.find(g => group == g.name).staticData.filter(obj => obj.show)
+                let data = state.lineDefinition.find(g => group == g.name).staticData.filter(obj => obj.show)
+                data.forEach(el => {
+                    if (el.shiftDelta) {
+                        el.label = "S"
+                    } else {
+                        el.label = "L"
+                    }
+                })
+                return data
 
             }
         },
@@ -249,13 +254,17 @@ export const useLineDataStore = defineStore("lineData", {
             this.lineDefinition.forEach((line) => {
                 line.staticData.forEach(async (node, index, source) => {
 
-                    if (index === source.length - 1) {
-                        let finish = await this.fetchNodeData(line.name, line.database, node.nodeName, node.distinct, true)
-                        line.isLoaded = finish
+                    if (node.shiftDelta) {
+                        this.staticShiftDelta(line.name, line.database, node.nodeName)
+
                     } else {
                         this.fetchNodeData(line.name, line.database, node.nodeName, node.distinct, false)
-
                     }
+
+                    if (index === source.length - 1) {
+                        line.isLoaded = true
+                    }
+
                 })
             })
 
@@ -278,7 +287,7 @@ export const useLineDataStore = defineStore("lineData", {
                     return false
                 }
             } catch (err) {
-                console.log(err)
+                console.error(err)
             }
         },
         async fetchAlarmDescription(line, mId, aId) {
@@ -373,6 +382,21 @@ export const useLineDataStore = defineStore("lineData", {
                 console.error(err)
             }
 
+        },
+
+        async staticShiftDelta(group, db, node) {
+            try{
+            const params = new URLSearchParams();
+            params.append("collection", db)
+            params.append("nodeName", node)
+            params.append("shiftdelta", "true")
+
+            let res = await axios.get(`${this.restURL}/timeseries/delta`, { params })
+            let el = this.lineDefinition.find(line => line.name == group).staticData.find(obj => obj.nodeName === node)
+            el.value = res.data.delta}
+            catch(err){
+                console.error(err)
+            }
         }
 
 

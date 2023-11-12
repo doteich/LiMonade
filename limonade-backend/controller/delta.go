@@ -6,6 +6,8 @@ import (
 	"limonade-backend/logging"
 	"limonade-backend/mongodb"
 	"net/http"
+	"os"
+	"strconv"
 	"time"
 )
 
@@ -21,8 +23,8 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 	endString := r.URL.Query().Get("end")
 	nodeName := r.URL.Query().Get("nodeName")
 	unit := r.URL.Query().Get("unit")
-
-	tsStart, err0 := time.Parse(time.RFC3339, startString)
+	shiftdelta := r.URL.Query().Get("shiftdelta")
+	//lineId := r.URL.Query().Get("lineId")
 
 	if collection == "" {
 		logging.LogError(errors.New("missing collection param in query"), "Missing Param Collection", "GetDataDuration")
@@ -38,33 +40,108 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err0 != nil {
-		logging.LogError(err0, "Error parsing start timestamp", "GetDelta")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Start timestamp has invalid format"))
-		return
+	var results result
+	var sEnabled bool
+	var sErr error
+
+	if shiftdelta != "" {
+		sEnabled, sErr = strconv.ParseBool(shiftdelta)
+
+		if sErr != nil {
+			logging.LogError(sErr, "Error parsing shift bool ", "GetDelta")
+			w.WriteHeader(http.StatusBadRequest)
+			return
+		}
+
+		bArr, err := os.ReadFile("./configs/definition.json")
+
+		if err != nil {
+			logging.LogError(err, "error while reading from definition file", "GetShiftTargets")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		var ww workweek
+
+		if err := json.Unmarshal(bArr, &ww); err != nil {
+			logging.LogError(err, "error while reading parsing definition file", "GetShiftTargets")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		//loc, err := time.LoadLocation("Europe/Berlin")
+
+		if err != nil {
+			logging.LogError(err, "unable to load time location", "GetShiftTargets")
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		start := time.Now()
+		startFixed := start.Round(time.Hour)
+
+		if start.Sub(startFixed) >= 0 {
+			startFixed = startFixed.Add(time.Hour)
+		}
+
+		weekDay := startFixed.Weekday().String()
+
+		end := startFixed.Add(time.Hour * 7 * -24)
+
+		for startFixed.After(end) {
+
+			weekDay = startFixed.Weekday().String()
+			var found bool
+			var res result
+
+			found, res = ww.getShift(weekDay, startFixed)
+			if found {
+				results = res
+				break
+			}
+
+			startFixed = startFixed.Add(time.Hour * -1)
+
+		}
+		//fmt.Println(results)
 	}
 
-	tsEnd, err1 := time.Parse(time.RFC3339, endString)
+	var res []mongodb.TimeSeriesData
+	var mErr error
 
-	if err1 != nil {
-		logging.LogError(err1, "Error parsing end timestamp", "GetDelta")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("End timestamp has invalid format"))
-		return
+	if sEnabled {
+		res, mErr = mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, results.StartTS, results.EndTS)
+		//fmt.Println(res)
+	} else {
+		tsStart, err0 := time.Parse(time.RFC3339, startString)
+
+		if err0 != nil {
+			logging.LogError(err0, "Error parsing start timestamp", "GetDelta")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Start timestamp has invalid format"))
+			return
+		}
+
+		tsEnd, err1 := time.Parse(time.RFC3339, endString)
+
+		if err1 != nil {
+			logging.LogError(err1, "Error parsing end timestamp", "GetDelta")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("End timestamp has invalid format"))
+			return
+		}
+
+		if tsEnd.Before(tsStart) {
+			logging.LogGeneric("warning", "Start Time after End Time", "GetDelta")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Start timestamp must be before end timestamp"))
+			return
+		}
+		res, mErr = mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, tsStart, tsEnd)
 	}
 
-	if tsEnd.Before(tsStart) {
-		logging.LogGeneric("warning", "Start Time after End Time", "GetDelta")
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte("Start timestamp must be before end timestamp"))
-		return
-	}
-
-	res, err := mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, tsStart, tsEnd)
-
-	if err != nil {
-		logging.LogError(err, "error executing mongodb query", "GetDelta")
+	if mErr != nil {
+		logging.LogError(mErr, "error executing mongodb query", "GetDelta")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}

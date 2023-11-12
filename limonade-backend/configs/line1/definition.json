@@ -193,7 +193,7 @@
                     "value": "",
                     "timestamp": "",
                     "showTS": true,
-                    "show": false,
+                    "show": true,
                     "distinct": false
                 },
                 {
@@ -204,6 +204,16 @@
                     "showTS": true,
                     "show": false,
                     "distinct": false
+                },
+                {
+                    "displayName": "Trays per Shift",
+                    "nodeName": "Trays",
+                    "value": "",
+                    "timestamp": "",
+                    "showTS": true,
+                    "show": true,
+                    "distinct": false,
+                    "shiftDelta": true
                 }
             ],
             "progressConfig": {
@@ -284,7 +294,7 @@
                     "nodeName": "Packages",
                     "value": "",
                     "timestamp": "",
-                    "showTS": true,
+                    "showTS": false,
                     "show": true,
                     "distinct": false
                 },

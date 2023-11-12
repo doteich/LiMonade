@@ -16,7 +16,7 @@ const store = useLineDataStore()
             <ProgressSpinner v-if="!store.getLoadingState(group.name)" class="spinner"></ProgressSpinner>
             <div class="static-data" v-if="store.getLoadingState(group.name)">
                 <singleStatic v-for="el in store.getStaticData(group.name)" :key="el.nodeName" :name="el.displayName"
-                    :value="el.value" :timestamp="el.timestamp" :showTS="el.showTS"></singleStatic>
+                    :value="el.value" :timestamp="el.timestamp" :showTS="el.showTS" :label="el.label"></singleStatic>
             </div>
         </div>
     </section>
