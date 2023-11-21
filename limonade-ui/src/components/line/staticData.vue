@@ -39,6 +39,7 @@ const store = useLineDataStore()
 
 .static-data{
     display: flex;
+    align-content: flex-start;
     flex-wrap: wrap;
     height: 100%;
     padding: 2px;

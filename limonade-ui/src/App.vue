@@ -29,8 +29,6 @@ h2 {
   margin: 4px;
   background: var(--theme-color-2);
   color: var(--font-color-1);
- 
-
 }
 
 footer {
