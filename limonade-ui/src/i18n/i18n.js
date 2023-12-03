@@ -2,15 +2,27 @@ import { createI18n } from 'vue-i18n'
 
 
 
-const messages ={
-    en:{
-        home:{
+const messages = {
+    en: {
+        home: {
             header: "LiMoNade"
+        },
+        line:{
+
+        },
+        machine:{
+
         }
     },
-    de:{
-        home:{
+    de: {
+        home: {
             header: "Line Monitor"
+        },
+        line:{
+
+        },
+        machine:{
+            
         }
     }
 }

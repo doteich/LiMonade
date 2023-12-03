@@ -5,9 +5,6 @@ import lineContainer from '../components/home/lineContainer.vue'
 
 const store = useHomeDataStore()
 
-
-
-
 onMounted(() => {
   store.fetchHomeData()
 })
@@ -22,7 +19,7 @@ onUnmounted(() => {
     <header>
       <img src="../assets/logo.svg" />
 
-      <h1>{{$t("home.header")}}</h1>
+      <h1>{{ $t('home.header') }}</h1>
     </header>
     <div class="home-content">
       <lineContainer v-for="line in store.getHomeData" :line="line" :key="line.id"></lineContainer>
