@@ -4,12 +4,15 @@ import { useAlarmStore } from './alarmStore'
 import { useMachineDataStore } from "./machineData"
 import { useMiscStore } from "./miscStore"
 
+
+const restURL = config()
+
 export const useCentralDataStore = defineStore("centralDataStore", {
     state: () => ({
         isLoaded: false,
         line: "",
         machine: "",
-        restURL: "http://localhost:3000",
+        restURL: restURL,
         refreshInterval: 60,
         machineDefinition: {
             name: "",

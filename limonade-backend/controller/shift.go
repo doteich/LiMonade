@@ -336,6 +336,7 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if len(tsArr) < 2 {
+			results[idx].Target = int(shift.Duration * pace)
 			continue
 		}
 
@@ -354,7 +355,6 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 		//tsArr[len(tsArr)-1].Value.(int64)
 
 		sum := float64(-tsArr[0].Value.(int64)) * unit[0]
-
 		var l int64 = 0
 
 		for i, e := range tsArr {
@@ -379,10 +379,11 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 					} else {
 						unit = append(unit, float64(u[0].Value.(int64))/1000)
 					}
+
+					sum = sum + float64(l)*unit[len(unit)-2]
+				} else {
+					sum = sum + float64(l)
 				}
-
-				sum = sum + float64(l)*unit[len(unit)-2]
-
 			}
 			l = v
 		}

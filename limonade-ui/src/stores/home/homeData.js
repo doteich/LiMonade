@@ -1,7 +1,8 @@
 import { defineStore } from "pinia"
 import axios from "axios"
 
-const restURL = "http://localhost:3000"
+// const restURL = "http://localhost:3000"
+const restURL = config()
 
 export const useHomeDataStore = defineStore("homeDataStore", {
     state: () => ({
@@ -41,7 +42,7 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 line.machines.forEach((m, tidx) => {
                     this.fetchStateData(line.id, m.database, m.id, m.stateNode, idx, tidx)
                 })
-                if (line.progress.enabled){
+                if (line.progress && line.progress.enabled){
                     this.fetchProgressData(line.progress.database, line.progress.target, idx, "target")
                     this.fetchProgressData(line.progress.database, line.progress.actual, idx, "actual")
                 }
@@ -79,11 +80,11 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 params.append("collection", db)
                 params.append("distinct", false)
                 let state = await axios.get(`${restURL}/last`, { params })
-
+                
                 params = new URLSearchParams()
                 params.append("line", line)
                 params.append("machineId", mId)
-                params.append("stateId", state.data[0].Value)
+                params.append("stateId", Number(state.data[0].Value))
                 let res = await axios.get(`${restURL}/config/state`, { params })
 
                 let color = "var(--schema-neutral)"
@@ -103,12 +104,12 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                         break
                 }
 
-
-
-                this.homeData[lineIndex].machines[tagIndex].value = state.data[0].Value
+                this.homeData[lineIndex].machines[tagIndex].value = Number(state.data[0].Value)
                 this.homeData[lineIndex].machines[tagIndex].schema = res.data[0].schema
                 this.homeData[lineIndex].machines[tagIndex].color = color
 
+                
+                
 
             }
             catch (err) {

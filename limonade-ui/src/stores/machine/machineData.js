@@ -111,8 +111,9 @@ export const useMachineDataStore = defineStore("machineData", {
 
                 if (res.data) {
                     res.data.forEach((el) => {
-
+                     
                         filteredData = this.datasets.filter(entry => entry.id == el.value)
+                        
                         entry = { x: [new Date(el.start), new Date(el.end)], y: "Status", duration: el.duration }
                         filteredData[0].data.push(entry)
 
