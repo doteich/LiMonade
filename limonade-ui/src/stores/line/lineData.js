@@ -4,11 +4,13 @@ import axios from "axios"
 
 const sockets = []
 const intervals = []
+const restURL = config()
+
 
 export const useLineDataStore = defineStore("lineData", {
     state: () => (
         {
-            restURL: "http://localhost:3000",
+            restURL: restURL,
             refreshInterval: 60,
             name: "",
             id: "",

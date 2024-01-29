@@ -32,7 +32,7 @@ const { getAlarm, getState } = storeToRefs(store)
 watch(getState, async (newVal) => {
     try {
 
-        let res = await store.fetchStateDescription(newVal)
+        let res = await store.fetchStateDescription(Number(newVal))
         let color = ""
 
         switch (res.schema) {
@@ -50,10 +50,12 @@ watch(getState, async (newVal) => {
                 break;
         }
         machineState.value = {
-            state: res.id,
+            state: Number(res.id),
             color,
             text: res.name
         }
+
+        console.log(machineState.value)
     }
     catch (err) {
         console.error(err);
@@ -63,16 +65,22 @@ watch(getState, async (newVal) => {
 
 watch(getAlarm, async (newVal) => {
     if (newVal > 0) {
-        try{
+        alarm.value = {
+            id: newVal,
+            text: "Unknown"
+        }
+
+        try {
             let res = await store.fetchAlarmDescription(newVal)
-            if (res){
+            if (res) {
                 alarm.value = {
                     id: res.id,
                     text: res.name
                 }
             }
-        }catch(err){
+        } catch (err) {
             console.error(err)
+
         }
     }
 
@@ -94,10 +102,11 @@ watch(getAlarm, async (newVal) => {
                 <alarmBox :code="alarm.id" :text="alarm.text"></alarmBox>
             </div>
             <div class="indicators">
-                <paceOverview v-if="store.machineDefinition.hasPace" :unit="store.getPaceConfig.unit" :pace="store.getPaceConfig.pace" :delta="store.getPaceConfig.delta"></paceOverview>
+                <paceOverview v-if="store.machineDefinition.hasPace" :unit="store.getPaceConfig.unit"
+                    :pace="store.getPaceConfig.pace" :delta="store.getPaceConfig.delta"></paceOverview>
             </div>
             <stateChart v-if="machineStore.getFetchState"></stateChart>
-           
+
 
         </div>
     </section>
@@ -142,7 +151,5 @@ watch(getAlarm, async (newVal) => {
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
 
-.indicators {
-   
-}
+.indicators {}
 </style>

@@ -5,12 +5,15 @@ import { createI18n } from 'vue-i18n'
 const messages = {
     en: {
         home: {
-            header: "LiMoNade"
+            header: "Line Monitor"
         },
-        line:{
-
+        line: {
+            h1: "Line View",
+            h2: "Performance",
+            h3: "Counters",
+            h4: "Static Data"
         },
-        machine:{
+        machine: {
 
         }
     },
@@ -18,10 +21,13 @@ const messages = {
         home: {
             header: "Line Monitor"
         },
-        line:{
-
+        line: {
+            h1: "Linien Visualisierung",
+            h2: "Leistung",
+            h3: "Zähler",
+            h4: "Statische Daten"
         },
-        machine:{
+        machine: {
             
         }
     }

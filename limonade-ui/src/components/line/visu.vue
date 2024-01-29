@@ -44,8 +44,9 @@ function getStateName(id, mid) {
 }
 
 function getStateColor(id, mid) {
-
-    let s = state.states.filter(a => a.id === id && a.mid === mid)
+  
+    let s = state.states.filter(a => a.id === Number(id) && a.mid === mid)
+  
 
     if (s.length < 1) {
         return 'var(--schema-neutral)'
@@ -87,7 +88,7 @@ watch(getStates, (nState, oState) => {
         if (oState.some(e => e.sid == el.sid && e.mid == el.mid)) {
             return
         }
-        let sRes = await store.fetchStateDescription(line, el.mid, el.sid)
+        let sRes = await store.fetchStateDescription(line, el.mid, Number(el.sid))
         if (!sRes) {
 
             let unknown = { id: el.aid, name: "Unknown", mid: el.mid }
@@ -107,14 +108,14 @@ watch(getStates, (nState, oState) => {
 
 <template>
     <section class="line-visu">
-        <h2>Linien Visualisierung</h2>
+        <h2>{{ $t('line.h1') }}</h2>
         <div class="timeline-container">
             <Timeline :value="store.getMachines" layout="horizontal">
                 <template #marker="slotProps">
                     <div class="machine-container" @click="switchRoute(slotProps.item.id)">
                         <p class="machine-state"><span class="status-num"
                                 :style="{ 'backgroundColor': getStateColor(slotProps.item.state, slotProps.item.id) }">{{
-                                    slotProps.item.state }}</span><span class="status-string">{{
+                                    Number(slotProps.item.state) }}</span><span class="status-string">{{
                                         getStateName(slotProps.item.state, slotProps.item.id) }}</span></p>
                         <div class="image-container">
                             <img src="../../assets/packing-machine-svgrepo-com.svg">
