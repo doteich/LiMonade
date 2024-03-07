@@ -14,6 +14,7 @@ export const useLineDataStore = defineStore("lineData", {
             refreshInterval: 60,
             name: "",
             id: "",
+            complexLayout: false,
             lineDefinition: [],
 
         }),
@@ -84,7 +85,14 @@ export const useLineDataStore = defineStore("lineData", {
         getMachineAreas(state) {
             let arr = []
             for (let group of state.lineDefinition) {
-                arr.push(group.machines.length)
+                if (state.complexLayout) {
+                   let x = group.machines.map(m => m.lvl).filter((v, i, a) => { return a.indexOf(v) == i
+                    })
+                    arr.push(x.length)
+                } else {
+                    arr.push(group.machines.length)
+                }
+
             }
             let sum = arr.reduce((accum, curVal) => accum + curVal, 0)
             let ratArr = []
@@ -110,7 +118,11 @@ export const useLineDataStore = defineStore("lineData", {
 
                 if (toEval || toEval.length > 0) {
                     toEval.forEach(obj => {
-                        obj.value = ((data.find(n => n.name == obj.ratioConf.dd).value / data.find(n => n.name == obj.ratioConf.dv).value) * 100)
+                        obj.value = ((Number(data.find(n => n.name == obj.ratioConf.dd).value) / Number(data.find(n => n.name == obj.ratioConf.dv).value)) * 100)
+
+                        if (isNaN(obj.value)) {
+                            obj.value = 0
+                        }
                     })
                 }
                 return data
@@ -140,14 +152,13 @@ export const useLineDataStore = defineStore("lineData", {
                 let config = state.lineDefinition.find(g => group == g.name).progressConfig
                 let data = state.lineDefinition.find(g => group == g.name).staticData
 
-
                 let ts = data.find(obj => obj.nodeName == config.tsIdKey).timestamp
                 let count = data.find(obj => obj.nodeName == config.counterIdKey)
                 let target = data.find(obj => obj.nodeName == config.targetIdKey).value
 
                 let timeDiff = (count.timestamp - ts) / (1000 * 60)
 
-                let pace = (count.value / timeDiff)
+                let pace = (count?.value / timeDiff)
                 let finish = ((target - count.value) / pace)
                 let finishTS = new Date()
                 finishTS.setMinutes(finishTS.getMinutes() + finish)
@@ -164,7 +175,7 @@ export const useLineDataStore = defineStore("lineData", {
                     finish: finish,
                     finishTS: finishTS.toLocaleString(),
                     target,
-                    count: count.value,
+                    count: count?.value,
                     progress: ((Number(count.value) / Number(target)) * 100).toFixed(1),
                     type: config.chartType,
                     tsIdKey: config.tsIdKey,
@@ -201,13 +212,15 @@ export const useLineDataStore = defineStore("lineData", {
                 let res = await axios.get(`${this.restURL}/config`, { params })
                 this.lineDefinition = res.data.data
                 this.name = res.data.displayName
+                res.data.complexLayout ? this.complexLayout = res.data.complexLayout : ""
                 this.id = lineName
+
                 this.startSockets()
                 this.fetchStaticData()
                 this.intervalHandler()
 
             } catch (err) {
-                console.log(err)
+                console.error(err)
             }
         },
         startSockets() {
@@ -217,7 +230,7 @@ export const useLineDataStore = defineStore("lineData", {
                 socket = new WebSocket(group.socket)
 
                 socket.addEventListener('open', () => {
-                    console.log("Socket opened for machine group: " + idx)
+                    console.info("Socket opened for machine group: " + idx)
                     let payload = {
                         "operation": "bulk_read"
                     }
@@ -294,7 +307,6 @@ export const useLineDataStore = defineStore("lineData", {
         },
         async fetchAlarmDescription(line, mId, aId) {
             try {
-
                 let params = new URLSearchParams()
                 params.append("line", line)
                 params.append("machineId", mId)
@@ -302,15 +314,10 @@ export const useLineDataStore = defineStore("lineData", {
 
                 let res = await axios.get(`${this.restURL}/config/alarm`, { params })
 
-                //console.log(res.data)
                 return res.data
-
-
             }
             catch (err) {
-
-                console.log(err)
-
+                console.error(err)
             }
         },
         async fetchStateDescription(line, mId, sId) {
@@ -320,14 +327,11 @@ export const useLineDataStore = defineStore("lineData", {
                 params.append("line", line)
                 params.append("machineId", mId)
                 params.append("stateId", sId)
-
                 let res = await axios.get(`${this.restURL}/config/state`, { params })
-
                 return res.data[0]
-
             }
             catch (err) {
-                console.log(err)
+                console.error(err)
             }
         },
         setRefreshInterval(value) {
@@ -387,16 +391,17 @@ export const useLineDataStore = defineStore("lineData", {
         },
 
         async staticShiftDelta(group, db, node) {
-            try{
-            const params = new URLSearchParams();
-            params.append("collection", db)
-            params.append("nodeName", node)
-            params.append("shiftdelta", "true")
+            try {
+                const params = new URLSearchParams();
+                params.append("collection", db)
+                params.append("nodeName", node)
+                params.append("shiftdelta", "true")
 
-            let res = await axios.get(`${this.restURL}/timeseries/delta`, { params })
-            let el = this.lineDefinition.find(line => line.name == group).staticData.find(obj => obj.nodeName === node)
-            el.value = res.data.delta}
-            catch(err){
+                let res = await axios.get(`${this.restURL}/timeseries/delta`, { params })
+                let el = this.lineDefinition.find(line => line.name == group).staticData.find(obj => obj.nodeName === node)
+                el.value = res.data.delta
+            }
+            catch (err) {
                 console.error(err)
             }
         }
