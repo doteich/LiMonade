@@ -85,12 +85,15 @@ export const useLineDataStore = defineStore("lineData", {
         getMachineAreas(state) {
             let arr = []
             for (let group of state.lineDefinition) {
-                if (state.complexLayout) {
-                   let x = group.machines.map(m => m.lvl).filter((v, i, a) => { return a.indexOf(v) == i
-                    })
-                    arr.push(x.length)
-                } else {
-                    arr.push(group.machines.length)
+                if (group.show) {
+                    if (state.complexLayout) {
+                        let x = group.machines.map(m => m.lvl).filter((v, i, a) => {
+                            return a.indexOf(v) == i
+                        })
+                        arr.push(x.length)
+                    } else {
+                        arr.push(group.machines.length)
+                    }
                 }
 
             }
@@ -112,20 +115,26 @@ export const useLineDataStore = defineStore("lineData", {
         getDynamicData(state) {
             return (group) => {
 
-                let data = state.lineDefinition.find((g) => group === g.name).dynamicData.filter(el => el.show)
+                let data = state.lineDefinition.find((g) => group === g.name).dynamicData
 
                 let toEval = data.filter(n => n.type == "ratio")
 
                 if (toEval || toEval.length > 0) {
+                    let dd
+                    let dv
                     toEval.forEach(obj => {
-                        obj.value = ((Number(data.find(n => n.name == obj.ratioConf.dd).value) / Number(data.find(n => n.name == obj.ratioConf.dv).value)) * 100)
+                        dd = data.find(n => n.name == obj.ratioConf.dd)
+                        dv = data.find(n => n.name == obj.ratioConf.dv)
 
-                        if (isNaN(obj.value)) {
+                        if (dd.value && dv.value && dd.value > 0 && dv.value > 0) {
+                            obj.value = (Number(dd.value) / Number(dv.value)) * 100
+                        } else {
                             obj.value = 0
                         }
+
                     })
                 }
-                return data
+                return data.filter(el => el.show)
                 //return state.lineDefinition.find((g) => group === g.name).dynamicData.filter(el => el.show)
             }
 
@@ -242,9 +251,11 @@ export const useLineDataStore = defineStore("lineData", {
 
 
                     let tag = this.lineDefinition[idx].dynamicData.find((el) =>
+                   
                         el.nodeId == json.nodeid
                     )
                     if (tag) {
+                        
                         tag.value = json.value
 
                     }

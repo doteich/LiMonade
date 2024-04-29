@@ -66,8 +66,7 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 params.append("nodeName", node)
                 let res = await axios.get(`${restURL}/last`, { params })
                 this.homeData[lineIndex].progress[key + "_value"] = res.data[0].Value
-                console.log(this.homeData[lineIndex])
-
+            
             }
             catch (err) {
                 console.error(err)

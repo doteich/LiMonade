@@ -24,8 +24,8 @@ const messages = {
         line: {
             h1: "Linien Visualisierung",
             h2: "Leistung",
-            h3: "Zähler",
-            h4: "Statische Daten"
+            h3: "Kontrollpunkte",
+            h4: "Auftragsdaten"
         },
         machine: {
             

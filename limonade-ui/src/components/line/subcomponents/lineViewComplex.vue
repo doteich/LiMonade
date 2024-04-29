@@ -260,7 +260,7 @@ p {
   overflow-x: hidden;
   overflow-y: auto;
   box-shadow: 0px 0px 2px 0px crimson;
-  align-items: center;
+  align-items: flex-start;
   height: 100%;
 
 }
