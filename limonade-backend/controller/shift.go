@@ -341,15 +341,12 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if unitString != "" {
-			u, err := mongodb.NewMDBHandler.FindLastByTime(collection, unitString, shift.StartTS)
-
+			u, err := getUnit(collection, unitString, shift.StartTS)
 			if err != nil {
 				logging.LogError(err, "error fetching init unit", "getShiftPaces")
 				return
 			}
-
-			unit[0] = (float64(u[0].Value.(int64)) / 1000)
-
+			unit[0] = u
 		}
 
 		//tsArr[len(tsArr)-1].Value.(int64)
@@ -367,18 +364,15 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 			if l > v && i > 0 {
 
 				if unitString != "" {
-					u, err := mongodb.NewMDBHandler.FindLastByTime(collection, unitString, tsArr[i-1].Timestamp)
+
+					u, err := getUnit(collection, unitString, tsArr[i-1].Timestamp)
 
 					if err != nil {
 						logging.LogError(err, "error fetching unit", "getShiftPaces")
 						break
 					}
 
-					if len(u) < 1 {
-						unit = append(unit, 1)
-					} else {
-						unit = append(unit, float64(u[0].Value.(int64))/1000)
-					}
+					unit = append(unit, u)
 
 					sum = sum + float64(l)*unit[len(unit)-2]
 				} else {
@@ -388,11 +382,19 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 			l = v
 		}
 
+		if unitString != "" {
+			u, err := getUnit(collection, unitString, shift.EndTS)
+			if err != nil {
+				logging.LogError(err, "error fetching init unit", "getShiftPaces")
+				return
+			}
+			unit = append(unit, u)
+		}
+
 		sum = sum + float64(tsArr[len(tsArr)-1].Value.(int64))*unit[len(unit)-1]
 
 		results[idx].Actual = int(sum)
 		results[idx].Target = int(shift.Duration * pace)
-
 	}
 	for i, j := 0, len(results)-1; i < j; i, j = i+1, j-1 {
 		results[i], results[j] = results[j], results[i]
@@ -408,5 +410,21 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(resp)
+
+}
+
+func getUnit(c string, u string, ts time.Time) (float64, error) {
+
+	units, err := mongodb.NewMDBHandler.FindLastByTime(c, u, ts)
+
+	if err != nil {
+		return 0, err
+	}
+
+	if len(u) < 1 {
+		return 1, nil
+	}
+
+	return float64(units[0].Value.(int64)) / 1000, nil
 
 }

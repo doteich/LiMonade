@@ -55,7 +55,7 @@ watch(getState, async (newVal) => {
             text: res.name
         }
 
-        console.log(machineState.value)
+        
     }
     catch (err) {
         console.error(err);

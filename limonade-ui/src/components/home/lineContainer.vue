@@ -2,7 +2,10 @@
 
 import { ref } from "vue"
 import { useRouter } from 'vue-router';
-import Timeline from 'primevue/timeline';
+import lineViewSimple from "./lineViewSimple.vue";
+import lineViewComplex from "./lineViewComplex.vue";
+
+
 import ProgressBar from 'primevue/progressbar';
 
 const router = useRouter()
@@ -21,9 +24,9 @@ function changeRoute(id) {
 
 <template>
     <div class="line-container" @click="changeRoute(line.id)">
-        <h2> {{ line.name }}</h2>
+        <h2> {{ line.name }} - {{ line.subtitle }}</h2>
         <div class="line-container-infos">
-            <h3>{{ line.subtitle }}</h3>
+            
             <div class="line-data">
                 <p v-for="el in line.data" :key="el.name" class="line-data-set">
                     <i class="bi bi-clipboard-check"></i>
@@ -31,19 +34,10 @@ function changeRoute(id) {
                     <span>{{ el.value }}</span>
                 </p>
             </div>
-            <Timeline :value="line.machines" layout="horizontal" class="line-simple" align="top">
-                <template #marker="slotProps">
-                    <div class="timeline-machine">
-                        <div class="timeline-bubble" :style="{ 'background': slotProps.item.color }">
-                            <p class="timeline-bubble-value">{{ slotProps.item.value }}</p>
-                        </div>
-                        <span>{{ slotProps.item.name }}</span>
-                    </div>
-                </template>
-
-            </Timeline>
-
-            <div v-if="line.progress">
+        
+            <lineViewComplex :machines="line.machines" v-if="line.branchingLayout"></lineViewComplex>
+               <lineViewSimple :machines="line.machines" v-else></lineViewSimple>
+            <div v-if="line.progress" class="line-progress">
                 <ProgressBar :value="((line.progress.actual_value / line.progress.target_value) * 100).toFixed(2)">
                 </ProgressBar>
                 <div class="progress-count">
@@ -74,6 +68,7 @@ function changeRoute(id) {
     border-radius: 5px;
     margin: 30px;
     cursor: pointer;
+   
 }
 
 .line-container>h2 {
@@ -81,73 +76,25 @@ function changeRoute(id) {
     margin: 0;
 }
 
-.line-simple {
-    padding: 0 1%;
 
+.line-container-infos{
+    height: 100%;
+    padding: 2px 5px;
 }
 
-.timeline-machine {
-    display: flex;
-    align-items: center;
-    width: 200px;
-    box-shadow: 1px 1px 4px 0px var(--border-color-1);
-    min-height: 30px;
-    width: 100%;
-
+h3{
+    padding: 2px;
 }
-
-.timeline-machine>span {
-    padding: 0 10px;
-
-}
-
-.timeline-bubble {
-    background: var(--theme-color-2);
-    color: var(--theme-color-2);
-    min-height: 30px;
-    min-width: 30px;
-    max-height: 30px;
-    max-width: 30px;
+.line-data {
     display: flex;
     align-items: center;
     justify-content: center;
-
-}
-
-.timeline-bubble-value {
-    margin: 0;
-    padding: 0;
-    font-weight: bold;
-    color: white;
-}
-
-
-
-.line-container-infos {
-    padding: 2px 15px;
-}
-
-.line-container-infos>h3 {
-    margin-top: 5px;
-    border-bottom: 1px solid var(--border-color-1);
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 17px;
-    color: var(--theme-color-2);
-
-}
-
-
-.line-data {
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
     flex-wrap: wrap;
-    height: 50%;
+    height: 30%;
 }
 
 .line-data>p {
-    width: 45%;
+    width: 100%;
 }
 
 .line-data-set {
@@ -175,10 +122,12 @@ function changeRoute(id) {
     padding: 0 5px;
 }
 
-
-
 .p-timeline-event-content {
     padding: 0 !important;
+}
+
+.line-progress{
+    height: 20%;
 }
 
 .progress-count {
@@ -226,6 +175,7 @@ function changeRoute(id) {
     margin-right: 10px;
     font-weight: bold;
 }
+
 
 
 

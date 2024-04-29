@@ -136,8 +136,7 @@ async function addData() {
     let last = chartdata.datasets[2].data[data.datasets[1].data.length - 1].x[1]
     let diff = el.actual - el.target
 
-    console.log("Last: " + last)
-    console.log("Diff: " + diff)
+   
 
     let n = last + el.actual
     let s = last + el.target
