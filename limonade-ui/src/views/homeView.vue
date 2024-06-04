@@ -1,9 +1,21 @@
 <script setup>
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref } from 'vue'
 import { useHomeDataStore } from '@/stores/home/homeData'
 import lineContainer from '../components/home/lineContainer.vue'
 
 const store = useHomeDataStore()
+
+const cozyMode = ref(true)
+const modeIcon = ref("bi bi-arrows-angle-contract")
+
+function changeDisplayMode(){
+  if (!cozyMode.value){
+    modeIcon.value = "bi bi-arrows-angle-contract"
+  }else{
+    modeIcon.value = "bi bi-arrows-angle-expand"
+  } 
+  cozyMode.value = !cozyMode.value
+}
 
 onMounted(() => {
   store.fetchHomeData()
@@ -20,14 +32,28 @@ onUnmounted(() => {
       <img src="../assets/logo.svg" />
 
       <h1>{{ $t('home.header') }}</h1>
+      
+      <button @click="changeDisplayMode" class="mode-button" title="Switch Layout"><i :class="modeIcon"></i></button>
     </header>
     <div class="home-content">
-      <lineContainer v-for="line in store.getHomeData" :line="line" :key="line.id"></lineContainer>
+      <lineContainer v-for="line in store.getHomeData" :line="line" :key="line.id" :cozy="cozyMode"></lineContainer>
     </div>
   </section>
 </template>
 
 <style scoped>
+.mode-button{
+  margin-left: auto;
+  margin-right: 1%;
+  border: none;
+  background: var(--theme-color-1);
+  color: var(--font-color-1);
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 10px;
+  
+}
+
 .home-content {
   height: 70vh;
   display: flex;

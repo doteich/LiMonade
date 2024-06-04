@@ -15,7 +15,7 @@ let state = reactive({
 })
 
 function switchRoute(name) {
-    router.push(router.currentRoute.value.fullPath + "/" + name)
+  router.push(router.currentRoute.value.fullPath + "/" + name)
 }
 
 
@@ -100,23 +100,23 @@ watch(getStates, (nState, oState) => {
 })
 
 function getStateColor(id, mid) {
-  
+
   let s = state.states.filter(a => a.id === Number(id) && a.mid === mid)
 
 
   if (s.length < 1) {
-      return 'var(--schema-neutral)'
+    return 'var(--schema-neutral)'
   }
 
   switch (s[0].schema) {
-      case 'critical':
-          return 'var(--schema-critical)'
-      case 'bad':
-          return 'var(--schema-bad)'
-      case 'good':
-          return 'var(--schema-good)'
-      default:
-          return 'var(--schema-neutral)'
+    case 'critical':
+      return 'var(--schema-critical)'
+    case 'bad':
+      return 'var(--schema-bad)'
+    case 'good':
+      return 'var(--schema-good)'
+    default:
+      return 'var(--schema-neutral)'
   }
 }
 
@@ -130,13 +130,14 @@ function getStateColor(id, mid) {
 
     <div v-for="(lvl, index) in visu" class="level">
 
-      <div v-for="machine in lvl" class="machine-block" >
-        <div class="machine" @click="switchRoute(machine.id)">
-          <p class="state"><span :style="{ 'backgroundColor': getStateColor(machine.state, machine.id) }">{{ machine?.state }}</span> {{ getStateName(machine.state, machine.id) }} </p>
+      <div v-for="machine in lvl" class="machine-block-complex">
+        <div class="machine-complex" @click="switchRoute(machine.id)">
+          <p class="state-complex"><span :style="{ 'backgroundColor': getStateColor(machine.state, machine.id) }">{{
+      machine?.state }}</span> {{ getStateName(machine.state, machine.id) }} </p>
           <div class="visu-content">
             <img src="../../../assets/packing-machine-svgrepo-com.svg" v-if="machine.alarm == 0">
-            <div class="alarm" v-else>
-              <div class="alarm-num">
+            <div class="alarm-complex" v-else>
+              <div class="alarm-num-complex">
                 <i class="bi bi-exclamation-diamond"></i>
                 <p>{{ machine?.alarm.toString().slice(0, 3) }}</p>
               </div>
@@ -153,7 +154,7 @@ function getStateColor(id, mid) {
   </section>
 </template>
 
-<style>
+<style scoped>
 .line-view-complex {
   display: flex;
   width: 100%;
@@ -187,14 +188,14 @@ function getStateColor(id, mid) {
   background: #ccc;
 } */
 
-.machine-block {
+.machine-block-complex {
   margin: 5px;
   display: flex;
   height: 50%;
   width: 100%;
 }
 
-.machine {
+.machine-complex {
   width: 100%;
   margin: 5px 0;
   height: 100%;
@@ -206,12 +207,14 @@ img {
   width: 4em;
 }
 
-.state {
+.state-complex{
+
   display: flex;
   height: 30%;
   display: flex;
   align-items: center;
   border-bottom: 1px solid var(--border-color-1);
+  width: 100%;
 }
 
 p {
@@ -220,7 +223,7 @@ p {
 
 
 
-.state>span {
+.state-complex>span {
   display: inline-block;
   height: 100%;
   padding-top: 3.5%;
@@ -234,12 +237,17 @@ p {
 }
 
 .visu-content {
+
   height: 40%;
+  width: 100%;
   background: white;
   display: flex;
   align-items: center;
   justify-content: center;
+
 }
+
+
 
 .name {
   display: flex;
@@ -250,40 +258,42 @@ p {
   font-weight: bold;
 }
 
-.alarm {
+.alarm-complex {
   display: flex;
-
   width: 100%;
   animation-name: example;
   animation-duration: 2s;
   max-height: 7vh;
-  overflow-x: hidden;
-  overflow-y: auto;
+
   box-shadow: 0px 0px 2px 0px crimson;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: flex-start;
   height: 100%;
 
 }
 
-.alarm>p {
+.alarm-complex>p {
   padding: 2px;
   margin: 0;
-
-  width: 100%;
-  vertical-align: middle;
+  overflow-x: hidden;
+  overflow-y: auto;
+  max-height: 100%;
+  vertical-align: super
 }
 
-.alarm-num {
+.alarm-num-complex {
   background: crimson;
   color: white;
-  padding: 5px 10px;
+
   display: flex;
+
   min-height: 100%;
   flex-direction: column;
   align-items: center;
   font-weight: bold;
   justify-content: stretch;
-  width: 21%;
+  width: 20%;
+  min-width: 20%;
   text-wrap: wrap;
 }
 
@@ -294,12 +304,12 @@ p {
   border-bottom: 3px solid var(--border-color-1);
 }
 
-.alarm-num>p {
+.alarm-num-complex>p {
   margin: 0;
 
 }
 
-.alarm-num>i {
+.alarm-num-complex>i {
   font-size: 20px;
 }
 </style>

@@ -42,24 +42,26 @@ const layout = computed(() => {
 
 <template>
     <div class="line-view-complex">
+      
         <div v-for="lvl, index in  layout " class="m-container" style="margin-left: 5%">
-            <div v-for=" machine  in  lvl " class="machine-status" :style="{ borderColor: machine.color }">
 
+            <div v-for=" machine  in  lvl " class="machine-status" :style="{ borderColor: machine.color }">
                 <span class="m-value" :style="{ background: machine.color }">
-                    {{ machine.value }}
+                    <i class="bi bi-check-circle-fill" v-if=" machine.schema=='good'"></i>
+                    <i class="bi bi-exclamation-triangle-fill" v-else ></i>
                 </span>
 
                 <span class="m-name">
 
                     {{ machine.name }}
                 </span>
-                <div class="connector" v-if="index != layout.length - 1" :style="{transform: 'rotate('+ machine.angle + 'deg)'}"></div>
+                <div class="connector" v-if="index != layout.length - 1"
+                    :style="{ transform: 'rotate(' + machine.angle + 'deg)' }"></div>
             </div>
 
         </div>
 
     </div>
-
 </template>
 
 <style scoped>

@@ -127,7 +127,7 @@ watch(getStates, (nState, oState) => {
                     <div class="alarm" v-if="slotProps.item.alarm > 0">
                         <div class="alarm-num">
                             <i class="bi bi-exclamation-diamond"></i>
-                            <p>{{ slotProps.item.alarm }}</p>
+                            <p>{{ slotProps.item.alarm.toString().slice(0,3)}}</p>
                         </div>
                         <p>{{ getAlarmName(slotProps.item.alarm, slotProps.item.id) }}</p>
                     </div>
@@ -150,14 +150,13 @@ watch(getStates, (nState, oState) => {
 .timeline-container {
     padding: 0px 10px;
 }
-
 .p-timeline-event-connector {
     height: 5px !important;
 }
 
 .p-timeline-event-opposite {
     flex: 0 !important;
-    padding: 2px !important;
+        padding: 2px !important;
 }
 
 .p-timeline-event-content {
@@ -218,7 +217,8 @@ watch(getStates, (nState, oState) => {
 .alarm {
     display: flex;
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
-    width: 13vw;
+    width: 62.5% !important;
+    min-width: 13vw;
     animation-name: example;
     animation-duration: 2s;
     max-height: 7vh;

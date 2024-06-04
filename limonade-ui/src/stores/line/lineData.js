@@ -59,6 +59,7 @@ export const useLineDataStore = defineStore("lineData", {
             let alarms = []
             for (let group of state.lineDefinition) {
                 for (let machine of group.machines) {
+                    
                     let alarm = {
                         mid: machine.id,
                         aid: group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value,

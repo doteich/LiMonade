@@ -12,11 +12,11 @@ defineProps({
   <div class="order-box">
     <div class="order-box-meta">
       <h5>{{ name }}</h5>
-      <p>{{label}}</p>
+      <p>{{ label }}</p>
     </div>
     <div class="order-box-data">
       <p>{{ value }}</p>
-      <span v-if="showTS">{{timestamp.toLocaleString()}}</span>
+      <span v-if="showTS">{{ timestamp.toLocaleString() }}</span>
     </div>
   </div>
 </template>
@@ -35,7 +35,7 @@ defineProps({
   box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
 
-.order-box-meta > h5 {
+.order-box-meta>h5 {
   word-wrap: break-word;
   font-size: 1em;
   margin: 0;
@@ -53,7 +53,7 @@ defineProps({
   padding: 0px 0 0 2px;
 }
 
-.order-box-meta > p {
+.order-box-meta>p {
   padding: 0;
   margin: 0;
   height: 18px;
@@ -73,26 +73,28 @@ defineProps({
   justify-content: center;
   width: 100%;
   height: 60%;
-  
+
 
 }
 
-.order-box-data > p {
+.order-box-data>p {
   font-size: 20px;
   padding: 0px 3px;
   margin: 0;
- 
 }
 
 
-.order-box-data >span{
-    margin-left: auto;
-    align-self: flex-end;
-    margin-top: auto;
-    font-size: 11px;
-    padding: 1px 2px;
-    background: var(--theme-color-2);
-    color: var(--font-color-1);
-    word-wrap: none;
+.order-box-data>span {
+  position: relative;
+  margin-left: auto;
+  align-self: flex-end;
+  margin-top: auto;
+  font-size: 11px;
+  padding: 1px 2px;
+  background: var(--theme-color-2);
+  color: var(--font-color-1);
+  word-wrap: none;
+  z-index: 100;
+  bottom: 0.5vh
 }
 </style>

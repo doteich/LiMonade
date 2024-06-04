@@ -12,7 +12,8 @@ const router = useRouter()
 
 
 const props = defineProps({
-    line: Object
+    line: Object,
+    cozy: Boolean
 })
 
 function changeRoute(id) {
@@ -23,7 +24,8 @@ function changeRoute(id) {
 
 
 <template>
-    <div class="line-container" @click="changeRoute(line.id)">
+    
+    <div class="line-container" :class="{'line-container-cozy': cozy}" @click="changeRoute(line.id)">
         <h2> {{ line.name }} - {{ line.subtitle }}</h2>
         <div class="line-container-infos">
             
@@ -56,10 +58,8 @@ function changeRoute(id) {
 <style scoped>
 .line-container {
     display: flex;
-
     flex-direction: column;
     width: 45vw;
-    height: 35vh;
     background-color: var(--font-color-1);
     font-family: Arial, Helvetica, sans-serif;
     border: 1px solid var(--border-color-1);
@@ -68,7 +68,10 @@ function changeRoute(id) {
     border-radius: 5px;
     margin: 30px;
     cursor: pointer;
-   
+}
+
+.line-container-cozy{
+    height: 35vh;
 }
 
 .line-container>h2 {

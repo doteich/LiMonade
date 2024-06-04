@@ -225,13 +225,16 @@ async function addData() {
 }
 
 .shift-chart-container {
-  width: 99%;
+
+  width: 99.2%;
   border: 1px solid var(--border-color-1);
-  height: 68%;
+  height: fit-content;
   padding: 7px;
   box-shadow: 1px 1px 4px 0px var(--border-color-1);
-  margin: 0.5% 0.5%;
-  margin-bottom: 5px;
+  margin: 0% 0.2%;
+  margin-bottom: 0px;
+ 
+  
 }
 
 
