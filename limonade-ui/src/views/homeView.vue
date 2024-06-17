@@ -34,7 +34,7 @@ onUnmounted(() => {
       <h1>{{ $t('home.header') }}</h1>
       <div class="meta">
         <div class="links">
-          <a  class="external-link" v-for="link in store.getLinks" :href="link?.url">
+          <a  class="external-link" target="_blank" v-for="link in store.getLinks" :href="link?.url">
             <i class="bi bi-box-arrow-up-right"></i>
             <span>{{link?.name}}</span>
           </a>
