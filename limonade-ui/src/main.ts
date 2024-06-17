@@ -9,8 +9,6 @@ import 'chartjs-plugin-annotation';
 import App from './App.vue'
 import router from './router'
 
-
-
 import './assets/main.css'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import "primevue/resources/themes/lara-light-indigo/theme.css";     

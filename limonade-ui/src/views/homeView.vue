@@ -8,12 +8,12 @@ const store = useHomeDataStore()
 const cozyMode = ref(true)
 const modeIcon = ref("bi bi-arrows-angle-contract")
 
-function changeDisplayMode(){
-  if (!cozyMode.value){
+function changeDisplayMode() {
+  if (!cozyMode.value) {
     modeIcon.value = "bi bi-arrows-angle-contract"
-  }else{
+  } else {
     modeIcon.value = "bi bi-arrows-angle-expand"
-  } 
+  }
   cozyMode.value = !cozyMode.value
 }
 
@@ -29,11 +29,20 @@ onUnmounted(() => {
 <template>
   <section>
     <header>
+     
       <img src="../assets/logo.svg" />
-
       <h1>{{ $t('home.header') }}</h1>
-      
-      <button @click="changeDisplayMode" class="mode-button" title="Switch Layout"><i :class="modeIcon"></i></button>
+      <div class="meta">
+        <div class="links">
+          <a  class="external-link" v-for="link in store.getLinks" :href="link?.url">
+            <i class="bi bi-box-arrow-up-right"></i>
+            <span>{{link?.name}}</span>
+          </a>
+
+        </div>
+        <button @click="changeDisplayMode" class="mode-button" title="Switch Layout"><i :class="modeIcon"></i></button>
+      </div>
+
     </header>
     <div class="home-content">
       <lineContainer v-for="line in store.getHomeData" :line="line" :key="line.id" :cozy="cozyMode"></lineContainer>
@@ -42,16 +51,15 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.mode-button{
+.mode-button {
   margin-left: auto;
-  margin-right: 1%;
   border: none;
   background: var(--theme-color-1);
   color: var(--font-color-1);
   cursor: pointer;
   border-radius: 4px;
   padding: 4px 10px;
-  
+ 
 }
 
 .home-content {
@@ -72,7 +80,7 @@ header {
   padding: 5px;
 }
 
-header > img {
+header>img {
   width: 50px;
   margin: 0 50px;
   border: white 1px solid;
@@ -81,5 +89,35 @@ header > img {
 h1 {
   padding: 0;
   margin: 0;
+}
+
+.meta {
+  margin-left: auto;
+  display: flex;
+  margin-right: 1vw;
+  
+}
+
+.links {
+  margin-right: 10px;
+  display: flex;
+  width: fit-content;
+  
+
+}
+
+.external-link {
+  display: flex;
+  border: 1px solid white;
+  padding: 10px;
+  width: fit-content;
+  text-decoration: none;
+  color: var(--font-color-1);
+  margin: 0 10px;
+  border-radius: 4px;
+}
+
+.external-link>span {
+  margin-left: 10px;
 }
 </style>

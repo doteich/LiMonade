@@ -7,12 +7,14 @@ const restURL = config()
 export const useHomeDataStore = defineStore("homeDataStore", {
     state: () => ({
         homeData: [],
+        links: [],
         ival: "",
     }),
     getters: {
         getHomeData(state) {
             return state.homeData
-        }
+        },
+        getLinks: (state) => state.links
 
     },
     actions: {
@@ -25,6 +27,7 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 params.append("configType", "main")
                 let res = await axios.get(`${restURL}/config`, { params })
                 this.homeData = res.data.lines
+                this.links = res.data.links
                 this.fetchAll()
                 this.ival = setInterval(() => {
                     this.fetchAll()
@@ -42,7 +45,7 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 line.machines.forEach((m, tidx) => {
                     this.fetchStateData(line.id, m.database, m.id, m.stateNode, idx, tidx)
                 })
-                if (line.progress && line.progress.enabled){
+                if (line.progress && line.progress.enabled) {
                     this.fetchProgressData(line.progress.database, line.progress.target, idx, "target")
                     this.fetchProgressData(line.progress.database, line.progress.actual, idx, "actual")
                 }
@@ -66,7 +69,7 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 params.append("nodeName", node)
                 let res = await axios.get(`${restURL}/last`, { params })
                 this.homeData[lineIndex].progress[key + "_value"] = res.data[0].Value
-            
+
             }
             catch (err) {
                 console.error(err)
@@ -79,7 +82,7 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 params.append("collection", db)
                 params.append("distinct", false)
                 let state = await axios.get(`${restURL}/last`, { params })
-                
+
                 params = new URLSearchParams()
                 params.append("line", line)
                 params.append("machineId", mId)
@@ -107,8 +110,8 @@ export const useHomeDataStore = defineStore("homeDataStore", {
                 this.homeData[lineIndex].machines[tagIndex].schema = res.data[0].schema
                 this.homeData[lineIndex].machines[tagIndex].color = color
 
-                
-                
+
+
 
             }
             catch (err) {

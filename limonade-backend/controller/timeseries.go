@@ -108,7 +108,7 @@ func ConvertToChartData(tsData []mongodb.TimeSeriesData) ([]byte, error) {
 		loc, _ := time.LoadLocation("Europe/Berlin")
 		localTs := tsEntry.Timestamp.In(loc)
 
-		newChartData.Labels = append(newChartData.Labels, fmt.Sprintf("%v:%v:%v", localTs.Hour(), localTs.Minute(), localTs.Second()))
+		newChartData.Labels = append(newChartData.Labels, fmt.Sprintf("%d:%d:%d", localTs.Hour(), localTs.Minute(), localTs.Second()))
 		newChartData.Data = append(newChartData.Data, tsEntry.Value)
 	}
 

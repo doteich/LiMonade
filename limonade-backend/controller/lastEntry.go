@@ -13,6 +13,7 @@ func GetLastEntry(w http.ResponseWriter, r *http.Request) {
 	nodeName := r.URL.Query().Get("nodeName")
 	collection := r.URL.Query().Get("collection")
 	distinct := r.URL.Query().Get("distinct")
+	exEmpty := r.URL.Query().Get("excludeEmpty")
 
 	if collection == "" {
 		logging.LogError(errors.New("missing collection param in query"), "Missing Param Collection", "GetDataDuration")
@@ -34,13 +35,19 @@ func GetLastEntry(w http.ResponseWriter, r *http.Request) {
 		dis = false
 	}
 
+	exEm, err := strconv.ParseBool(exEmpty)
+
+	if err != nil {
+		exEm = false
+	}
+
 	var res []mongodb.TimeSeriesData
 	var e error
 
 	if dis {
 		res, e = mongodb.NewMDBHandler.FindDistinct(collection, nodeName)
 	} else {
-		res, e = mongodb.NewMDBHandler.FindLast(collection, nodeName)
+		res, e = mongodb.NewMDBHandler.FindLast(collection, nodeName, exEm)
 	}
 
 	if e != nil {

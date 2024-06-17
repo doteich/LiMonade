@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
@@ -136,10 +137,18 @@ func (mh *MongoHandler) FindDistinct(collection string, nodeName string) ([]Time
 	return res[:1], nil
 }
 
-func (mh *MongoHandler) FindLast(collection string, nodeName string) ([]TimeSeriesData, error) {
+func (mh *MongoHandler) FindLast(collection string, nodeName string, exEmpty bool) ([]TimeSeriesData, error) {
+
 	coll := mh.client.Database(mh.database).Collection(collection)
 	filter := bson.D{
 		{Key: "meta.nodeName", Value: nodeName},
+	}
+
+	if exEmpty {
+		filter = append(filter, primitive.E{Key: "value", Value: bson.D{
+			{Key: "$exists", Value: true},
+			{Key: "$ne", Value: ""},
+		}})
 	}
 
 	sortParams := bson.D{{Key: "ts", Value: -1}}
@@ -156,6 +165,7 @@ func (mh *MongoHandler) FindLast(collection string, nodeName string) ([]TimeSeri
 }
 
 func (mh *MongoHandler) FindLastByTime(collection string, nodeName string, tsEnd time.Time) ([]TimeSeriesData, error) {
+
 	coll := mh.client.Database(mh.database).Collection(collection)
 	filter := bson.D{
 		{Key: "meta.nodeName", Value: nodeName},

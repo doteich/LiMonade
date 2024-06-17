@@ -55,7 +55,7 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 	var unit float64 = 1
 
 	if unitString != "" {
-		unitEntry, err := mongodb.NewMDBHandler.FindLast(collection, unitString)
+		unitEntry, err := mongodb.NewMDBHandler.FindLast(collection, unitString, false)
 
 		if err != nil {
 			logging.LogError(err, "error executing mongodb query", "GetShiftTargets")
