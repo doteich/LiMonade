@@ -71,12 +71,6 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 
 		//loc, err := time.LoadLocation("Europe/Berlin")
 
-		if err != nil {
-			logging.LogError(err, "unable to load time location", "GetShiftTargets")
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-
 		start := time.Now()
 		startFixed := start.Round(time.Hour)
 
@@ -84,13 +78,11 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 			startFixed = startFixed.Add(time.Hour)
 		}
 
-		weekDay := startFixed.Weekday().String()
-
 		end := startFixed.Add(time.Hour * 7 * -24)
 
 		for startFixed.After(end) {
 
-			weekDay = startFixed.Weekday().String()
+			weekDay := startFixed.Weekday().String()
 			var found bool
 			var res result
 

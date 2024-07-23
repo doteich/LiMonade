@@ -47,6 +47,7 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 	tsEntry, err := mongodb.NewMDBHandler.FindDistinct(collection, tsIdentifier)
 
 	if err != nil {
+
 		logging.LogError(err, "error executing mongodb query", "GetShiftTargets")
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -346,6 +347,7 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 				logging.LogError(err, "error fetching init unit", "getShiftPaces")
 				return
 			}
+
 			unit[0] = u
 		}
 
@@ -421,7 +423,7 @@ func getUnit(c string, u string, ts time.Time) (float64, error) {
 		return 0, err
 	}
 
-	if len(u) < 1 {
+	if len(units) < 1 {
 		return 1, nil
 	}
 
