@@ -73,15 +73,19 @@ func (mh *MongoHandler) QueryByNodeName(collection string, nodeName string, tsSt
 		},
 	}
 
+	sortParams := bson.D{{Key: "ts", Value: 1}}
+
 	var res []TimeSeriesData
 
-	cursor, err := coll.Find(ctx, filter)
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSort(sortParams))
 
 	if err != nil {
 		return nil, err
 	}
 
 	cursor.All(ctx, &res)
+
+	defer cursor.Close(ctx)
 
 	return res, nil
 }
@@ -92,7 +96,7 @@ func (mh *MongoHandler) FindDistinct(collection string, nodeName string) ([]Time
 	pipeline := bson.A{
 		bson.D{{Key: "$match", Value: bson.D{{Key: "meta.nodeName", Value: nodeName}}}},
 		bson.D{{Key: "$sort", Value: bson.D{{Key: "ts", Value: -1}}}},
-		bson.D{{Key: "$limit", Value: 5}},
+		bson.D{{Key: "$limit", Value: 100}},
 		bson.D{
 			{Key: "$group",
 				Value: bson.D{
@@ -134,6 +138,8 @@ func (mh *MongoHandler) FindDistinct(collection string, nodeName string) ([]Time
 		return nil, errors.New("query did not return any results")
 	}
 
+	defer cursor.Close(ctx)
+
 	return res[:1], nil
 }
 
@@ -161,6 +167,9 @@ func (mh *MongoHandler) FindLast(collection string, nodeName string, exEmpty boo
 		return nil, err
 	}
 	cursor.All(ctx, &res)
+
+	defer cursor.Close(ctx)
+
 	return res, nil
 }
 
@@ -186,6 +195,9 @@ func (mh *MongoHandler) FindLastByTime(collection string, nodeName string, tsEnd
 		return nil, err
 	}
 	cursor.All(ctx, &res)
+
+	defer cursor.Close(ctx)
+
 	return res, nil
 
 }

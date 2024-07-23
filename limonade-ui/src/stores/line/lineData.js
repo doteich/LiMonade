@@ -272,6 +272,7 @@ export const useLineDataStore = defineStore("lineData", {
 
             let i = setInterval(() => {
                 this.fetchStaticData()
+             
             }, this.refreshInterval * 1000)
             intervals.push(i)
         },
