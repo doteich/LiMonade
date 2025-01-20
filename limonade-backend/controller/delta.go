@@ -103,7 +103,7 @@ func GetDelta(w http.ResponseWriter, r *http.Request) {
 
 	if sEnabled {
 		res, mErr = mongodb.NewMDBHandler.QueryByNodeName(collection, nodeName, results.StartTS, results.EndTS)
-		//fmt.Println(res)
+
 	} else {
 		tsStart, err0 := time.Parse(time.RFC3339, startString)
 

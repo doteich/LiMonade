@@ -38,7 +38,7 @@ var NewMDBHandler MongoHandler
 
 func InitMongoDB(password string) {
 
-	connectionURL := "mongodb://appuser:" + password + "@localhost:61018/?directConnection=true"
+	connectionURL := "mongodb://linemonitor-access:" + password + "@localhost:49392/?directConnection=true"
 
 	client, err := mongo.Connect(ctx, options.Client().ApplyURI(connectionURL))
 
@@ -190,6 +190,34 @@ func (mh *MongoHandler) FindLastByTime(collection string, nodeName string, tsEnd
 	var res []TimeSeriesData
 
 	cursor, err := coll.Find(ctx, filter, options.Find().SetSort(sortParams), options.Find().SetLimit(1))
+
+	if err != nil {
+		return nil, err
+	}
+	cursor.All(ctx, &res)
+
+	defer cursor.Close(ctx)
+
+	return res, nil
+
+}
+
+func (mh *MongoHandler) SelectTimeseries(collection string, tsStart time.Time, tsEnd time.Time) ([]TimeSeriesData, error) {
+
+	coll := mh.client.Database(mh.database).Collection(collection)
+	filter := bson.D{
+		{Key: "ts",
+			Value: bson.D{
+				{Key: "$gte", Value: tsStart},
+				{Key: "$lt", Value: tsEnd},
+			},
+		},
+	}
+	sortParams := bson.D{{Key: "ts", Value: 1}}
+
+	var res []TimeSeriesData
+
+	cursor, err := coll.Find(ctx, filter, options.Find().SetSort(sortParams))
 
 	if err != nil {
 		return nil, err

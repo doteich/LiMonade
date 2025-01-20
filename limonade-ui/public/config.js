@@ -1,4 +1,4 @@
 function config() {
-    return "http://localhost:3000"
+    return "https://linemonitoring-iep-der.schwarz/api"
     
 }
