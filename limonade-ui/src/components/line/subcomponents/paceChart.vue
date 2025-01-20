@@ -4,6 +4,13 @@ import { useLineDataStore } from "@/stores/line/lineData";
 import Dialog from 'primevue/dialog';
 import SelectButton from 'primevue/selectbutton';
 
+import {useI18n} from "vue-i18n";
+        
+const i18n = useI18n();
+const translatedMessage = i18n.t("line.performance");
+const toggle = i18n.t("line.performance_toggle");
+
+
 const store = useLineDataStore()
 
 const emit = defineEmits(["close"])
@@ -35,7 +42,7 @@ async function fetchDeltas() {
     let l = []
     let ucode = ""
 
-    if(selection.value != "Stk"){
+    if(selection.value != toggle){
         ucode = props.unitTag
         
     }
@@ -55,7 +62,7 @@ async function fetchDeltas() {
     data.value.labels = l
     data.value.datasets[0].data = res
 
-     ucode == "" ? data.value.datasets[0].label = "Stk/h" : data.value.datasets[0].label = "Kg/h"
+     ucode == "" ? data.value.datasets[0].label = translatedMessage : data.value.datasets[0].label = "Kg/h"
 
 }
 
@@ -93,7 +100,7 @@ const data = ref({
     labels: [],
     datasets: [
         {
-            label: 'Stk/h',
+            label: translatedMessage,
             data: [],
 
 
@@ -102,8 +109,8 @@ const data = ref({
     ]
 });
 
-const options = ref(["Stk","KG"])
-const selection = ref("Stk")
+const options = ref([toggle,"KG"])
+const selection = ref(toggle)
 
 </script>
 <template>

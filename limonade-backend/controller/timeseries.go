@@ -121,3 +121,68 @@ func ConvertToChartData(tsData []mongodb.TimeSeriesData) ([]byte, error) {
 	return bytes, nil
 
 }
+
+func GetTimeSeriesData(w http.ResponseWriter, r *http.Request) {
+
+	collection := r.URL.Query().Get("collection")
+	startString := r.URL.Query().Get("start")
+	endString := r.URL.Query().Get("end")
+
+	tsStart, err0 := time.Parse(time.RFC3339, startString)
+
+	if collection == "" {
+		logging.LogError(errors.New("missing collection param in query"), "Missing Param Collection", "GetDataDuration")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Parameter Collection not provided"))
+		return
+	}
+	if err0 != nil {
+		logging.LogError(err0, "Error parsing start timestamp", "GetDataByNodeName")
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte("Start timestamp has invalid format"))
+		return
+	}
+
+	var tsEnd time.Time
+	var err1 error
+
+	if endString != "" {
+		tsEnd, err1 = time.Parse(time.RFC3339, endString)
+
+		if err1 != nil {
+			logging.LogError(err1, "Error parsing end timestamp", "GetDataByNodeName")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("End timestamp has invalid format"))
+			return
+		}
+
+		if tsEnd.Before(tsStart) {
+			logging.LogGeneric("warning", "Start Time after End Time", "GetDataByNodeName")
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte("Start timestamp must be before end timestamp"))
+			return
+		}
+	} else {
+		tsEnd = time.Now()
+	}
+
+	ts, err := mongodb.NewMDBHandler.SelectTimeseries(collection, tsStart, tsEnd)
+
+	if err != nil {
+		logging.LogError(err, "error executing mongodb query", "GetDataByNodeName")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	payload, err := json.Marshal(ts)
+
+	if err != nil {
+		logging.LogError(err, "Error marshaling JSON", "GetDataByNodeName")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(payload)
+
+}

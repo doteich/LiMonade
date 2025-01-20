@@ -13,6 +13,10 @@ const props = defineProps({
   pObject: Object
 })
 
+let unit = props.pObject.unit && props.pObject.unit != '' ? props.pObject.unit : 'kg';
+
+
+
 Chart.register(annotationPlugin);
 Chart.register(ChartDataLabels);
 
@@ -28,18 +32,18 @@ function refreshChart() {
     addData()
   }, 120000);
 }
-onUnmounted(()=>{
+onUnmounted(() => {
   clearInterval(interval)
 })
 
 
 const data = {
-  labels: ['kg'],
+  labels: [unit],
   datasets: [
     {
       label: 'Ist',
       data: [
-        { x: [0, 0], y: "kg" },
+        { x: [0, 0], y: unit },
       ],
       backgroundColor: "hsl(209, 47%, 20%)",
 
@@ -47,14 +51,14 @@ const data = {
     {
       label: 'Soll',
       data: [
-        { x: [0, 0], y: "kg" },
+        { x: [0, 0], y: unit },
       ],
       backgroundColor: "crimson",
     },
     {
       label: 'Über',
       data: [
-        { x: [0, 0], y: "kg" },
+        { x: [0, 0], y: unit },
       ],
       backgroundColor: "rgb(39, 207, 115)",
     },
@@ -142,13 +146,13 @@ const config = {
 async function addData() {
 
   data.datasets.forEach(set => {
-    set.data = [{ x: [0, 0], y: "kg" }]
+    set.data = [{ x: [0, 0], y: unit }]
   })
 
   let params = new URLSearchParams()
   params.append("collection", props.pObject.db)
   params.append("limit", 3)
-  if(props.pObject.unit){
+  if (props.pObject.unit) {
     params.append("unit", props.pObject.unit)
   }
   params.append("nodeName", props.pObject.counterIdKey)
@@ -170,13 +174,13 @@ async function addData() {
     let uEntry = {}
 
     if (diff > 0) {
-      iEntry = { x: [last, s], y: "kg" }
-      sEntry = { x: [s, s], y: "kg" }
-      uEntry = { x: [s, s + diff], y: "kg" }
+      iEntry = { x: [last, s], y: unit }
+      sEntry = { x: [s, s], y: unit }
+      uEntry = { x: [s, s + diff], y: unit }
     } else {
-      iEntry = { x: [last, n], y: "kg" }
-      sEntry = { x: [n, s], y: "kg" }
-      uEntry = { x: [s, s], y: "kg" }
+      iEntry = { x: [last, n], y: unit }
+      sEntry = { x: [n, s], y: unit }
+      uEntry = { x: [s, s], y: unit }
     }
 
     data.datasets[0].data.push(iEntry)
@@ -233,8 +237,8 @@ async function addData() {
   box-shadow: 1px 1px 4px 0px var(--border-color-1);
   margin: 0% 0.2%;
   margin-bottom: 0px;
- 
-  
+
+
 }
 
 

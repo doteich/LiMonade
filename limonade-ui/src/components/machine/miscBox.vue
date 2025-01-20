@@ -16,8 +16,8 @@ const setActive = (name) => {
         <div class="misc-nav">
             <h2>Misc</h2>
             <ul>
-                <li @click="setActive('order')" :class="{ 'li-active': store.getActiveComponent.order }">Auftragsdaten</li>
-                <li @click="setActive('chart')" :class="{ 'li-active': store.getActiveComponent.chart }">Historische Werte
+                <li @click="setActive('order')" :class="{ 'li-active': store.getActiveComponent.order }">{{ $t('machine.b1') }} </li>
+                <li @click="setActive('chart')" :class="{ 'li-active': store.getActiveComponent.chart }">{{ $t('machine.b2') }}
                 </li>
             </ul>
         </div>

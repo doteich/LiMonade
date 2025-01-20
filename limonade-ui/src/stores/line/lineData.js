@@ -190,7 +190,7 @@ export const useLineDataStore = defineStore("lineData", {
                     type: config.chartType,
                     tsIdKey: config.tsIdKey,
                     counterIdKey: config.counterIdKey,
-                    unit: config.unitTag,
+                    unit: config.unit,
                     url: state.restURL,
                     lineid: state.id,
                     db: state.lineDefinition.find(g => group == g.name).database

@@ -153,6 +153,7 @@ func GetShiftTargets(w http.ResponseWriter, r *http.Request) {
 		results[i].Target = int(res.Duration * pace)
 
 		if len(entry) < 1 {
+
 			continue
 		}
 
@@ -204,9 +205,14 @@ func (ww *workweek) getCurrentShift(wd string, t time.Time) (bool, shift, int) {
 
 	for _, s := range d {
 		if s.DayOverlap {
+
+			if t.Hour() >= s.Start && t.Hour() < 24 {
+				return true, s, 0
+			}
+
 			if t.Hour() >= s.Start || t.Hour() < s.End {
 				//fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, wd)
-				return true, s, 24
+				return true, s, 1
 			}
 		} else if t.Hour() < s.End && t.Hour() >= s.Start {
 			//fmt.Printf("CURRENT SHIFT IS %s on %s \n", s.Name, wd)
@@ -285,7 +291,8 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	start := time.Now()
+	start := time.Now().In(loc)
+
 	startFixed := start.Round(time.Hour)
 
 	if start.Sub(startFixed) >= 0 {
@@ -299,8 +306,10 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 	isProd, cShift, dev := ww.getCurrentShift(weekDay, start.In(loc))
 
 	if isProd {
-		cShiftStart := time.Date(start.Year(), start.Month(), start.Day(), cShift.Start, 0, 0, 0, loc)
-		results = append(results, result{Duration: start.Sub(cShiftStart).Hours() + float64(dev), EndTS: start.In(loc), Name: cShift.Name, StartTS: cShiftStart})
+
+		cShiftStart := time.Date(start.Year(), start.Month(), start.Day()-dev, cShift.Start, 0, 0, 0, loc)
+
+		results = append(results, result{Duration: start.Sub(cShiftStart).Hours(), EndTS: start.In(loc), Name: cShift.Name, StartTS: cShiftStart})
 		startFixed = cShiftStart
 	}
 
@@ -350,8 +359,6 @@ func GetShiftPaces(w http.ResponseWriter, r *http.Request) {
 
 			unit[0] = u
 		}
-
-		//tsArr[len(tsArr)-1].Value.(int64)
 
 		sum := float64(-tsArr[0].Value.(int64)) * unit[0]
 		var l int64 = 0

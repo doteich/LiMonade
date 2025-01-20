@@ -44,7 +44,7 @@ onUnmounted(() => {
         </div>
         <div class="progress-values">
             <span style="font-weight:600">{{ pace }}</span>
-            <span>Stk/min</span>
+            <span>{{$t('line.pace')}}</span>
            
         </div>
     </div>
