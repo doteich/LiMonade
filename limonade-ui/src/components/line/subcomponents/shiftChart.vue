@@ -5,6 +5,13 @@ import { Chart } from 'chart.js';
 import axios from "axios"
 import annotationPlugin from 'chartjs-plugin-annotation';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { useI18n } from "vue-i18n";
+
+const i18n = useI18n();
+const l1 = i18n.t("line.shift_chart_leg_1");
+const l2 = i18n.t("line.shift_chart_leg_2");
+const l3 = i18n.t("line.shift_chart_leg_3");
+
 
 const show = ref(true)
 let interval = null
@@ -41,7 +48,7 @@ const data = {
   labels: [unit],
   datasets: [
     {
-      label: 'Ist',
+      label: l1,
       data: [
         { x: [0, 0], y: unit },
       ],
@@ -49,14 +56,14 @@ const data = {
 
     },
     {
-      label: 'Soll',
+      label: l2,
       data: [
         { x: [0, 0], y: unit },
       ],
       backgroundColor: "crimson",
     },
     {
-      label: 'Über',
+      label: l3,
       data: [
         { x: [0, 0], y: unit },
       ],

@@ -14,7 +14,10 @@ const messages = {
             h4: "Static Data",
             pace: "pcs/min",
             performance: "pcs/h",
-            performance_toggle:"pcs"
+            performance_toggle: "pcs",
+            shift_chart_leg_1: "Actual",
+            shift_chart_leg_2: "Target",
+            shift_chart_leg_3: "Over",
         },
         machine: {
             b1: "Order Data",
@@ -32,11 +35,14 @@ const messages = {
             h4: "Auftragsdaten",
             pace: "Stk/min",
             performance: "Stk/h",
-            performance_toggle:"Stk"
+            performance_toggle: "Stk",
+            shift_chart_leg_1: "Ist",
+            shift_chart_leg_2: "Soll",
+            shift_chart_leg_3: "Über",
         },
         machine: {
-             b1: "Auftragsdaten",
-             b2: "Historische Werte"
+            b1: "Auftragsdaten",
+            b2: "Historische Werte"
         }
     }
 }
