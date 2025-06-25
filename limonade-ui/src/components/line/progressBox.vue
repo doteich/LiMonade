@@ -7,13 +7,15 @@ import ProgressSpinner from 'primevue/progressspinner';
 import ProgressData from "./subcomponents/progressData.vue"
 import paceToggle from "./subcomponents/paceToggle.vue";
 import paceChart from "./subcomponents/paceChart.vue";
-
+import paceChartExpanded from "./subcomponents/paceChartExpanded.vue";
+import paceBarChart from "./subcomponents/paceBarChart.vue";
 
 const store = useLineDataStore()
 
 
 const paceData = ref({
     show: false,
+    showExpanded: false,
     node: "",
     db: "",
     unitTag: ""
@@ -32,38 +34,61 @@ function togglePaceChart(show, db, node, unitTag) {
     }
 
 }
+function expand() {
+    togglePaceChart(false)
+    toggleExpandedChart(true)
+}
+
+
+
+function toggleExpandedChart(show) {
+    paceData.value.showExpanded = show
+}
+
 
 
 </script>
 <template>
     <section>
-   
+
         <div class="line-progress" v-for="group in store.getMachineAreas" :key="group"
             :style="{ width: group.ratio * 100 + '%' }">
-          
+
             <div class="heading-controls">
                 <h3>{{ $t('line.h2') }} - {{ group.name }} </h3>
-                <i class="bi bi-bar-chart-line-fill" @click="togglePaceChart(true, group.db, group.paceCounter, group.unit)"></i>
+                <i class="bi bi-bar-chart-line-fill"
+                    @click="togglePaceChart(true, group.db, group.paceCounter, group.unit)"></i>
             </div>
             <ProgressSpinner v-if="!store.getLoadingState(group.name)" class="spinner"></ProgressSpinner>
             <div v-if="store.getLoadingState(group.name)">
                 <div class="progress-data">
-                    <paceToggle :group="group.name"></paceToggle>
+                    <paceToggle :group="group.name" :show-hour-pace="store.getSimpleLayout"></paceToggle>
                     <ProgressData :value="store.getProgressData(group.name).finish" unit="min" icon="hourglass-split">
                     </ProgressData>
-                    <ProgressData :value="store.getProgressData(group.name).finishTS" icon="calendar-week"></ProgressData>
+                    <ProgressData :value="store.getProgressData(group.name).finishTS" icon="calendar-week">
+                    </ProgressData>
                 </div>
 
                 <shiftChart v-if="store.getProgressData(group.name).type == 'shift'"
                     :pObject="store.getProgressData(group.name)"></shiftChart>
 
+                <paceBarChart v-else-if="store.getProgressData(group.name).type == 'bar'" :db="group.db"
+                    :node="group.paceCounter" :unitTag="paceData.unitTag"></paceBarChart>
+
+
                 <progressBarChart :pObject="store.getProgressData(group.name)" v-else>
                 </progressBarChart>
-          
+
 
             </div>
         </div>
-        <paceChart v-if="paceData.show" :db="paceData.db" :node="paceData.node" :unitTag="paceData.unitTag" @close="togglePaceChart(false)"></paceChart>
+        <paceChart v-if="paceData.show" :db="paceData.db" :node="paceData.node" :unitTag="paceData.unitTag"
+            @close="togglePaceChart(false)" @expand="expand"></paceChart>
+        <paceChartExpanded v-if="paceData.showExpanded" :db="paceData.db" :node="paceData.node"
+            :unitTag="paceData.unitTag" @close="toggleExpandedChart(false)">
+        </paceChartExpanded>
+
+
     </section>
 </template>
 <style scoped>
@@ -121,4 +146,3 @@ h3 {
     font-size: 25px;
 }
 </style>
-

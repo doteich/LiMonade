@@ -15,6 +15,7 @@ export const useLineDataStore = defineStore("lineData", {
             name: "",
             id: "",
             complexLayout: false,
+            simpleLayout: false,
             lineDefinition: [],
 
         }),
@@ -59,7 +60,7 @@ export const useLineDataStore = defineStore("lineData", {
             let alarms = []
             for (let group of state.lineDefinition) {
                 for (let machine of group.machines) {
-                    
+
                     let alarm = {
                         mid: machine.id,
                         aid: group.dynamicData.filter(el => el.name == machine.alarmNode)[0].value,
@@ -68,6 +69,9 @@ export const useLineDataStore = defineStore("lineData", {
                 }
             }
             return alarms
+        },
+        getSimpleLayout(state){
+            return state.simpleLayout
         },
         getStates(state) {
             let states = []
@@ -223,6 +227,7 @@ export const useLineDataStore = defineStore("lineData", {
                 this.lineDefinition = res.data.data
                 this.name = res.data.displayName
                 res.data.complexLayout ? this.complexLayout = res.data.complexLayout : ""
+                res.data.simpleLayout ? this.simpleLayout = res.data.simpleLayout : false
                 this.id = lineName
 
                 this.startSockets()
@@ -244,7 +249,7 @@ export const useLineDataStore = defineStore("lineData", {
                     let payload = {
                         "operation": "bulk_read"
                     }
-                    socket.send(JSON.stringify(payload))
+
 
                 })
                 socket.addEventListener("message", (event) => {
@@ -252,11 +257,11 @@ export const useLineDataStore = defineStore("lineData", {
 
 
                     let tag = this.lineDefinition[idx].dynamicData.find((el) =>
-                   
+
                         el.nodeId == json.nodeid
                     )
                     if (tag) {
-                        
+
                         tag.value = json.value
 
                     }
@@ -272,7 +277,7 @@ export const useLineDataStore = defineStore("lineData", {
 
             let i = setInterval(() => {
                 this.fetchStaticData()
-             
+
             }, this.refreshInterval * 1000)
             intervals.push(i)
         },
@@ -357,14 +362,19 @@ export const useLineDataStore = defineStore("lineData", {
 
             let line = this.lineDefinition.find(g => group == g.name)
 
-            if (tString == "AT") {
-                let data = line.staticData
+            if (tString == "h") {
+                let end = new Date().toISOString()
+                let start = new Date()
+                start.setHours(start.getHours() - 1)
+                start = start.toISOString()
+                let delta = await this.fetchPaceData(start, end, 60, line.database, line.progressConfig.counterIdKey, "hour", "")
 
+                return delta
+            } else if (tString == "AT") {
+                let data = line.staticData
                 let ts = data.find(obj => obj.nodeName == line.progressConfig.tsIdKey).timestamp
                 let count = data.find(obj => obj.nodeName == line.progressConfig.counterIdKey)
-
                 let timeDiff = (count.timestamp - ts) / (1000 * 60)
-
                 return (count.value / timeDiff).toFixed(2)
             } else {
                 let end = new Date().toISOString()
@@ -392,13 +402,12 @@ export const useLineDataStore = defineStore("lineData", {
                 let delta
 
                 tCode == "hour" ? delta = (res.data.delta / (tSpan / 60)).toFixed(2) : delta = (res.data.delta / tSpan).toFixed(2)
-
-
                 return delta
             }
 
             catch (err) {
-                console.error(err)
+                throw err
+
             }
 
         },

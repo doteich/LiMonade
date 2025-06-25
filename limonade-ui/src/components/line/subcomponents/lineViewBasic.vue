@@ -21,6 +21,25 @@ let state = reactive({
 })
 
 
+onMounted(() => {
+
+    console.log(getStates.value)
+
+    getStates.value.forEach(async (el, idx) => {
+
+        let sRes = await store.fetchStateDescription(line, el.mid, Number(el.sid))
+        if (!sRes) {
+
+            let unknown = { id: el.aid, name: "Unknown", mid: el.mid }
+            state.states[idx] = unknown
+        } else {
+            sRes.mid = el.mid
+            state.states[idx] = sRes
+        }
+
+    })
+})
+
 
 
 function switchRoute(name) {
@@ -48,9 +67,9 @@ function getStateName(id, mid) {
 }
 
 function getStateColor(id, mid) {
-  
+
     let s = state.states.filter(a => a.id === Number(id) && a.mid === mid)
-  
+
 
     if (s.length < 1) {
         return 'var(--schema-neutral)'
@@ -88,6 +107,7 @@ watch(getAlarms, (nState) => {
 })
 
 watch(getStates, (nState, oState) => {
+
     nState.forEach(async (el, idx) => {
         if (oState.some(e => e.sid == el.sid && e.mid == el.mid)) {
             return
@@ -112,32 +132,31 @@ watch(getStates, (nState, oState) => {
 
 <template>
 
-        <div class="timeline-container">
-            <Timeline :value="store.getMachines" layout="horizontal">
-                <template #marker="slotProps">
-                    <div class="machine-container" @click="switchRoute(slotProps.item.id)">
-                        <p class="machine-state"><span class="status-num"
-                                :style="{ 'backgroundColor': getStateColor(slotProps.item.state, slotProps.item.id) }">{{
-                                    Number(slotProps.item.state) }}</span><span class="status-string">{{
-                                        getStateName(slotProps.item.state, slotProps.item.id) }}</span></p>
-                        <div class="image-container">
-                            <img src="../../../assets/packing-machine-svgrepo-com.svg">
-                            <!-- <img :src="slotProps.item.img"> -->
-                        </div>
-                        <p class="machine-name">{{ slotProps.item.name }}</p>
+    <div class="timeline-container">
+        <Timeline :value="store.getMachines" layout="horizontal">
+            <template #marker="slotProps">
+                <div class="machine-container" @click="switchRoute(slotProps.item.id)">
+                    <p class="machine-state"
+                        :style="{ 'backgroundColor': getStateColor(slotProps.item.state, slotProps.item.id) }"><span
+                            class="status-string-basic">{{
+                                getStateName(slotProps.item.state, slotProps.item.id) }}</span></p>
+
+                    <p class="machine-name-basic"
+                        :style="{ 'backgroundColor': getStateColor(slotProps.item.state, slotProps.item.id) }">{{
+                        slotProps.item.name }}</p>
+                </div>
+            </template>
+            <template #content="slotProps">
+                <div class="alarm" v-if="slotProps.item.alarm > 0">
+                    <div class="alarm-num">
+                        <i class="bi bi-exclamation-diamond"></i>
+                        <p>{{ slotProps.item.alarm.toString().slice(0, 3) }}</p>
                     </div>
-                </template>
-                <template #content="slotProps">
-                    <div class="alarm" v-if="slotProps.item.alarm > 0">
-                        <div class="alarm-num">
-                            <i class="bi bi-exclamation-diamond"></i>
-                            <p>{{ slotProps.item.alarm.toString().slice(0,3)}}</p>
-                        </div>
-                        <p>{{ getAlarmName(slotProps.item.alarm, slotProps.item.id) }}</p>
-                    </div>
-                </template>
-            </Timeline>
-        </div>
+                    <p>{{ getAlarmName(slotProps.item.alarm, slotProps.item.id) }}</p>
+                </div>
+            </template>
+        </Timeline>
+    </div>
 
 </template>
 
@@ -154,13 +173,14 @@ watch(getStates, (nState, oState) => {
 .timeline-container {
     padding: 0px 10px;
 }
+
 .p-timeline-event-connector {
     height: 5px !important;
 }
 
 .p-timeline-event-opposite {
     flex: 0 !important;
-        padding: 2px !important;
+    padding: 2px !important;
 }
 
 .p-timeline-event-content {
@@ -188,14 +208,18 @@ watch(getStates, (nState, oState) => {
     box-shadow: 1px 1px 4px 0px var(--border-color-1);
 }
 
-.machine-name {
+.machine-name-basic {
     padding: 5px;
     border-top: 1px solid var(--border-color-1);
     margin-top: auto;
-    height: 15%;
-    color: var(--theme-color-2);
+    color: var(--font-color-1);
     font-weight: bolder;
+    width: 100%;
+    line-height: 250%;
+    height: 75%;
+    font-size: xx-large;
     text-align: center;
+    vertical-align: middle;
 
 }
 
@@ -206,6 +230,8 @@ watch(getStates, (nState, oState) => {
     display: flex;
     height: 27%;
 
+    align-items: center;
+    justify-items: center;
 }
 
 .machine-state>span {
@@ -229,6 +255,13 @@ watch(getStates, (nState, oState) => {
     overflow-x: hidden;
     overflow-y: auto;
 
+}
+
+.status-string-basic {
+    width: 100%;
+    text-align: center;
+    font-size: xx-large;
+    color: var(--font-color-1);
 }
 
 @keyframes example {

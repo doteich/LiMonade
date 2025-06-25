@@ -5,6 +5,7 @@ import Dialog from 'primevue/dialog';
 import SelectButton from 'primevue/selectbutton';
 
 import { useI18n } from "vue-i18n";
+import internal from "stream";
 
 const i18n = useI18n();
 const translatedMessage = i18n.t("line.performance");
@@ -13,7 +14,7 @@ const toggle = i18n.t("line.performance_toggle");
 
 const store = useLineDataStore()
 
-const emit = defineEmits(["close","expand"])
+const emit = defineEmits(["close"])
 
 const props = defineProps(
     {
@@ -28,16 +29,21 @@ onMounted(() => {
         options.value.pop()
 
     }
-    fetchDeltas()
+
+    let d = new Date()
+    let h = d.getHours()
+    let h_start = (h - 8) < 0 ? (24 - 8 + h) : (h - 8)
+    h_start = h_start.toString()
+    h_start = h_start.length < 2 ? "0" + h_start : h_start
+    settings.value.start = `${d.toISOString().split("T")[0]}T${h_start}:00`
+    settings.value.end = `${d.toISOString().split("T")[0]}T${h}:00`
+
+    // fetchDeltas()
 
 })
 
 function closeChart() {
     emit("close")
-    
-}
-
-function expand(){
     emit("expand")
 }
 
@@ -49,19 +55,21 @@ async function fetchDeltas() {
 
     if (selection.value != toggle) {
         ucode = props.unitTag
-
     }
 
     for (let i = 0; i < 9; i++) {
         let end = new Date()
         end.setMinutes(0, 0, 0);
-        let start = new Date()
+        let start = new Date("06.17.2025")
         start.setMinutes(0, 0, 0);
         end.setHours(end.getHours() - i);
         start.setHours(start.getHours() - i - 1);
         l.unshift(`${start.getHours()}:00 - ${end.getHours()}:00`)
-        let rponse = await store.fetchPaceData(start.toISOString(), end.toISOString(), 60, props.db, props.node, "hour", ucode)
-        rponse < 0 ? res.unshift(0) : res.unshift(rponse.split(".")[0])
+
+        console.log(l)
+
+        // let rponse = await store.fetchPaceData(start.toISOString(), end.toISOString(), 60, props.db, props.node, "hour", ucode)
+        // rponse < 0 ? res.unshift(0) : res.unshift(rponse.split(".")[0])
     }
 
     data.value.labels = l
@@ -114,22 +122,43 @@ const data = ref({
     ]
 });
 
+const settings = ref({
+    start: "",
+    end: "",
+    interval: 1
+})
+
+
 const options = ref([toggle, "KG"])
 const selection = ref(toggle)
 
 </script>
 <template>
-    <Dialog visible="true" modal header="Performance" :closable="false" :style="{ width: '50vw' }">
+    <Dialog visible="true" modal header="Performance" :closable="false" :style="{ width: '98vw', height: '100vh' }">
 
         <template #header="slotProps">
             <div class="chart-header">
-                <h3>Performance</h3>
+                <h3>Performance Detail</h3>
                 <div>
-                    <!-- <button class="expand-button" @click="expand"><i class="bi bi-arrows-angle-expand"></i></button> -->
                     <button class="close-button" @click="closeChart"><i class="bi bi-x-circle"></i></button>
                 </div>
             </div>
         </template>
+        <div class="performance-inputs">
+            
+            <div class="input-group">
+                <label>Von</label>
+                <input type="datetime-local" v-model="settings.start">
+            </div>
+            <div class="input-group">
+                <label>Bis</label>
+                <input type="datetime-local" v-model="settings.end">
+            </div>
+            <div class="input-group">
+                <label>Interval</label>
+                <input type="number" v-model="settings.interval">
+            </div>
+        </div>
         <p>
             <pv-chart type="bar" :data="data" :options="config"></pv-chart>
         </p>
@@ -161,26 +190,31 @@ const selection = ref(toggle)
     align-items: center;
 }
 
-.expand-button {
 
+.performance-inputs {
+    display: flex;
+
+}
+
+.input-group>label {
     color: var(--theme-color-2);
-    border: 1px solid black;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 20px;
-    border-radius: 4px;
-    font-weight: bolder;
-    border: none;
-    background: none;
-    margin-right: 1px;
-
+    font-weight: bold;
 }
 
-.expand-button:hover {
-    color: var(--font-color-1);
-    background-color: var(--theme-color-2);
-
+.input-group>input {
+    color: var(--theme-color-2);
+    font-weight: bold;
+    border: 1px solid var(--border-color-1);
+    height: 3.5vh;
+   font-family: Arial, Helvetica, sans-serif;
 }
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+}
+
 
 .close-button {
 

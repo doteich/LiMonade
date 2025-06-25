@@ -5,26 +5,33 @@ import { useLineDataStore } from "@/stores/line/lineData"
 const store = useLineDataStore()
 
 
-const toggleVals = ["10", "60", "120", "AT"]
+const toggleVals = ref(["10", "60", "120", "AT"])
 
 const cVal = ref(0)
 const pace = ref(0)
 let interval = null
 
 async function updateValue() {
-    cVal.value == 3 ? cVal.value = 0 : cVal.value++
-    pace.value = await store.setPace(props.group, toggleVals[cVal.value])
-
+    cVal.value == toggleVals.value.length - 1 ? cVal.value = 0 : cVal.value++
+    pace.value = await store.setPace(props.group, toggleVals.value[cVal.value])
 }
 
 const props = defineProps({
-    group: String
+    group: String,
+    showHourPace: Boolean
 })
 
 onMounted(async () => {
-    pace.value = await store.setPace(props.group, toggleVals[cVal.value])
+
+    if (props.showHourPace) {
+        toggleVals.value.unshift("h")
+    }
+   
+
+
+    pace.value = await store.setPace(props.group, toggleVals.value[cVal.value])
     interval = setInterval(async () => {
-        pace.value = await store.setPace(props.group, toggleVals[cVal.value])
+        pace.value = await store.setPace(props.group, toggleVals.value[cVal.value])
     }, 60000)
 })
 
@@ -43,9 +50,11 @@ onUnmounted(() => {
             <span>{{ toggleVals[cVal] }}</span>
         </div>
         <div class="progress-values">
+        
             <span style="font-weight:600">{{ pace }}</span>
-            <span>{{$t('line.pace')}}</span>
-           
+            <span v-if="toggleVals[cVal] == 'h'">pcs/h</span>
+            <span v-else>{{ $t('line.pace') }}</span>
+
         </div>
     </div>
 </template>
@@ -89,10 +98,10 @@ onUnmounted(() => {
 
 }
 
-.progress-values{
+.progress-values {
     padding: 8px 0;
     width: 100%;
-    
+
 }
 
 
@@ -100,7 +109,4 @@ onUnmounted(() => {
     padding: 0 3px;
     font-size: 15px;
 }
-
-
-
 </style>
